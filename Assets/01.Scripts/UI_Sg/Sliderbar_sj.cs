@@ -4,15 +4,18 @@ using UnityEngine.UI;
 public class Sliderbar_sj : MonoBehaviour
 {
     //private인데 대문자 쓰면 안됨
-    [SerializeField] private Image Fullimage;
-    [SerializeField] private Image PlayerIcon;
-    [SerializeField] private Image TrainIcon;
+    [SerializeField] private Image _fullimage;
+    [SerializeField] private Image _playerIcon;
+    [SerializeField] private Image _trainIcon;
+                                   
+    //마찬가지                     
+    [SerializeField] private float _playerIconY;
+    [SerializeField] private float _trainIconY;
 
-    //마찬가지
-    [SerializeField] private float PlayerIconY;
-    [SerializeField] private float TrainIconY;
-
+    [Header("할당X, 자동으로 할당됨")]
     [SerializeField] private RemainDistance_sj _remainDistance;
+
+    [Space(10)]
     [SerializeField] private bool _stageStart = false;
     [SerializeField] private float _remain;
     [SerializeField] private float _time;
@@ -55,12 +58,12 @@ public class Sliderbar_sj : MonoBehaviour
         _remain = _remainDistance.RemainDistance();
         _time = _remainDistance.TrainDistance();
 
-        TrainIcon.transform.localPosition = new Vector3(1 - _time, TrainIconY, 0);
+        _trainIcon.transform.localPosition = new Vector3(1 - _time, _trainIconY, 0);
 
         // Debug.Log("remain"+remain);
-        PlayerIcon.transform.localPosition = new Vector3(_remainDistance.UiPosition(), PlayerIconY, 0);
+        _playerIcon.transform.localPosition = new Vector3(_remainDistance.UiPosition(), _playerIconY, 0);
 
-        Fullimage.fillAmount = _remain;
+        _fullimage.fillAmount = _remain;
         //if (Fullimage.fillAmount==0)
         //{
         //    GameManager.Instance.GameOver();
