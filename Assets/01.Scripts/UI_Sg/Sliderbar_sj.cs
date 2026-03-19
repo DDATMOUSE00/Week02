@@ -3,16 +3,19 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Sliderbar_sj : MonoBehaviour
 {
-    //[SerializeField] private Slider slider;
+    //private인데 대문자 쓰면 안됨
     [SerializeField] private Image Fullimage;
     [SerializeField] private Image PlayerIcon;
+    [SerializeField] private Image TrainIcon;
 
-
+    //마찬가지
     [SerializeField] private float PlayerIconY;
-    private RemainDistance_sj _remainDistance;
-    private bool _stageStart = false;
-    private float _remain;
+    [SerializeField] private float TrainIconY;
 
+    [SerializeField] private RemainDistance_sj _remainDistance;
+    [SerializeField] private bool _stageStart = false;
+    [SerializeField] private float _remain;
+    [SerializeField] private float _time;
 
 
 
@@ -25,6 +28,7 @@ public class Sliderbar_sj : MonoBehaviour
     {
         if (EventManager.Instance == null)
             return;
+
         EventManager.Instance.AddListener(MEventType.StageStarted, OnGameStart);
         EventManager.Instance.AddListener(MEventType.StageFailed, OnGameFail);
     }
@@ -34,6 +38,7 @@ public class Sliderbar_sj : MonoBehaviour
     {
         if(EventManager.Instance == null)
             return;
+
         EventManager.Instance.RemoveListener(MEventType.StageStarted, this);
         EventManager.Instance.RemoveListener(MEventType.StageFailed, this);
     }
@@ -48,23 +53,18 @@ public class Sliderbar_sj : MonoBehaviour
         }
   
         _remain = _remainDistance.RemainDistance();
+        _time = _remainDistance.TrainDistance();
 
-
-
+        TrainIcon.transform.localPosition = new Vector3(1 - _time, TrainIconY, 0);
 
         // Debug.Log("remain"+remain);
-        PlayerIcon.transform.localPosition =  new Vector3(_remainDistance.UiPosition(),PlayerIconY,0);
+        PlayerIcon.transform.localPosition = new Vector3(_remainDistance.UiPosition(), PlayerIconY, 0);
 
         Fullimage.fillAmount = _remain;
-        if (Fullimage.fillAmount==0)
-        {
-            GameManager.Instance.GameOver();
-        }
-        //Debug.Log("fillAmount" + Fullimage.fillAmount);
-        //PlayerIcon.transform.localPosition = playerpo;
-
-        //remain = GameManager.GetComponent<GameManager_sj>().remainDistance();
-        //slider.value = remain;
+        //if (Fullimage.fillAmount==0)
+        //{
+        //    GameManager.Instance.GameOver();
+        //}
     }
     #endregion
 

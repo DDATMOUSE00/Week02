@@ -3,57 +3,54 @@ using UnityEngine;
 
 public class PlayerMove_sj : MonoBehaviour
 {
-    private bool _stageStart = false;
+    [Header("설정")]
+    [SerializeField] private bool _stageStart = false; // 스테이지 시작 여부
+    [SerializeField] private float _speed = 5f;        // 플레이어 이동 속도
+
     private void OnEnable()
     {
-        if (EventManager.Instance == null)
-            return;
+        if (EventManager.Instance == null) return;
+
+        // 스테이지 시작 및 실패 이벤트 구독
         EventManager.Instance.AddListener(MEventType.StageStarted, OnGameStart);
         EventManager.Instance.AddListener(MEventType.StageFailed, OnGameFail);
     }
 
-
     private void OnDisable()
     {
-        if (EventManager.Instance == null)
-            return;
+        if (EventManager.Instance == null) return;
+
+        // 이벤트 구독 해제 (메모리 누수 방지)
         EventManager.Instance.RemoveListener(MEventType.StageStarted, this);
         EventManager.Instance.RemoveListener(MEventType.StageFailed, this);
     }
-    
-  
-  
-    [SerializeField] private float speed = 5f; // 이동 속도
 
-    void Update()
+    private void Update()
     {
-        if (_stageStart == false)
-        {
-            //Debug.Log("플레이어 멈춤");
-            return;
-        }
-        //Debug.Log("플레이어 움직임");
-        // 현재 위치에서 오른쪽(Vector3.right) 방향으로 
-        // (속도 * 프레임 시간)만큼 더한 새로운 위치를 대입합니다.
+        // 스테이지가 시작되지 않았으면 이동 로직을 실행하지 않음
+        if (!_stageStart) return;
 
-        if(Input.GetKey(KeyCode.D))
+        // D키: 오른쪽 이동, A키: 왼쪽 이동
+        if (Input.GetKey(KeyCode.D))
         {
-
-            transform.position += Vector3.right * speed * Time.deltaTime;
+            transform.position += Vector3.right * (_speed * Time.deltaTime);
         }
-        if(Input.GetKey(KeyCode.A))
+
+        if (Input.GetKey(KeyCode.A))
         {
-            transform.position += Vector3.left * speed * Time.deltaTime;
+            transform.position += Vector3.left * (_speed * Time.deltaTime);
         }
     }
 
-    private void OnGameFail(MEventType MEventType, Component Sender, EventArgs args)
-    {
-        _stageStart = false;
-    }
-
-    private void OnGameStart(MEventType MEventType, Component Sender, EventArgs args)
+    // 이벤트: 게임 시작 시 호출
+    private void OnGameStart(MEventType eventType, Component sender, EventArgs args)
     {
         _stageStart = true;
+    }
+
+    // 이벤트: 게임 실패 시 호출
+    private void OnGameFail(MEventType eventType, Component sender, EventArgs args)
+    {
+        _stageStart = false;
     }
 }
