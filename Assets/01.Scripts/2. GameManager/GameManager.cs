@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -22,7 +23,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (EventManager.Instance == null)
             return;
-            
+
         EventManager.Instance.RemoveListener(MEventType.PlayerDied, this);
         EventManager.Instance.RemoveListener(MEventType.StageCleared, this);
     }
@@ -38,6 +39,14 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log("GameClear");
     }
+
+    private void ChangeState(GameState state)
+    {
+        CurrentState = state;
+
+    }
+
+    
 
     
 }
