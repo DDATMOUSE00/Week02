@@ -11,7 +11,7 @@ public class GameDebuggerInput : MonoBehaviour
         }
         else if (Keyboard.current.digit2Key.wasPressedThisFrame)
         {
-            GameManager.Instance.DebugSetState(GameState.Play);
+            GameManager.Instance.GameStart();
         }
         else if (Keyboard.current.digit3Key.wasPressedThisFrame)
         {
