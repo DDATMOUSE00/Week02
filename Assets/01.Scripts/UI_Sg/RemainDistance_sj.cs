@@ -52,9 +52,9 @@ void Update()
 
         float a = Mathf.Clamp((NowPosition - StartPosition) / (EndPosition - StartPosition), 0, 1);
        
-        Debug.Log("(NowPosition - StartPosition)"+(NowPosition - StartPosition));
-        Debug.Log("(EndPosition - StartPosition)"+(EndPosition - StartPosition));
-        Debug.Log("a"+a);
+        //Debug.Log("(NowPosition - StartPosition)"+(NowPosition - StartPosition));
+        //Debug.Log("(EndPosition - StartPosition)"+(EndPosition - StartPosition));
+        //Debug.Log("a"+a);
         return a;
     }
 
