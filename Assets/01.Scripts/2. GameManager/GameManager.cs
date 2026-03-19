@@ -10,6 +10,12 @@ public class GameManager : Singleton<GameManager>
     public GameState CurrentState = GameState.Lobby;
     private bool _isStageEnded = false;
 
+    
+    public void GameStart()
+        {
+            ChangeState(GameState.Play);
+            EventManager.Instance.PostNotification(MEventType.StageStarted, this);
+        }
     public void GameClear()
     {
         if (_isStageEnded) return;
@@ -32,13 +38,12 @@ public class GameManager : Singleton<GameManager>
     private void ChangeState(GameState nextstate)
     {
         if (CurrentState == nextstate) return;
-
+  
         GameState prev = CurrentState;
         CurrentState = nextstate;
-        if (nextstate == GameState.Play) 
+        if (nextstate == GameState.Play)
         {
-            Debug.LogError("게임시작");
-
+            Debug.LogError("GameStart");
         }
         if (nextstate == GameState.Clear || nextstate == GameState.GameOver) 
         {
