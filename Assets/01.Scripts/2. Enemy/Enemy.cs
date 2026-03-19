@@ -20,7 +20,8 @@ public class Enemy : MonoBehaviour
 
     [Header("Move")]
     [SerializeField] private float idleSpeed = 0.3f; //평소 속도
-    [SerializeField] private float panicSpeed = 1f; //공포상태 속도
+    [SerializeField] private float panicminSpeed = 0.8f; //공포상태 최소속도
+    [SerializeField] private float panicmaxSpeed = 1.3f; //공포상태 최고속도
 
     [Header("Panic Setting")]
     [SerializeField] private float detectRange = 5f; //플레이어 감지범위
@@ -37,12 +38,17 @@ public class Enemy : MonoBehaviour
 
     private Vector3 VisualOriginalPos; //Visual 처음 위치 저장
 
+    [SerializeField] private float panicSpeed; //랜덤 달리기속도
+
     private void Awake()
     {
         state = EnemyState.Idle;
 
         if (visual != null)
             VisualOriginalPos = visual.localPosition;
+
+        //랜덤 속도 만들기
+        panicSpeed = Random.Range(panicminSpeed, panicmaxSpeed);
     }
 
     private void Update()
@@ -110,6 +116,8 @@ public class Enemy : MonoBehaviour
         if (player == null)
             return;
 
+
+
         //플레이어 반대 방향으로만 이동
         float dirX = transform.position.x - player.position.x;
         float runX = Mathf.Sign(dirX);
@@ -161,25 +169,25 @@ public class Enemy : MonoBehaviour
     }
 
 
-    private void OnDrawGizmos()
-    {
-        // 감지 범위
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectRange);
+    //private void OnDrawGizmos()
+    //{
+    //    // 감지 범위
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawWireSphere(transform.position, detectRange);
 
-        // Panic 해제 범위
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, runRange);
+    //    // Panic 해제 범위
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(transform.position, runRange);
 
-        // Idle 배회 범위
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, idleRange);
+    //    // Idle 배회 범위
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawWireSphere(transform.position, idleRange);
 
-        // 플레이어와 현재 거리 선
-        if (player != null)
-        {
-            Gizmos.color = Color.white;
-            Gizmos.DrawLine(transform.position, player.position);
-        }
-    }
+    //    // 플레이어와 현재 거리 선
+    //    if (player != null)
+    //    {
+    //        Gizmos.color = Color.white;
+    //        Gizmos.DrawLine(transform.position, player.position);
+    //    }
+    //}
 }
