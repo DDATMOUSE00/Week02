@@ -10,6 +10,8 @@ public class GameManager : Singleton<GameManager>
     public GameState CurrentState = GameState.Lobby;
     private bool _isStageEnded = false;
 
+    
+
     public void GameClear()
     {
         if (_isStageEnded) return;
@@ -37,8 +39,8 @@ public class GameManager : Singleton<GameManager>
         CurrentState = nextstate;
         if (nextstate == GameState.Play) 
         {
-            Debug.LogError("게임시작");
-
+            EventManager.Instance.PostNotification(MEventType.StageStarted, this);
+            //위치가 나중에 변경되어야함.
         }
         if (nextstate == GameState.Clear || nextstate == GameState.GameOver) 
         {
