@@ -1,11 +1,12 @@
 ﻿public enum MEventType
 {
-    EnemyKilled,
 
     StageStarted,
     StageCleared,
     StageFailed,
     StageExited,
+
+    EnemyKilled,
 
     TrainTimeChanged,
     TrainTimeOver,

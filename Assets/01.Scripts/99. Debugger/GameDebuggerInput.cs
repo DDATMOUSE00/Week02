@@ -15,11 +15,11 @@ public class GameDebuggerInput : MonoBehaviour
         }
         else if (Keyboard.current.digit3Key.wasPressedThisFrame)
         {
-            GameManager.Instance.DebugSetState(GameState.Clear);
+            GameManager.Instance.GameClear();
         }
         else if (Keyboard.current.digit4Key.wasPressedThisFrame)
         {
-            GameManager.Instance.DebugSetState(GameState.GameOver);
+            GameManager.Instance.GameOver();
         }
     }
 }

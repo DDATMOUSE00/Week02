@@ -6,15 +6,23 @@ public class TrainTimer : MonoBehaviour
     public float RemainingTime { get; private set; }
     public bool IsRunning  { get; private set; } = false;
 
-    private float totalTime;
+    public float totalTime = 300f;
 
-    private void Awake()
+    private void OnEnable()
     {
+        EventManager.Instance.AddListener(MEventType.GameStateChanged, OnGameStateChanged);
     }
+    private void OnDisable()
+    {
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.RemoveListener(MEventType.GameStateChanged, this);
+        }
 
+    }
     private void Update()
     {
-        if (!IsRunning) return;
+        if (IsRunning == false) return;
 
         RemainingTime -= Time.deltaTime;
         Debug.Log(RemainingTime);
@@ -28,9 +36,22 @@ public class TrainTimer : MonoBehaviour
         {
             IsRunning = false;
             EventManager.Instance.PostNotification(MEventType.TrainTimeOver, this);
+            GameManager.Instance.GameOver();
         }
     }
+    private void OnGameStateChanged(MEventType type, Component sender, System.EventArgs args)
+    {
+        if (args is not GameStateChangedEventArgs e) return;
 
+        if (e.current == GameState.Play)
+        {
+            StartTimer(totalTime);
+        }
+        else if (e.current == GameState.Clear || e.current == GameState.GameOver)
+        {
+            StopTimer();
+        }
+    }
     public void StartTimer(float seconds)
     {
         totalTime = seconds;
