@@ -10,68 +10,81 @@ public class Enemy : MonoBehaviour
         Dead
     }
 
-    [SerializeField] private Transform visual; //캐릭터 스프라이트
-    private Tween panicTween;
+    [SerializeField] private Transform _visual; //캐릭터 스프라이트
+    [SerializeField] private Tween _panicTween;
 
     [Header("State")]
-    [SerializeField] private EnemyState state;
+    [SerializeField] private EnemyState _state;
 
     [Header("Find Player")]
-    [SerializeField] private Transform player;
+    [SerializeField] private Transform _player;
 
     [Header("Move")]
-    [SerializeField] private float idleSpeed = 0.3f; //평소 속도
-    [SerializeField] private float panicminSpeed = 0.8f; //공포상태 최소속도
-    [SerializeField] private float panicmaxSpeed = 1.3f; //공포상태 최고속도
+    [SerializeField] private float _idleSpeed = 0.3f; //평소 속도
+    [SerializeField] private float _panicminSpeed = 0.8f; //공포상태 최소속도
+    [SerializeField] private float _panicmaxSpeed = 1.3f; //공포상태 최고속도
 
     [Header("Panic Setting")]
-    [SerializeField] private float detectRange = 5f; //플레이어 감지범위
-    [SerializeField] private float runRange = 15; //공포상태에서 도망가는 범위
-    [SerializeField] private float panicShake = 0.04f; //떨리는 정도
+    [SerializeField] private float _detectRange = 5f; //플레이어 감지범위
+    [SerializeField] private float _runRange = 15; //공포상태에서 도망가는 범위
+    [SerializeField] private float _panicShake = 0.04f; //떨리는 정도
 
     [Header("Idle Setting")]
-    [SerializeField] private float changeDirTime = 2f; //이정도 시간으로 왔다갔다
-    [SerializeField] private float idleRange = 0.4f; //이정도 범위에서 왔다갔다
+    [SerializeField] private float _changeDirTime = 2f; //이정도 시간으로 왔다갔다
+    [SerializeField] private float _idleRange = 0.4f; //이정도 범위에서 왔다갔다
 
-    private Vector2 moveDir; //방향
-    private float _distance; //플레이어랑 거리
-    private float _dirtimer; //시간
+    [SerializeField] private Vector2 _moveDir; //방향
+    [SerializeField] private float _distance; //플레이어랑 거리
+    [SerializeField] private float _dirtimer; //시간
 
-    private Vector3 VisualOriginalPos; //Visual 처음 위치 저장
+    [SerializeField] private Vector3 _visualOriginalPos; //Visual 처음 위치 저장
+    [SerializeField] private Vector3 _visualOriginalScale; //원래 크기 저장
 
-    [SerializeField] private float panicSpeed; //랜덤 달리기속도
+    [SerializeField] private float _panicSpeed; //랜덤 달리기속도
 
-    private EnemyHealth enemyHealth; //체력인데 계속 1일듯 아마
-    private Collider2D col; //콜라이더
+    [SerializeField] private EnemyHealth _enemyHealth; //체력인데 계속 1일듯 아마
+    [SerializeField] private Collider2D _col; //콜라이더
+    [SerializeField] private Rigidbody2D _rb; //리지드바디
 
     private void Awake()
     {
-        state = EnemyState.Idle;
+        _state = EnemyState.Idle;
 
-        col = GetComponent<Collider2D>();
-        enemyHealth = GetComponent<EnemyHealth>();
+        _col = GetComponent<Collider2D>();
+        _enemyHealth = GetComponent<EnemyHealth>();
+        _rb = GetComponent<Rigidbody2D>();
 
-        if (visual != null)
-            VisualOriginalPos = visual.localPosition;
+        if (_visual != null)
+        {
+            _visualOriginalPos = _visual.localPosition;
+            _visualOriginalScale = _visual.localScale;
+        }
 
         //랜덤 속도 만들기 인데 풀링 때문에 Init에 있으니 나중에 빼기
-        panicSpeed = Random.Range(panicminSpeed, panicmaxSpeed);
+        _panicSpeed = Random.Range(_panicminSpeed, _panicmaxSpeed);
+
+        if (_rb != null)
+        {
+            _rb.simulated = false; //평소엔 물리 끔
+            _rb.linearVelocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
+        }
     }
 
     private void Update()
     {
-        if (state == EnemyState.Dead)
+        if (_state == EnemyState.Dead)
             return;
 
-        if (player == null)
+        if (_player == null)
             return;
 
-        _distance = Vector2.Distance(transform.position, player.position);
+        _distance = Vector2.Distance(transform.position, _player.position);
 
-        switch (state)
+        switch (_state)
         {
             case EnemyState.Idle:
-                if (_distance <= detectRange)
+                if (_distance <= _detectRange)
                 {
                     ChangeState(EnemyState.Panic);
                     return;
@@ -80,7 +93,7 @@ public class Enemy : MonoBehaviour
                 break;
 
             case EnemyState.Panic:
-                if (_distance >= runRange)
+                if (_distance >= _runRange)
                 {
                     ChangeState(EnemyState.Idle);
                     return;
@@ -93,51 +106,115 @@ public class Enemy : MonoBehaviour
 
     public void Init(Transform targetPlayer) //오브젝트풀링을 위한
     {
-        player = targetPlayer;
+        _player = targetPlayer;
 
-        state = EnemyState.Idle;
+        _state = EnemyState.Idle;
         _dirtimer = 0f;
-        moveDir = Vector2.zero;
+        _moveDir = Vector2.zero;
 
-        panicSpeed = Random.Range(panicminSpeed, panicmaxSpeed);
+        _panicSpeed = Random.Range(_panicminSpeed, _panicmaxSpeed);
 
         StopPanicShake();
 
-        if (visual != null)
-            visual.localPosition = VisualOriginalPos;
+        transform.rotation = Quaternion.identity; //회전 초기화
 
-        if (col != null)
-            col.enabled = true;
+        if (_visual != null)
+        {
+            _visual.localPosition = _visualOriginalPos;
+            _visual.localRotation = Quaternion.identity;
+            _visual.localScale = _visualOriginalScale;
+        }
 
-        if (enemyHealth != null)
-            enemyHealth.Init();
+        if (_col != null)
+            _col.enabled = true;
+
+        if (_rb != null)
+        {
+            _rb.simulated = false;
+            _rb.linearVelocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
+            _rb.rotation = 0f;
+        }
+
+        if (_enemyHealth != null)
+            _enemyHealth.Init();
     }
 
     public void OnDeath()
     {
-        if (state == EnemyState.Dead)
+        if (_state == EnemyState.Dead)
             return;
 
-        state = EnemyState.Dead;
+        _state = EnemyState.Dead;
 
         StopPanicShake();
 
-        if (col != null)
-            col.enabled = false;
+        //if (col != null)
+        //    col.enabled = false;
 
-        //죽는 연출 넣기
-        PoolManager.Instance.ReturnEnemy(this);
+        //죽는 연출 나오게 하는
+        PlayDeathPhysics();
     }
 
 
+    //----------죽는 모션 시작----------
+    private void PlayDeathPhysics()
+    {
+        if (_rb == null)
+        {
+            PoolManager.Instance.ReturnEnemy(this);
+            return;
+        }
+
+        float dirX = 1f;
+
+        if (_player != null)
+        {
+            dirX = Mathf.Sign(transform.position.x - _player.position.x);
+            if (dirX == 0f)
+                dirX = Random.value > 0.5f ? 1f : -1f;
+        }
+
+        _rb.simulated = true;
+        _rb.linearVelocity = Vector2.zero;
+        _rb.angularVelocity = 0f;
+
+        Vector2 force = new Vector2(dirX * 5f, 3.5f);
+        _rb.AddForce(force, ForceMode2D.Impulse);
+
+        _rb.AddTorque(-dirX * 8f, ForceMode2D.Impulse);
+
+        if (_visual != null)
+        {
+            _visual.DOPunchScale(new Vector3(0.15f, -0.1f, 0f), 0.2f, 8, 0.8f);
+        }
+
+        Invoke(nameof(ReturnToPool), 1.2f);
+    }
+    private void ReturnToPool()
+    {
+        if (_rb != null)
+        {
+            _rb.simulated = false;
+            _rb.linearVelocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
+            _rb.rotation = 0f;
+        }
+
+        transform.rotation = Quaternion.identity;
+
+        PoolManager.Instance.ReturnEnemy(this);
+    }
+    //----------죽는 모션 끝----------
+
     private void ChangeState(EnemyState newState)
     {
-        if (state == newState)
+        if (_state == newState)
             return;
 
-        state = newState;
+        _state = newState;
 
-        if (state == EnemyState.Panic)
+        if (_state == EnemyState.Panic)
             StartPanicShake();
         else
             StopPanicShake();
@@ -150,52 +227,52 @@ public class Enemy : MonoBehaviour
         //랜덤하게 방향 변경
         if (_dirtimer <= 0f)
         {
-            _dirtimer = changeDirTime;
+            _dirtimer = _changeDirTime;
 
-            float randomX = Random.Range(-idleRange, idleRange);
-            moveDir = new Vector2(randomX, 0f).normalized;
+            float randomX = Random.Range(-_idleRange, _idleRange);
+            _moveDir = new Vector2(randomX, 0f).normalized;
         }
 
         //이동
-        transform.position += (Vector3)(moveDir * idleSpeed * Time.deltaTime);
+        transform.position += (Vector3)(_moveDir * _idleSpeed * Time.deltaTime);
     }
 
     private void DoPanic() //Panic상태 움직임
     {
-        if (player == null)
+        if (_player == null)
             return;
 
         //플레이어 반대 방향으로만 이동
-        float dirX = transform.position.x - player.position.x;
+        float dirX = transform.position.x - _player.position.x;
         float runX = Mathf.Sign(dirX);
 
         //x가 같으면 랜덤
         if (runX == 0f)
         {
-            if (moveDir.x != 0f)
-                runX = Mathf.Sign(moveDir.x);
+            if (_moveDir.x != 0f)
+                runX = Mathf.Sign(_moveDir.x);
             else
                 runX = Random.value > 0.5f ? 1f : -1f;
         }
 
-        moveDir = new Vector2(runX, 0f);
-        transform.position += (Vector3)(moveDir * panicSpeed * Time.deltaTime);
+        _moveDir = new Vector2(runX, 0f);
+        transform.position += (Vector3)(_moveDir * _panicSpeed * Time.deltaTime);
     }
 
 
     //패닉 움직임
     private void StartPanicShake()
     {
-        if (visual == null)
+        if (_visual == null)
             return;
 
         //혹시 기존 트윈 있으면 제거
-        panicTween?.Kill();
+        _panicTween?.Kill();
 
         //계속 반복되는 흔들림
-        panicTween = visual.DOShakePosition(
+        _panicTween = _visual.DOShakePosition(
             duration: 1f, // 1초짜리 (루프로 계속 반복됨)
-            strength: new Vector3(panicShake, 0f, 0f), //좌우 흔들림
+            strength: new Vector3(_panicShake, 0f, 0f), //좌우 흔들림
             vibrato: 20, //떨림 횟수
             randomness: 90f,
             snapping: false,
@@ -204,41 +281,36 @@ public class Enemy : MonoBehaviour
     }
     private void StopPanicShake()
     {
-        if (panicTween != null)
+        if (_panicTween != null)
         {
-            panicTween.Kill();
-            panicTween = null;
+            _panicTween.Kill();
+            _panicTween = null;
         }
 
-        if (visual != null)
-            visual.localPosition = VisualOriginalPos;
+        if (_visual != null)
+            _visual.localPosition = _visualOriginalPos;
     }
 
-
-
-
-
-
-    //범위 체크 Gizmos
+    
     //private void OnDrawGizmos()
     //{
     //    // 감지 범위
     //    Gizmos.color = Color.yellow;
-    //    Gizmos.DrawWireSphere(transform.position, detectRange);
+    //    Gizmos.DrawWireSphere(transform.position, _detectRange);
 
     //    // Panic 해제 범위
     //    Gizmos.color = Color.red;
-    //    Gizmos.DrawWireSphere(transform.position, runRange);
+    //    Gizmos.DrawWireSphere(transform.position, _runRange);
 
     //    // Idle 배회 범위
     //    Gizmos.color = Color.green;
-    //    Gizmos.DrawWireSphere(transform.position, idleRange);
+    //    Gizmos.DrawWireSphere(transform.position, _idleRange);
 
     //    // 플레이어와 현재 거리 선
-    //    if (player != null)
+    //    if (_player != null)
     //    {
     //        Gizmos.color = Color.white;
-    //        Gizmos.DrawLine(transform.position, player.position);
+    //        Gizmos.DrawLine(transform.position, _player.position);
     //    }
     //}
 }

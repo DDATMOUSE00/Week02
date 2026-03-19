@@ -30,9 +30,14 @@ public class GameDebuggerInput : MonoBehaviour
         {
             spawnManager.Spawn(10);
         }
-        //else if (Keyboard.current.digit7Key.wasPressedThisFrame)
-        //{
-        //    GameManager.Instance.();
-        //}
+        else if (Keyboard.current.digit7Key.wasPressedThisFrame)
+        {
+            EnemyHealth[] enemies = Object.FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None);
+
+            foreach (var enemy in enemies)
+            {
+                enemy.Kill();
+            }
+        }
     }
 }

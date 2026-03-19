@@ -2,25 +2,25 @@
 
 public class EnemyHealth : MonoBehaviour
 {
-    private bool isDead;
-    private Enemy enemy;
+    [SerializeField] private bool _isDead;
+    [SerializeField] private Enemy _enemy;
 
     private void Awake()
     {
-        enemy = GetComponent<Enemy>();
+        _enemy = GetComponent<Enemy>();
     }
 
     public void Init()
     {
-        isDead = false;
+        _isDead = false;
     }
 
     public void Kill()
     {
-        if (isDead)
+        if (_isDead)
             return;
 
-        isDead = true;
-        enemy.OnDeath();
+        _isDead = true;
+        _enemy.OnDeath();
     }
 }

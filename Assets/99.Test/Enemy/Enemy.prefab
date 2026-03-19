@@ -102,6 +102,8 @@ GameObject:
   - component: {fileID: 1743862947850704257}
   - component: {fileID: 7587107075301689535}
   - component: {fileID: -1767012991852701831}
+  - component: {fileID: 322749367186215371}
+  - component: {fileID: -5696688024312518445}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -137,18 +139,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc64d0b39ecbb93489efd044d09a39c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  visual: {fileID: 2420665293574089471}
-  state: 0
-  player: {fileID: 7155101887242498687, guid: 760a167a990b289468ec08d0c3d923cd, type: 3}
-  idleSpeed: 0.3
-  panicminSpeed: 0.8
-  panicmaxSpeed: 1.3
-  detectRange: 5
-  runRange: 15
-  panicShake: 0.04
-  changeDirTime: 2
-  idleRange: 0.4
-  panicSpeed: 0
+  _visual: {fileID: 2420665293574089471}
+  _state: 0
+  _player: {fileID: 0}
+  _idleSpeed: 0.3
+  _panicminSpeed: 0.8
+  _panicmaxSpeed: 1.3
+  _detectRange: 5
+  _runRange: 15
+  _panicShake: 0.04
+  _changeDirTime: 2
+  _idleRange: 0.4
+  _moveDir: {x: 0, y: 0}
+  _distance: 0
+  _dirtimer: 0
+  _visualOriginalPos: {x: 0, y: 0, z: 0}
+  _visualOriginalScale: {x: 0, y: 0, z: 0}
+  _panicSpeed: 0
+  _enemyHealth: {fileID: 0}
+  _col: {fileID: 0}
+  _rb: {fileID: 0}
 --- !u!114 &-1767012991852701831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,3 +171,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4e4a9999610d743800645f5b611c87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  _isDead: 0
+  _enemy: {fileID: 0}
+--- !u!70 &322749367186215371
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9106306916095990395}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.5, y: 0.5}
+  m_Direction: 0
+--- !u!50 &-5696688024312518445
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9106306916095990395}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 4.64
+  m_AngularDamping: 1.92
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

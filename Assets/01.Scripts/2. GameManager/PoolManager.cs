@@ -4,9 +4,9 @@ using UnityEngine;
 public class PoolManager : Singleton<PoolManager>
 {
     [Header("Pool Setting")]
-    [SerializeField] private Enemy enemyPrefab;
-    [SerializeField] private int initialSize = 200;
-    [SerializeField] private Transform poolParent;
+    [SerializeField] private Enemy _enemyPrefab;
+    [SerializeField] private int _initialSize = 200;
+    [SerializeField] private Transform _poolParent;
 
     private Queue<Enemy> enemyPool = new Queue<Enemy>();
 
@@ -17,7 +17,7 @@ public class PoolManager : Singleton<PoolManager>
         if (Instance != this)
             return;
 
-        for (int i = 0; i < initialSize; i++)
+        for (int i = 0; i < _initialSize; i++)
         {
             CreateEnemy();
         }
@@ -25,7 +25,7 @@ public class PoolManager : Singleton<PoolManager>
 
     private Enemy CreateEnemy()
     {
-        Enemy newEnemy = Instantiate(enemyPrefab, poolParent);
+        Enemy newEnemy = Instantiate(_enemyPrefab, _poolParent);
         newEnemy.gameObject.SetActive(false);
         enemyPool.Enqueue(newEnemy);
         return newEnemy;
@@ -46,7 +46,7 @@ public class PoolManager : Singleton<PoolManager>
     public void ReturnEnemy(Enemy enemy)
     {
         enemy.gameObject.SetActive(false);
-        enemy.transform.SetParent(poolParent);
+        enemy.transform.SetParent(_poolParent);
         enemyPool.Enqueue(enemy);
     }
 
