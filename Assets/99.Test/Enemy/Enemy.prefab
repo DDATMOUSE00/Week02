@@ -101,6 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1743862947850704257}
   - component: {fileID: 7587107075301689535}
+  - component: {fileID: -1767012991852701831}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -148,3 +149,15 @@ MonoBehaviour:
   changeDirTime: 2
   idleRange: 0.4
   panicSpeed: 0
+--- !u!114 &-1767012991852701831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9106306916095990395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de4e4a9999610d743800645f5b611c87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth

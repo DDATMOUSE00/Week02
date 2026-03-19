@@ -48,6 +48,9 @@ public class Enemy : MonoBehaviour
     {
         state = EnemyState.Idle;
 
+        col = GetComponent<Collider2D>();
+        enemyHealth = GetComponent<EnemyHealth>();
+
         if (visual != null)
             VisualOriginalPos = visual.localPosition;
 
@@ -69,19 +72,25 @@ public class Enemy : MonoBehaviour
         {
             case EnemyState.Idle:
                 if (_distance <= detectRange)
+                {
                     ChangeState(EnemyState.Panic);
-
+                    return;
+                }
                 DoIdle();
                 break;
+
             case EnemyState.Panic:
                 if (_distance >= runRange)
+                {
                     ChangeState(EnemyState.Idle);
+                    return;
+                }
                 DoPanic();
                 break;
         }
     }
 
-    
+
     public void Init(Transform targetPlayer) //오브젝트풀링을 위한
     {
         player = targetPlayer;
