@@ -25,7 +25,7 @@ public class TrainTimer : MonoBehaviour
         if (IsRunning == false) return;
 
         RemainingTime -= Time.deltaTime;
-        Debug.Log(RemainingTime);
+        //Debug.Log(RemainingTime);
         if (RemainingTime < 0f) 
         {
             RemainingTime = 0f;
