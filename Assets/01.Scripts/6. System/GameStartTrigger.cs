@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class GameStartTrigger : MonoBehaviour
 {
-    void Start()
+    void OnTriggerEnter2D(Collider2D other)
     {
-        
-    }
-
-    void Update()
-    {
-        
+        if(other.CompareTag("Player"))
+        {
+            GameManager.Instance.GameStart();
+        }
     }
 }
