@@ -39,5 +39,15 @@ public class GameDebuggerInput : MonoBehaviour
                 enemy.Kill();
             }
         }
+
+        //클릭테스트
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+            worldPos.z = 0f;
+
+            spawnManager.SpawnAt(worldPos, 15);
+        }
     }
 }
