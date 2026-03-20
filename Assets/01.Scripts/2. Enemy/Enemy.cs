@@ -65,7 +65,7 @@ public class Enemy : MonoBehaviour
 
         if (_rb != null)
         {
-            _rb.simulated = false; //평소엔 물리 끔
+            //_rb.simulated = false; //평소엔 물리 끔
             _rb.linearVelocity = Vector2.zero;
             _rb.angularVelocity = 0f;
         }
@@ -130,7 +130,7 @@ public class Enemy : MonoBehaviour
 
         if (_rb != null)
         {
-            _rb.simulated = false;
+            //_rb.simulated = false;
             _rb.linearVelocity = Vector2.zero;
             _rb.angularVelocity = 0f;
             _rb.rotation = 0f;
@@ -179,10 +179,10 @@ public class Enemy : MonoBehaviour
         _rb.linearVelocity = Vector2.zero;
         _rb.angularVelocity = 0f;
 
-        Vector2 force = new Vector2(dirX * 5f, 3.5f);
+        Vector2 force = new Vector2(dirX * 80f, 3.5f);
         _rb.AddForce(force, ForceMode2D.Impulse);
 
-        _rb.AddTorque(-dirX * 8f, ForceMode2D.Impulse);
+        _rb.AddTorque(-dirX * 42f, ForceMode2D.Impulse);
 
         if (_visual != null)
         {
@@ -195,7 +195,7 @@ public class Enemy : MonoBehaviour
     {
         if (_rb != null)
         {
-            _rb.simulated = false;
+            //_rb.simulated = false;
             _rb.linearVelocity = Vector2.zero;
             _rb.angularVelocity = 0f;
             _rb.rotation = 0f;
