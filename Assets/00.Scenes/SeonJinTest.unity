@@ -2044,9 +2044,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f364ade490de9764981a475d66a5df6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
+  _distanceChecker: {fileID: 0}
   _player: {fileID: 1681544782}
   _spawnPoints:
   - {fileID: 517059999}
+  _spawnInterval: 50
+  _spawnCountPerInterval: 80
+  _minSpawnDistanceFromPlayer: 5
+  _lastSpawnPosition: {x: 0, y: 0, z: 0}
+  _isSpawnActive: 0
+  _groundY: -4.8
+  _spawnForwardDistance: 50
+  _spawnXRandomRange: 60
 --- !u!4 &1235190217
 Transform:
   m_ObjectHideFlags: 0
@@ -3132,10 +3141,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 91538458458665171, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _cameraController
-      value: 
-      objectReference: {fileID: 519420033}
     - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: _chargeSlider
       value: 
@@ -3381,7 +3386,7 @@ PrefabInstance:
       objectReference: {fileID: 480169502}
     - target: {fileID: 1020491800464766899, guid: f127e5232c4999540a84480f43ce7ef3, type: 3}
       propertyPath: _manualOffset.y
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1020491800464766899, guid: f127e5232c4999540a84480f43ce7ef3, type: 3}
       propertyPath: _manualOffset.z
@@ -3553,7 +3558,7 @@ PrefabInstance:
       objectReference: {fileID: 1349983763}
     - target: {fileID: 1014587908239141999, guid: a71a3d1121710a849972e0f64077fe0b, type: 3}
       propertyPath: _postSlamDelay
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1014587908239141999, guid: a71a3d1121710a849972e0f64077fe0b, type: 3}
       propertyPath: _pressHold_Image

@@ -26,7 +26,7 @@ public class TutorialManager : Singleton<TutorialManager>
     [SerializeField] private Image _pressHold_Image;
 
     private bool _isPeakDetected = false;
-
+    private bool _canJumpNow = false;
     public override void Init() { Debug.Log("Tutorial Manager Initialized."); }
 
     private void Start() { SetStep(TutorialStep.MoveAD); }
@@ -38,13 +38,24 @@ public class TutorialManager : Singleton<TutorialManager>
         switch (_currentStep)
         {
             case TutorialStep.JumpCharge:
-                // 조건 1: 게이지가 50% 이상인가?
-                // 조건 2: 플레이어가 바닥을 떠나 위로 솟구치고 있는가? (점프 실행 여부 감시)
-                if (_chargeSlider != null && _chargeSlider.value >= 0.5f && _playerRb.linearVelocity.y > 0.1f)
+                // 1. 게이지가 0.5를 넘었는지 먼저 확인
+                if (_chargeSlider != null && _chargeSlider.value >= 0.5f)
                 {
-                    _isPeakDetected = false;
+                    if (!_canJumpNow)
+                    {
+                        _canJumpNow = true;
+                        Debug.Log("준비 완료! 이제 점프하세요.");
+                    }
+                }
+
+                // 2. 준비된 상태에서 플레이어의 Y축 속도가 상승하면 단계 전환
+                // 게이지가 이미 0으로 떨어졌어도 _canJumpNow가 true이므로 인식됨
+                if (_canJumpNow && _playerRb.linearVelocity.y > 0.1f)
+                {
+                    _canJumpNow = false; // 플래그 리셋
                     SetStep(TutorialStep.InAir);
-                    Debug.Log("게이지 50% 충전 후 점프 확인: 최고점 감시 시작");
+                    if (_pressHold_Image != null) _pressHold_Image.gameObject.SetActive(false);
+                    Debug.Log("점프 성공! 공중 상태 진입.");
                 }
                 break;
 
@@ -89,12 +100,13 @@ public class TutorialManager : Singleton<TutorialManager>
 
     public void OnTrigger1Entered()
     {
+        // 중괄호를 추가하여 안전하게 처리
         if (_currentStep == TutorialStep.MoveAD)
-            
+        {
             SetStep(TutorialStep.JumpCharge);
-            _pressHold_Image.gameObject.SetActive(true);
+            if (_pressHold_Image != null) _pressHold_Image.gameObject.SetActive(true);
+        }
     }
-
     private void CheckPeakHeight()
     {
         if (_playerRb == null) return;
