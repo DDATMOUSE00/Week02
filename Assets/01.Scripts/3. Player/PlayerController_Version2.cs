@@ -38,6 +38,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
 
     //이전 점프가 차지였는지?
     private bool _lastJumpWasCharged;
+    private float _lastJumpChargeRatio;
 
     #endregion
 
@@ -58,6 +59,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     public int LockedActionFacingDirection => _lockedActionFacingDirection;
     public bool ShowDebugLog => _showDebugLog;
     public bool LastJumpWasCharged => _lastJumpWasCharged;
+    public float LastJumpChargeRatio => _lastJumpChargeRatio;
 
     public bool IsWalking =>
         IsGrounded &&
@@ -99,6 +101,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
 
         _canSlam = true;
         _lastJumpWasCharged = false;
+        _lastJumpChargeRatio = 0f;
         _lockedActionFacingDirection = _facingDirection;
     }
 
@@ -327,11 +330,12 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     }
 
     // 점프 발사 직후 상태를 갱신한다.
-    public void OnJumpLaunched(bool wasChargedJump)
+    public void OnJumpLaunched(bool wasChargedJump, float jumpChargeRatio)
     {
         _isCharging = false;
         _canSlam = true;
         _lastJumpWasCharged = wasChargedJump;
+        _lastJumpChargeRatio = wasChargedJump ? Mathf.Clamp01(jumpChargeRatio) : 0f;
     }
 
     // 슬램 예고 상태에 진입한다.
@@ -359,6 +363,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
         _isSlamming = false;
         _canSlam = true;
         _lastJumpWasCharged = false;
+        _lastJumpChargeRatio = 0f;
     }
 
     // 접지 이탈로 차지를 취소한다.
@@ -388,7 +393,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
         }
 
         if (landedFromSlam)
-            _airAction.ApplySlamDamage(_movement, transform.position, _showDebugLog);
+            _airAction.ApplySlamDamage(this, _movement, transform.position, _showDebugLog);
 
         if (justLanded)
             OnLanded();
