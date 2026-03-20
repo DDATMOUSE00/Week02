@@ -44,5 +44,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Building
+    uniqueID: 597379149
+    locked: 0
+  - name: Enemy
+    uniqueID: 2007200235
+    locked: 0
+  - name: Etc
+    uniqueID: 2057935239
+    locked: 0
+  - name: Player
+    uniqueID: 2002665543
+    locked: 0
   m_RenderingLayers:
   - Default
