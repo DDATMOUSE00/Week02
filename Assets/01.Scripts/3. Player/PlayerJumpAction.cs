@@ -20,6 +20,9 @@ public class PlayerJumpAction : MonoBehaviour
     [Header("Buffer")]
     [SerializeField] private float _jumpBufferTime = 0.12f;
 
+    [Header("Jump Particle")]
+    [SerializeField] private ParticleSystem _jumpParticle;
+
     #endregion
 
     #region Runtime Fields
@@ -99,7 +102,7 @@ public class PlayerJumpAction : MonoBehaviour
             ? Mathf.Lerp(_normalJumpForceX, _maxChargeJumpForceX, effectiveRatio)
             : _normalJumpForceX;
 
-        LaunchJump(controller, movement, jumpForceX, jumpForceY);
+        LaunchJump(controller, movement, jumpForceX, jumpForceY, isChargedJump);
 
         if (controller.ShowDebugLog)
         {
@@ -124,16 +127,21 @@ public class PlayerJumpAction : MonoBehaviour
         }
 
         controller.LockFacingForAction();
-        LaunchJump(controller, movement, _normalJumpForceX, _normalJumpForceY);
+        LaunchJump(controller, movement, _normalJumpForceX, _normalJumpForceY, false);
 
         if (controller.ShowDebugLog)
             Debug.Log("Buffered Normal Jump");
     }
 
     // 점프를 실제 발사한다.
-    private void LaunchJump(PlayerControllerVersionTwo controller, PlayerMovementMotor movement, float jumpForceX, float jumpForceY)
+    private void LaunchJump(
+        PlayerControllerVersionTwo controller,
+        PlayerMovementMotor movement,
+        float jumpForceX,
+        float jumpForceY,
+        bool wasChargedJump)
     {
-        controller.OnJumpLaunched();
+        controller.OnJumpLaunched(wasChargedJump);
 
         movement.StartJumpDetachIgnore();
 
@@ -143,6 +151,9 @@ public class PlayerJumpAction : MonoBehaviour
 
         _chargeTimer = 0f;
         _jumpBufferTimer = 0f;
+
+        if (_jumpParticle != null)
+            _jumpParticle.Play();
     }
 
     #endregion
