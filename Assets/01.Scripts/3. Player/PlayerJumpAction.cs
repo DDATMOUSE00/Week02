@@ -14,6 +14,9 @@ public class PlayerJumpAction : MonoBehaviour
     [SerializeField] private float _maxChargeJumpForceY = 16f;
     [SerializeField] private float _maxChargeJumpForceX = 8f;
 
+    [Header("Charge Curve")]
+    [SerializeField] private AnimationCurve _chargeForceCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
     [Header("Buffer")]
     [SerializeField] private float _jumpBufferTime = 0.12f;
 
@@ -29,6 +32,12 @@ public class PlayerJumpAction : MonoBehaviour
     #region Properties
 
     public bool HasBufferedJump => _jumpBufferTimer > 0f;
+
+    // 홀드 시간 기준의 0~1 차지량이다. 슬라이더 표시용으로 사용한다.
+    public float ChargeHoldNormalized => GetChargeHoldNormalized(_chargeTimer);
+
+    // 실제 점프 힘 계산에 쓰이는 0~1 비율이다. threshold 이후 curve가 적용된다.
+    public float ChargeEffectiveRatio => EvaluateChargeForceRatio(_chargeTimer);
 
     #endregion
 
@@ -78,18 +87,16 @@ public class PlayerJumpAction : MonoBehaviour
     public void ReleaseChargeJump(PlayerControllerVersionTwo controller, PlayerMovementMotor movement)
     {
         float chargeTime = _chargeTimer;
-
         bool isChargedJump = chargeTime >= _chargeThreshold;
-        float ratio = isChargedJump
-            ? Mathf.InverseLerp(_chargeThreshold, _maxChargeTime, chargeTime)
-            : 0f;
+
+        float effectiveRatio = EvaluateChargeForceRatio(chargeTime);
 
         float jumpForceY = isChargedJump
-            ? Mathf.Lerp(_normalJumpForceY, _maxChargeJumpForceY, ratio)
+            ? Mathf.Lerp(_normalJumpForceY, _maxChargeJumpForceY, effectiveRatio)
             : _normalJumpForceY;
 
         float jumpForceX = isChargedJump
-            ? Mathf.Lerp(_normalJumpForceX, _maxChargeJumpForceX, ratio)
+            ? Mathf.Lerp(_normalJumpForceX, _maxChargeJumpForceX, effectiveRatio)
             : _normalJumpForceX;
 
         LaunchJump(controller, movement, jumpForceX, jumpForceY);
@@ -97,7 +104,7 @@ public class PlayerJumpAction : MonoBehaviour
         if (controller.ShowDebugLog)
         {
             Debug.Log(isChargedJump
-                ? $"Charged Jump | ChargeTime: {chargeTime:F2}, Ratio: {ratio:F2}"
+                ? $"Charged Jump | ChargeTime: {chargeTime:F2}, EvaluatedRatio: {effectiveRatio:F2}"
                 : $"Normal Jump | TapTime: {chargeTime:F2}");
         }
     }
@@ -136,6 +143,36 @@ public class PlayerJumpAction : MonoBehaviour
 
         _chargeTimer = 0f;
         _jumpBufferTimer = 0f;
+    }
+
+    #endregion
+
+    #region Charge Evaluate
+
+    // 홀드 시간을 0~1 범위의 차지량으로 변환한다.
+    private float GetChargeHoldNormalized(float chargeTime)
+    {
+        if (_maxChargeTime <= 0f)
+            return 0f;
+
+        return Mathf.Clamp01(chargeTime / _maxChargeTime);
+    }
+
+    // threshold 이후의 차지 비율에 curve를 적용해 실제 힘 계산용 비율을 반환한다.
+    private float EvaluateChargeForceRatio(float chargeTime)
+    {
+        if (chargeTime < _chargeThreshold)
+            return 0f;
+
+        if (_maxChargeTime <= _chargeThreshold)
+            return 1f;
+
+        float rawRatio = Mathf.InverseLerp(_chargeThreshold, _maxChargeTime, chargeTime);
+
+        if (_chargeForceCurve == null || _chargeForceCurve.length == 0)
+            return rawRatio;
+
+        return Mathf.Clamp01(_chargeForceCurve.Evaluate(rawRatio));
     }
 
     #endregion

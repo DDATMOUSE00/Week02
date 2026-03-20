@@ -1087,31 +1087,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91a35dbb61266674798873990aae1de7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  _defaultSize: 16
   _target: {fileID: 1681544782}
   _targetRb: {fileID: 1681544781}
-  _followOffset: {x: 0, y: 7, z: 0}
+  _followOffset: {x: 0, y: 12, z: 0}
   _followX: 1
   _followY: 1
   _groundReferenceY: 3
-  _verticalFollowLerp: 0.35
-  _maxCameraRiseFromGround: 6
+  _verticalFollowLerp: 0.3
+  _maxCameraRiseFromGround: 12
   _xSmoothTime: 0.08
   _ySmoothTimeRising: 0.16
   _ySmoothTimeFalling: 0.08
   _ySmoothTimeGrounded: 0.1
-  _xMaxSpeed: 100
+  _xMaxSpeed: 200
   _yMaxSpeed: 100
-  _useDynamicZoom: 1
-  _defaultSize: 16
-  _maxZoomOutSize: 6.2
-  _zoomStartHeight: 3
-  _zoomFullHeight: 8
-  _zoomSmoothTime: 0.12
   _useSlamLandShake: 1
   _slamShakeDuration: 0.18
-  _slamShakeStrengthX: 0.18
-  _slamShakeLiftY: 0.08
-  _slamShakeOscillationCount: 4
+  _slamShakeStrengthX: 2
+  _slamShakeLiftY: 8
+  _slamShakeOscillationCount: 2
+  _slamShakeKickPortion: 0.16
+  _slamShakeDamping: 3.2
+  _useSlamLandRoll: 1
+  _slamRollMaxAngle: 6
+  _slamRollDamping: 3.6
   _drawGuide: 1
 --- !u!1 &550013620
 GameObject:
@@ -2264,7 +2264,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1349983761}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -2908,32 +2908,80 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 91538458458665171, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _slamSpeed
-      value: 100
+      propertyPath: _cameraController
+      value: 
+      objectReference: {fileID: 519420033}
+    - target: {fileID: 91538458458665171, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _slamAnticipationDuration
+      value: 0.15
       objectReference: {fileID: 0}
-    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _normalJumpForceX
-      value: 12
+    - target: {fileID: 1068913684767308262, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.16
       objectReference: {fileID: 0}
     - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: _maxChargeJumpForceX
-      value: 42
+      value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _maxChargeJumpForceY
-      value: 32
+      propertyPath: _chargeForceCurve.m_Curve.Array.data[0].inSlope
+      value: 2.9228609
       objectReference: {fileID: 0}
+    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _chargeForceCurve.m_Curve.Array.data[1].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _chargeForceCurve.m_Curve.Array.data[0].outSlope
+      value: 2.9228609
+      objectReference: {fileID: 0}
+    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _chargeForceCurve.m_Curve.Array.data[1].inWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _chargeForceCurve.m_Curve.Array.data[1].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _chargeForceCurve.m_Curve.Array.data[0].outWeight
+      value: 0.0375
+      objectReference: {fileID: 0}
+    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _chargeScaleX
+      value: 1.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _chargeScaleY
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _chargeSlider
+      value: 
+      objectReference: {fileID: 1349983763}
+    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _maxChargeScaleX
+      value: 1.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _maxChargeScaleY
+      value: 0.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
+      propertyPath: _chargeSliderCanvasGroup
+      value: 
+      objectReference: {fileID: 1349983764}
     - target: {fileID: 8710293424457801612, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: m_Name
       value: '[Player]'
       objectReference: {fileID: 0}
     - target: {fileID: 8939529229189183035, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.23525
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8939529229189183035, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.17824
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8939529229189183035, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: m_LocalPosition.z

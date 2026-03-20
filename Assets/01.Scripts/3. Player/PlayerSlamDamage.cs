@@ -12,6 +12,9 @@ public class PlayerSlamDamage : MonoBehaviour
     [SerializeField] private float _slamDamagePerHeight = 4f;
     [SerializeField] private float _slamMaxDamage = 999f;
 
+    [Header("Slam Shake")]
+    [SerializeField] private float _slamShakeFullHeight = 8f;
+
     private bool _hasLastImpact;
     private Vector2 _lastImpactPoint;
     private float _lastSlamImpactRadius;
@@ -67,6 +70,17 @@ public class PlayerSlamDamage : MonoBehaviour
         //        $"radius: {impactRadius:F2}, damage: {damage:F2}, " +
         //        $"rawHits: {hits.Length}, uniqueTargets: {damagedTargets.Count}");
         //}
+    }
+
+    // 슬램 낙하 높이를 기준으로 카메라 흔들림용 0~1 비율을 계산한다.
+    public float EvaluateSlamShakeRatio(Vector2 impactPoint, float slamStartY)
+    {
+        float fallDistance = GetCurrentSlamFallDistance(slamStartY, impactPoint.y);
+
+        if (_slamShakeFullHeight <= 0f)
+            return fallDistance > 0f ? 1f : 0f;
+
+        return Mathf.Clamp01(fallDistance / _slamShakeFullHeight);
     }
 
     // 현재 슬램의 실제 낙하 높이를 계산한다.

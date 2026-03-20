@@ -5,6 +5,9 @@ public class PlayerAirAction : MonoBehaviour
 {
     #region Inspector
 
+    [Header("Reference | Inspector 연결 필요")]
+    [SerializeField] private CameraController _cameraController;
+
     [Header("Slam")]
     [SerializeField] private float _slamSpeed = 22f;
     [SerializeField] private float _slamAnticipationDuration = 0.08f;
@@ -32,6 +35,9 @@ public class PlayerAirAction : MonoBehaviour
     private void Awake()
     {
         _slamDamage = GetComponent<PlayerSlamDamage>();
+
+        if (_cameraController == null)
+            Debug.LogWarning($"{nameof(PlayerAirAction)}: _cameraController 가 비어 있어서 슬램 카메라 흔들림은 재생되지 않습니다.", this);
     }
 
     #endregion
@@ -89,11 +95,15 @@ public class PlayerAirAction : MonoBehaviour
             Debug.Log("Start Slam Dive");
     }
 
-    // 슬램 낙하 높이를 바탕으로 데미지를 적용한다.
+    // 슬램 낙하 높이를 바탕으로 데미지를 적용하고, 비율에 따라 카메라 흔들림을 재생한다.
     public void ApplySlamDamage(PlayerMovementMotor movement, Vector3 fallbackPosition, bool showDebugLog)
     {
         Vector2 impactPoint = movement.GetImpactPoint(fallbackPosition);
+
+        float slamRatio = _slamDamage.EvaluateSlamShakeRatio(impactPoint, _slamStartY);
+
         _slamDamage.ApplySlamDamage(impactPoint, _slamStartY, showDebugLog);
+        _cameraController?.PlaySlamLandShake(slamRatio, impactPoint.x);
     }
 
     // 착지 후 슬램 런타임 상태를 초기화한다.

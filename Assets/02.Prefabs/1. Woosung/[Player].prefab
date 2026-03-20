@@ -14832,6 +14832,7 @@ GameObject:
   - component: {fileID: 9208425882914112254}
   - component: {fileID: 5297336689268113706}
   - component: {fileID: 91538458458665171}
+  - component: {fileID: 5923006262828927960}
   m_Layer: 6
   m_Name: '[Player]'
   m_TagString: Untagged
@@ -15006,11 +15007,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerJumpAction
   _normalJumpForceY: 10
-  _normalJumpForceX: 4
+  _normalJumpForceX: 12
   _chargeThreshold: 0.12
   _maxChargeTime: 0.6
-  _maxChargeJumpForceY: 16
-  _maxChargeJumpForceX: 8
+  _maxChargeJumpForceY: 20
+  _maxChargeJumpForceX: 64
+  _chargeForceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.742857
+      outSlope: 2.742857
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.041666668
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.033126496
+      outSlope: -0.033126496
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.28750002
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _jumpBufferTime: 0.12
 --- !u!114 &91538458458665171
 MonoBehaviour:
@@ -15024,8 +15049,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c8522de7ad08b9489e721e249e459f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAirAction
-  _slamSpeed: 22
+  _slamSpeed: 100
   _slamAnticipationDuration: 0.08
+--- !u!114 &5923006262828927960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8710293424457801612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06795e1b862d4a54a8e84b26d8ed0b49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeEffect
+  _visualRoot: {fileID: 1068913684767308262}
+  _chargeSlider: {fileID: 0}
+  _chargeSliderCanvasGroup: {fileID: 0}
+  _chargeEnterDuration: 0.1
+  _chargeExitDuration: 0.1
+  _chargeScaleX: 1.12
+  _chargeScaleY: 0.88
+  _uiFadeDuration: 0.12
+  _useEffectiveRatioForSlider: 1
 --- !u!1 &9102630547781074732
 GameObject:
   m_ObjectHideFlags: 0
