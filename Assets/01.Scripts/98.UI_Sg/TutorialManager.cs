@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI; // 슬라이더 참조를 위해 필요
 
 public class TutorialManager : Singleton<TutorialManager>
 {
@@ -13,9 +14,16 @@ public class TutorialManager : Singleton<TutorialManager>
     [SerializeField] private Manual_Ui_sg _uiManager;
     [SerializeField] private Rigidbody2D _playerRb;
 
+    [Header("UI 감시 설정")]
+    [SerializeField] private Slider _chargeSlider; // 게이지 슬라이더 연결 필요
+
     [Header("튜토리얼 설정값")]
     [SerializeField] private float _slowMotionScale = 0.05f;
     [SerializeField] private float _postSlamDelay = 2.0f;
+
+    [Header("텍스트 사진")]
+    [SerializeField] private Image _press_Image;
+    [SerializeField] private Image _pressHold_Image;
 
     private bool _isPeakDetected = false;
 
@@ -30,13 +38,13 @@ public class TutorialManager : Singleton<TutorialManager>
         switch (_currentStep)
         {
             case TutorialStep.JumpCharge:
-                // [수정] 플레이어 코드를 고치지 않고, 물리 상태를 감시하여 점프 판단
-                // Y축 속도가 일정 이상 올라가면 점프한 것으로 간주
-                if (_playerRb.linearVelocity.y > 0.5f)
+                // 조건 1: 게이지가 50% 이상인가?
+                // 조건 2: 플레이어가 바닥을 떠나 위로 솟구치고 있는가? (점프 실행 여부 감시)
+                if (_chargeSlider != null && _chargeSlider.value >= 0.5f && _playerRb.linearVelocity.y > 0.1f)
                 {
                     _isPeakDetected = false;
                     SetStep(TutorialStep.InAir);
-                    Debug.Log("감시 로직: 플레이어 상승 감지 -> InAir 단계로 전환");
+                    Debug.Log("게이지 50% 충전 후 점프 확인: 최고점 감시 시작");
                 }
                 break;
 
@@ -45,10 +53,11 @@ public class TutorialManager : Singleton<TutorialManager>
                 break;
 
             case TutorialStep.SlamWait:
-                // [수정] 슬램 입력 감시 (Input System이나 기존 Input 클래스 사용)
-                // 플레이어 컨트롤러를 수정할 수 없으므로 여기서 직접 키 입력을 체크함
+                // 슬램 입력 감시
+                //트리거 3발동
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    _press_Image.gameObject.SetActive(false);
                     OnSlamInput();
                 }
                 break;
@@ -80,21 +89,27 @@ public class TutorialManager : Singleton<TutorialManager>
 
     public void OnTrigger1Entered()
     {
-        if (_currentStep == TutorialStep.MoveAD) SetStep(TutorialStep.JumpCharge);
+        if (_currentStep == TutorialStep.MoveAD)
+            
+            SetStep(TutorialStep.JumpCharge);
+            _pressHold_Image.gameObject.SetActive(true);
     }
 
     private void CheckPeakHeight()
     {
-        // 상승하다가 속도가 줄어들면 최고점으로 판단
+        if (_playerRb == null) return;
         if (!_isPeakDetected && _playerRb.linearVelocity.y <= 0.1f)
-        {
+        {   //트리거 2발동
+            _pressHold_Image.gameObject.SetActive(false);
             _isPeakDetected = true;
             SetStep(TutorialStep.SlamWait);
+            _press_Image.gameObject.SetActive(true);
+
         }
     }
 
     public void OnSlamInput()
-    {
+    {   //트리거 3발동
         if (_currentStep == TutorialStep.SlamWait)
             SetStep(TutorialStep.Finished);
     }
