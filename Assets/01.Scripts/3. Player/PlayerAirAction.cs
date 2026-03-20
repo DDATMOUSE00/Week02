@@ -12,6 +12,13 @@ public class PlayerAirAction : MonoBehaviour
     [SerializeField] private float _slamSpeed = 22f;
     [SerializeField] private float _slamAnticipationDuration = 0.08f;
 
+    [Header("Charged Slam")]
+    [SerializeField] private float _chargedSlamSpeed = 30f;
+    [SerializeField] private float _chargedSlamAnticipationDuration = 0.14f;
+
+    [Header("Effect")]
+    [SerializeField] private PlayerSlamBeforeEffect _effect;
+
     #endregion
 
     #region Runtime Fields
@@ -20,12 +27,13 @@ public class PlayerAirAction : MonoBehaviour
 
     private float _slamAnticipationTimer;
     private float _slamStartY;
+    private float _currentSlamSpeed;
 
     #endregion
 
     #region Properties
 
-    public float SlamSpeed => _slamSpeed;
+    public float SlamSpeed => _currentSlamSpeed > 0f ? _currentSlamSpeed : _slamSpeed;
 
     #endregion
 
@@ -58,14 +66,31 @@ public class PlayerAirAction : MonoBehaviour
     {
         controller.EnterSlamAnticipationState();
 
-        _slamAnticipationTimer = _slamAnticipationDuration;
+        bool useChargedSlam = controller.LastJumpWasCharged;
+
+        _slamAnticipationTimer = useChargedSlam
+            ? _chargedSlamAnticipationDuration
+            : _slamAnticipationDuration;
+
+        _currentSlamSpeed = useChargedSlam
+            ? _chargedSlamSpeed
+            : _slamSpeed;
+
         _slamStartY = controller.transform.position.y;
 
         movement.ClearJumpLaunchMomentum();
         movement.FreezeBody();
 
+        if (_effect != null && controller.LastJumpWasCharged)
+            _effect.Play();
+
         if (controller.ShowDebugLog)
-            Debug.Log($"Start Slam Anticipation | slamStartY: {_slamStartY:F2}");
+        {
+            Debug.Log(
+                $"Start Slam Anticipation | charged: {useChargedSlam}, " +
+                $"slamStartY: {_slamStartY:F2}, anticipation: {_slamAnticipationTimer:F2}, " +
+                $"slamSpeed: {_currentSlamSpeed:F2}");
+        }
     }
 
     // 슬램 예고 타이머를 갱신하고, 시간이 끝나면 슬램 돌입을 시작한다.
@@ -89,10 +114,10 @@ public class PlayerAirAction : MonoBehaviour
         controller.EnterSlamDiveState();
         _slamAnticipationTimer = 0f;
 
-        movement.SetVelocity(new Vector2(0f, -_slamSpeed));
+        movement.SetVelocity(new Vector2(0f, -SlamSpeed));
 
         if (controller.ShowDebugLog)
-            Debug.Log("Start Slam Dive");
+            Debug.Log($"Start Slam Dive | slamSpeed: {SlamSpeed:F2}");
     }
 
     // 슬램 낙하 높이를 바탕으로 데미지를 적용하고, 비율에 따라 카메라 흔들림을 재생한다.
@@ -110,6 +135,7 @@ public class PlayerAirAction : MonoBehaviour
     public void ResetRuntimeState()
     {
         _slamAnticipationTimer = 0f;
+        _currentSlamSpeed = 0f;
     }
 
     #endregion

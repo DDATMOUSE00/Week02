@@ -36,6 +36,9 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     private int _facingDirection = 1;
     private int _lockedActionFacingDirection = 1;
 
+    //이전 점프가 차지였는지?
+    private bool _lastJumpWasCharged;
+
     #endregion
 
     #region Properties
@@ -54,6 +57,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     public int FacingDirection => _facingDirection;
     public int LockedActionFacingDirection => _lockedActionFacingDirection;
     public bool ShowDebugLog => _showDebugLog;
+    public bool LastJumpWasCharged => _lastJumpWasCharged;
 
     public bool IsWalking =>
         IsGrounded &&
@@ -94,6 +98,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
         JumpAction?.Enable();
 
         _canSlam = true;
+        _lastJumpWasCharged = false;
         _lockedActionFacingDirection = _facingDirection;
     }
 
@@ -322,10 +327,11 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     }
 
     // 점프 발사 직후 상태를 갱신한다.
-    public void OnJumpLaunched()
+    public void OnJumpLaunched(bool wasChargedJump)
     {
         _isCharging = false;
         _canSlam = true;
+        _lastJumpWasCharged = wasChargedJump;
     }
 
     // 슬램 예고 상태에 진입한다.
@@ -352,6 +358,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
         _isSlamAnticipating = false;
         _isSlamming = false;
         _canSlam = true;
+        _lastJumpWasCharged = false;
     }
 
     // 접지 이탈로 차지를 취소한다.

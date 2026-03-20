@@ -15,6 +15,9 @@ public class PlayerSlamDamage : MonoBehaviour
     [Header("Slam Shake")]
     [SerializeField] private float _slamShakeFullHeight = 8f;
 
+    [Header("Effect")]
+    [SerializeField] private PlayerHitEffect _playerHitEffect;
+
     private bool _hasLastImpact;
     private Vector2 _lastImpactPoint;
     private float _lastSlamImpactRadius;
@@ -22,6 +25,9 @@ public class PlayerSlamDamage : MonoBehaviour
     // 슬램 낙하 높이를 바탕으로 범위와 데미지를 계산해 적에게 적용한다.
     public void ApplySlamDamage(Vector2 impactPoint, float slamStartY, bool showDebugLog)
     {
+        if(_playerHitEffect != null)
+            _playerHitEffect.Play();
+
         float fallDistance = GetCurrentSlamFallDistance(slamStartY, impactPoint.y);
         float impactRadius = GetSlamImpactRadius(fallDistance);
         float damage = GetSlamDamage(fallDistance);
