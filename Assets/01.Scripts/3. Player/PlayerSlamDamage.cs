@@ -15,6 +15,9 @@ public class PlayerSlamDamage : MonoBehaviour
     [Header("Slam Shake")]
     [SerializeField] private float _slamShakeFullHeight = 8f;
 
+    [Header("Effect")]
+    [SerializeField] private PlayerHitEffect _playerHitEffect;
+
     private bool _hasLastImpact;
     private Vector2 _lastImpactPoint;
     private float _lastSlamImpactRadius;
@@ -22,6 +25,9 @@ public class PlayerSlamDamage : MonoBehaviour
     // 슬램 낙하 높이를 바탕으로 범위와 데미지를 계산해 적에게 적용한다.
     public void ApplySlamDamage(Vector2 impactPoint, float slamStartY, bool showDebugLog)
     {
+        if(_playerHitEffect != null)
+            _playerHitEffect.Play();
+
         float fallDistance = GetCurrentSlamFallDistance(slamStartY, impactPoint.y);
         float impactRadius = GetSlamImpactRadius(fallDistance);
         float damage = GetSlamDamage(fallDistance);
@@ -43,33 +49,19 @@ public class PlayerSlamDamage : MonoBehaviour
             return;
         }
 
-        //HashSet<ISlamDamageable> damagedTargets = new();
+        for (int i = 0; i < hits.Length; i++)
+        {
+            Collider2D hit = hits[i];
+            if (hit == null)
+                continue;
 
-        //for (int i = 0; i < hits.Length; i++)
-        //{
-        //    Collider2D hit = hits[i];
-        //    if (hit == null)
-        //        continue;
+            EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
 
-        //    ISlamDamageable damageable = hit.GetComponent<ISlamDamageable>();
-        //    damageable ??= hit.GetComponentInParent<ISlamDamageable>();
+            if (enemy == null)
+                continue;
 
-        //    if (damageable == null)
-        //        continue;
-
-        //    if (!damagedTargets.Add(damageable))
-        //        continue;
-
-        //    damageable.TakeSlamDamage(damage, impactPoint);
-        //}
-
-        //if (showDebugLog)
-        //{
-        //    Debug.Log(
-        //        $"Slam Impact | fallDistance: {fallDistance:F2}, " +
-        //        $"radius: {impactRadius:F2}, damage: {damage:F2}, " +
-        //        $"rawHits: {hits.Length}, uniqueTargets: {damagedTargets.Count}");
-        //}
+            enemy.Kill();
+        }
     }
 
     // 슬램 낙하 높이를 기준으로 카메라 흔들림용 0~1 비율을 계산한다.
