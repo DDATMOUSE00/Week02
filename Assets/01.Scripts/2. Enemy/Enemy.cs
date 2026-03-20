@@ -1,6 +1,13 @@
-﻿using UnityEngine;
-using DG.Tweening;
+﻿using DG.Tweening;
+using UnityEngine;
+using static Enemy;
 
+[System.Serializable]
+public class EnemySpriteSet
+{
+    public Sprite IdleSprite; //Idle 상태 스프라이트
+    public Sprite PanicSprite; //Panic 상태 스프라이트
+}
 public class Enemy : MonoBehaviour
 {
     public enum EnemyState
@@ -9,9 +16,24 @@ public class Enemy : MonoBehaviour
         Panic,
         Dead
     }
+    public enum EnemyType
+    {
+        A,
+        B,
+        C,
+        D
+    }
 
-    [SerializeField] private Transform _visual; //캐릭터 스프라이트
+    [SerializeField] private Transform _visual; //스프라이트 움직이기 위해
     [SerializeField] private Tween _panicTween;
+
+    [Header("Sprite")]
+    [SerializeField] private SpriteRenderer _spriteRenderer; //적 스프라이트
+    [SerializeField] private EnemyType _enemyType; //적 종류
+    [SerializeField] private EnemySpriteSet _typeA; //A타입 스프라이트
+    [SerializeField] private EnemySpriteSet _typeB; //B타입 스프라이트
+    [SerializeField] private EnemySpriteSet _typeC; //C타입 스프라이트
+    [SerializeField] private EnemySpriteSet _typeD; //D타입 스프라이트
 
     [Header("State")]
     [SerializeField] private EnemyState _state;
@@ -25,8 +47,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _panicmaxSpeed = 1.3f; //공포상태 최고속도
 
     [Header("Panic Setting")]
-    [SerializeField] private float _detectRange = 5f; //플레이어 감지범위
-    [SerializeField] private float _runRange = 15; //공포상태에서 도망가는 범위
+    [SerializeField] private float _detectRange = 28f; //플레이어 감지범위
+    [SerializeField] private float _runRange = 35; //공포상태에서 도망가는 범위
     [SerializeField] private float _panicShake = 0.04f; //떨리는 정도
 
     [Header("Idle Setting")]
@@ -54,6 +76,9 @@ public class Enemy : MonoBehaviour
         _enemyHealth = GetComponent<EnemyHealth>();
         _rb = GetComponent<Rigidbody2D>();
 
+        if (_spriteRenderer == null)
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         if (_visual != null)
         {
             _visualOriginalPos = _visual.localPosition;
@@ -69,6 +94,51 @@ public class Enemy : MonoBehaviour
             _rb.linearVelocity = Vector2.zero;
             _rb.angularVelocity = 0f;
         }
+
+        UpdateSpriteByState();
+    }
+
+    private void UpdateSpriteByState()
+    {
+        if (_spriteRenderer == null)
+            return;
+
+        EnemySpriteSet spriteSet = GetCurrentSpriteSet();
+
+        switch (_state)
+        {
+            case EnemyState.Idle:
+                _spriteRenderer.sprite = spriteSet.IdleSprite;
+                break;
+
+            case EnemyState.Panic:
+                _spriteRenderer.sprite = spriteSet.PanicSprite;
+                break;
+
+            case EnemyState.Dead:
+                _spriteRenderer.sprite = spriteSet.PanicSprite; //Dead일 땐 Panic 상태로 죽을 거라서 Panic 스프라이트 유지
+                break;
+        }
+    }
+
+    private EnemySpriteSet GetCurrentSpriteSet()  //enemy 스프라이트 선택
+    {
+        switch (_enemyType)
+        {
+            case EnemyType.A:
+                return _typeA;
+
+            case EnemyType.B:
+                return _typeB;
+
+            case EnemyType.C:
+                return _typeC;
+
+            case EnemyType.D:
+                return _typeD;
+        }
+
+        return _typeA;
     }
 
     private void Update()
@@ -104,9 +174,10 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void Init(Transform targetPlayer) //오브젝트풀링을 위한
+    public void Init(Transform targetPlayer, EnemyType enemyType) //오브젝트풀링을 위한
     {
         _player = targetPlayer;
+        _enemyType = enemyType;
 
         _state = EnemyState.Idle;
         _dirtimer = 0f;
@@ -138,6 +209,8 @@ public class Enemy : MonoBehaviour
 
         if (_enemyHealth != null)
             _enemyHealth.Init();
+
+        UpdateSpriteByState();
     }
 
     public void OnDeath()
@@ -146,6 +219,8 @@ public class Enemy : MonoBehaviour
             return;
 
         _state = EnemyState.Dead;
+
+        UpdateSpriteByState();
 
         StopPanicShake();
 
@@ -213,6 +288,8 @@ public class Enemy : MonoBehaviour
             return;
 
         _state = newState;
+
+        UpdateSpriteByState();
 
         if (_state == EnemyState.Panic)
             StartPanicShake();
@@ -301,16 +378,17 @@ public class Enemy : MonoBehaviour
     //    // Panic 해제 범위
     //    Gizmos.color = Color.red;
     //    Gizmos.DrawWireSphere(transform.position, _runRange);
-
-    //    // Idle 배회 범위
-    //    Gizmos.color = Color.green;
-    //    Gizmos.DrawWireSphere(transform.position, _idleRange);
-
-    //    // 플레이어와 현재 거리 선
-    //    if (_player != null)
-    //    {
-    //        Gizmos.color = Color.white;
-    //        Gizmos.DrawLine(transform.position, _player.position);
-    //    }
     //}
-}
+
+        //    // Idle 배회 범위
+        //    Gizmos.color = Color.green;
+        //    Gizmos.DrawWireSphere(transform.position, _idleRange);
+
+        //    // 플레이어와 현재 거리 선
+        //    if (_player != null)
+        //    {
+        //        Gizmos.color = Color.white;
+        //        Gizmos.DrawLine(transform.position, _player.position);
+        //    }
+        //}
+    }
