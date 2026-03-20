@@ -13640,7 +13640,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 64
+      m_Bits: 256
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -14696,6 +14696,7 @@ GameObject:
   - component: {fileID: 1068913684767308262}
   - component: {fileID: 5900665064508955086}
   - component: {fileID: 6210652088205552834}
+  - component: {fileID: 9175364472112226412}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -14712,7 +14713,7 @@ Transform:
   m_GameObject: {fileID: 8607325350640508921}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14767,7 +14768,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 602b7fc8f4f3a1e41b714ac88632e254, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2e3bd26aa29b8d548ab4782d9d4052f2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -14792,9 +14793,29 @@ MonoBehaviour:
   _visualRoot: {fileID: 1068913684767308262}
   _spriteRenderer: {fileID: 5900665064508955086}
   _bounceHeight: 0.06
-  _stepDuration: 0.24
-  _tiltAngle: 5
+  _stepDuration: 0.2
+  _tiltAngle: 8
   _resetDuration: 0.08
+--- !u!114 &9175364472112226412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8607325350640508921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4586b8f82596d544297ba7497ce06af1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCharacterVisual
+  _controller: {fileID: 6132667342024847222}
+  _spriteRenderer: {fileID: 5900665064508955086}
+  _defaultSprite: {fileID: 21300000, guid: 2e3bd26aa29b8d548ab4782d9d4052f2, type: 3}
+  _jumpSprite: {fileID: 21300000, guid: 576d0a6405f9ac943a5f3815039e134b, type: 3}
+  _slamSprite: {fileID: 21300000, guid: b88f3c7c1edde264aba5e13214cf1cb9, type: 3}
+  _gorillaWalkBounce: {fileID: 6210652088205552834}
+  _walkDustParticle: {fileID: 485049913976522586}
+  _walkDustInterval: 0.12
 --- !u!1 &8710293424457801612
 GameObject:
   m_ObjectHideFlags: 0
@@ -14806,11 +14827,15 @@ GameObject:
   - component: {fileID: 8939529229189183035}
   - component: {fileID: 1474818717019631858}
   - component: {fileID: 2896271809508286414}
-  - component: {fileID: 3619001522830981856}
   - component: {fileID: 6132667342024847222}
-  m_Layer: 8
+  - component: {fileID: 6184929715748466212}
+  - component: {fileID: 9208425882914112254}
+  - component: {fileID: 5297336689268113706}
+  - component: {fileID: 91538458458665171}
+  - component: {fileID: 5923006262828927960}
+  m_Layer: 6
   m_Name: '[Player]'
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14908,65 +14933,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.28780285, y: 0.26659864}
   m_EdgeRadius: 0
---- !u!114 &3619001522830981856
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8710293424457801612}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e4fbf402c55add4aac919d4480431ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  _cameraController: {fileID: 0}
-  _moveActionReference: {fileID: 7498629009962558687, guid: c1dca101133dc7344b39f0a18713823e, type: 3}
-  _jumpActionReference: {fileID: 3867542368798081419, guid: c1dca101133dc7344b39f0a18713823e, type: 3}
-  _rb: {fileID: 1474818717019631858}
-  _groundCheck: {fileID: 3541704761379091181}
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _groundCheckSize: {x: 3, y: 0.15}
-  _jumpDetachIgnoreTime: 0.08
-  _groundMoveSpeed: 6
-  _airMoveSpeed: 6
-  _inputDeadZone: 0.1
-  _normalJumpForceY: 20
-  _normalJumpForceX: 16
-  _chargeThreshold: 0.12
-  _maxChargeTime: 1
-  _maxChargeJumpForceY: 32
-  _maxChargeJumpForceX: 8
-  _useJumpLaunchMomentum: 1
-  _airControlPercent: 0.1
-  _launchMomentumDecay: 0
-  _slamSpeed: 100
-  _slamAnticipationDuration: 0.08
-  _visualRoot: {fileID: 1068913684767308262}
-  _slamAnticipationScaleX: 1.12
-  _slamAnticipationScaleY: 0.88
-  _slamAnticipationRotateZ: 10
-  _slamDiveStretchScaleX: 0.92
-  _slamDiveStretchScaleY: 1.16
-  _slamDiveStretchDuration: 0.06
-  _riseGravityScale: 4.4
-  _fallGravityScale: 3.6
-  _slamGravityScale: 6
-  _jumpBufferTime: 0.12
-  _showDebugLog: 0
-  _spriteRenderer: {fileID: 5900665064508955086}
-  _defaultSprite: {fileID: 21300000, guid: 602b7fc8f4f3a1e41b714ac88632e254, type: 3}
-  _jumpSprite: {fileID: 21300000, guid: 257222e306e369747a54227be30be36b, type: 3}
-  _slamSprite: {fileID: 21300000, guid: f87f9bf819e1ba24ab1c2412d2851b5a, type: 3}
-  _gorillaWalkBounce: {fileID: 6210652088205552834}
-  _walkDustParticle: {fileID: 485049913976522586}
-  _walkDustInterval: 0.12
-  _slamLandEffectOnlyAfterChargedJump: 1
-  _slamLandImpactParticle: {fileID: 1305992075724188536}
-  _useSlamLandHitStop: 1
-  _slamLandHitStopDuration: 0.035
 --- !u!114 &6132667342024847222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14979,37 +14945,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d2fa73b5e6c1b498319d55ad5bed9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerControllerVersionTwo
-  _cameraController: {fileID: 0}
-  _moveActionReference: {fileID: 7498629009962558687, guid: c1dca101133dc7344b39f0a18713823e, type: 3}
-  _jumpActionReference: {fileID: 3867542368798081419, guid: c1dca101133dc7344b39f0a18713823e, type: 3}
-  _rb: {fileID: 1474818717019631858}
-  _groundCheck: {fileID: 3541704761379091181}
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _groundCheckSize: {x: 0.6, y: 0.12}
-  _jumpDetachIgnoreTime: 0.08
-  _groundMoveSpeed: 6
-  _airMoveSpeed: 6
-  _inputDeadZone: 0.1
-  _normalJumpForceY: 10
-  _normalJumpForceX: 12
-  _chargeThreshold: 0.12
-  _maxChargeTime: 0.6
-  _maxChargeJumpForceY: 16
-  _maxChargeJumpForceX: 42
-  _useJumpLaunchMomentum: 1
-  _airControlPercent: 0.1
-  _launchMomentumDecay: 0
-  _slamSpeed: 100
-  _slamAnticipationDuration: 0.08
-  _visualRoot: {fileID: 1068913684767308262}
-  _slamAnticipationScaleX: 1.12
-  _slamAnticipationScaleY: 0.88
-  _slamAnticipationRotateZ: 10
-  _slamDiveStretchScaleX: 0.92
-  _slamDiveStretchScaleY: 1.16
-  _slamDiveStretchDuration: 0.06
+  _moveActionReference: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  _jumpActionReference: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  _preLandBufferCheckDistance: 0.28
+  _showDebugLog: 0
+--- !u!114 &6184929715748466212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8710293424457801612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebec01ca5cb7814493c54e3bbc67989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSlamDamage
   _slamDamageLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -15019,23 +14970,110 @@ MonoBehaviour:
   _slamBaseDamage: 10
   _slamDamagePerHeight: 4
   _slamMaxDamage: 999
+  _slamShakeFullHeight: 8
+--- !u!114 &9208425882914112254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8710293424457801612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04c344101bbe93441ad52194abe966a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementMotor
+  _groundCheck: {fileID: 3541704761379091181}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  _groundCheckSize: {x: 0.6, y: 0.12}
+  _jumpDetachIgnoreTime: 0.08
+  _groundMoveSpeed: 6
+  _inputDeadZone: 0.1
+  _useJumpLaunchMomentum: 1
+  _launchMomentumDecay: 0
   _riseGravityScale: 2.2
   _fallGravityScale: 3.6
-  _slamGravityScale: 6
+--- !u!114 &5297336689268113706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8710293424457801612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24c8df79d129f84b922090482f1468d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerJumpAction
+  _normalJumpForceY: 10
+  _normalJumpForceX: 12
+  _chargeThreshold: 0.12
+  _maxChargeTime: 0.6
+  _maxChargeJumpForceY: 20
+  _maxChargeJumpForceX: 110
+  _chargeForceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.9228609
+      outSlope: 2.9228609
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.0375
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _jumpBufferTime: 0.12
-  _preLandBufferCheckDistance: 0.28
-  _showDebugLog: 0
-  _spriteRenderer: {fileID: 5900665064508955086}
-  _defaultSprite: {fileID: 21300000, guid: 602b7fc8f4f3a1e41b714ac88632e254, type: 3}
-  _jumpSprite: {fileID: 21300000, guid: 257222e306e369747a54227be30be36b, type: 3}
-  _slamSprite: {fileID: 21300000, guid: f87f9bf819e1ba24ab1c2412d2851b5a, type: 3}
-  _gorillaWalkBounce: {fileID: 6210652088205552834}
-  _walkDustParticle: {fileID: 485049913976522586}
-  _walkDustInterval: 0.12
-  _slamLandEffectOnlyAfterChargedJump: 1
-  _slamLandImpactParticle: {fileID: 1305992075724188536}
-  _useSlamLandHitStop: 1
-  _slamLandHitStopDuration: 0.035
+--- !u!114 &91538458458665171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8710293424457801612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c8522de7ad08b9489e721e249e459f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAirAction
+  _cameraController: {fileID: 0}
+  _slamSpeed: 100
+  _slamAnticipationDuration: 0.15
+--- !u!114 &5923006262828927960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8710293424457801612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06795e1b862d4a54a8e84b26d8ed0b49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeEffect
+  _visualRoot: {fileID: 1068913684767308262}
+  _chargeSlider: {fileID: 0}
+  _chargeSliderCanvasGroup: {fileID: 0}
+  _yOffest: 0
+  _showOffest: 0.1
+  _chargeExitDuration: 0.1
+  _maxChargeScaleX: 1.13
+  _maxChargeScaleY: 0.64
+  _uiFadeDuration: 0.12
 --- !u!1 &9102630547781074732
 GameObject:
   m_ObjectHideFlags: 0
