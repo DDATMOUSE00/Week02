@@ -14713,7 +14713,7 @@ Transform:
   m_GameObject: {fileID: 8607325350640508921}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14835,7 +14835,7 @@ GameObject:
   - component: {fileID: 5923006262828927960}
   m_Layer: 6
   m_Name: '[Player]'
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14970,6 +14970,7 @@ MonoBehaviour:
   _slamBaseDamage: 10
   _slamDamagePerHeight: 4
   _slamMaxDamage: 999
+  _slamShakeFullHeight: 8
 --- !u!114 &9208425882914112254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15011,27 +15012,27 @@ MonoBehaviour:
   _chargeThreshold: 0.12
   _maxChargeTime: 0.6
   _maxChargeJumpForceY: 20
-  _maxChargeJumpForceX: 64
+  _maxChargeJumpForceX: 110
   _chargeForceCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2.742857
-      outSlope: 2.742857
+      inSlope: 2.9228609
+      outSlope: 2.9228609
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.041666668
+      outWeight: 0.0375
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: -0.033126496
-      outSlope: -0.033126496
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.28750002
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -15049,8 +15050,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c8522de7ad08b9489e721e249e459f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAirAction
+  _cameraController: {fileID: 0}
   _slamSpeed: 100
-  _slamAnticipationDuration: 0.08
+  _slamAnticipationDuration: 0.15
 --- !u!114 &5923006262828927960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15066,12 +15068,12 @@ MonoBehaviour:
   _visualRoot: {fileID: 1068913684767308262}
   _chargeSlider: {fileID: 0}
   _chargeSliderCanvasGroup: {fileID: 0}
-  _chargeEnterDuration: 0.1
+  _yOffest: 0
+  _showOffest: 0.1
   _chargeExitDuration: 0.1
-  _chargeScaleX: 1.12
-  _chargeScaleY: 0.88
+  _maxChargeScaleX: 1.13
+  _maxChargeScaleY: 0.64
   _uiFadeDuration: 0.12
-  _useEffectiveRatioForSlider: 1
 --- !u!1 &9102630547781074732
 GameObject:
   m_ObjectHideFlags: 0

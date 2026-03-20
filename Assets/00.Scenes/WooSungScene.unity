@@ -2911,62 +2911,10 @@ PrefabInstance:
       propertyPath: _cameraController
       value: 
       objectReference: {fileID: 519420033}
-    - target: {fileID: 91538458458665171, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _slamAnticipationDuration
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1068913684767308262, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.16
-      objectReference: {fileID: 0}
-    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _maxChargeJumpForceX
-      value: 110
-      objectReference: {fileID: 0}
-    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _chargeForceCurve.m_Curve.Array.data[0].inSlope
-      value: 2.9228609
-      objectReference: {fileID: 0}
-    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _chargeForceCurve.m_Curve.Array.data[1].inSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _chargeForceCurve.m_Curve.Array.data[0].outSlope
-      value: 2.9228609
-      objectReference: {fileID: 0}
-    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _chargeForceCurve.m_Curve.Array.data[1].inWeight
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _chargeForceCurve.m_Curve.Array.data[1].outSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5297336689268113706, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _chargeForceCurve.m_Curve.Array.data[0].outWeight
-      value: 0.0375
-      objectReference: {fileID: 0}
-    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _chargeScaleX
-      value: 1.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _chargeScaleY
-      value: 0.8
-      objectReference: {fileID: 0}
     - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: _chargeSlider
       value: 
       objectReference: {fileID: 1349983763}
-    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _maxChargeScaleX
-      value: 1.13
-      objectReference: {fileID: 0}
-    - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
-      propertyPath: _maxChargeScaleY
-      value: 0.64
-      objectReference: {fileID: 0}
     - target: {fileID: 5923006262828927960, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: _chargeSliderCanvasGroup
       value: 
