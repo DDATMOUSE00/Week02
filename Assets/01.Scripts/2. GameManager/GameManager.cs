@@ -1,9 +1,14 @@
-﻿using UnityEngine;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
 
-    public override void Init(){} // Init 에 어떤거?
+    public override void Init()
+    {
+        CurrentState = GameState.Lobby;
+        _isStageEnded = false;
+    }
 
     [Header("Game Flow")]
 
@@ -43,18 +48,18 @@ public class GameManager : Singleton<GameManager>
         CurrentState = nextstate;
         if (nextstate == GameState.Play)
         {
-            Debug.LogError("GameStart");
+            Debug.Log("GameStart");
         }
         if (nextstate == GameState.Clear || nextstate == GameState.GameOver) 
         {
-            Debug.LogError("GameStop");
-            Debug.LogError("몬스터 스폰 정지");
+            Debug.Log("GameStop");
+            Debug.Log("몬스터 스폰 정지");
             // 이건 EnemySpawner에서 이벤트 구독해서 구현해야함. 여기서 구현하는게 아님.
             //Player MoveLock true
         }
         if(nextstate == GameState.Ready)
         {
-            Debug.LogError("시작컷씬 실행");
+            Debug.Log("시작컷씬 실행");
             //Player MoveLock true
 
         }
