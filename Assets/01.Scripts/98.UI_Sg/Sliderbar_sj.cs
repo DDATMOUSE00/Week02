@@ -13,12 +13,12 @@ public class Sliderbar_sj : MonoBehaviour
     [SerializeField] private float _trainIconY;
 
     [Header("할당X, 자동으로 할당됨")]
-    [SerializeField] private RemainDistance_sj _remainDistance;
+    private RemainDistance_sj _remainDistance;
 
     [Space(10)]
-    [SerializeField] private bool _stageStart = false;
-    [SerializeField] private float _remain;
-    [SerializeField] private float _time;
+    private bool _stageStart = false;
+    private float _remain;
+    private float _time;
 
 
 
