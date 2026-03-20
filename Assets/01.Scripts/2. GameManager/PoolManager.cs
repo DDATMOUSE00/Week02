@@ -8,7 +8,7 @@ public class PoolManager : Singleton<PoolManager>
     [SerializeField] private int _initialSize = 200;
     [SerializeField] private Transform _poolParent;
 
-    private Queue<Enemy> enemyPool = new Queue<Enemy>();
+    [SerializeField] private Queue<Enemy> _enemyPool = new Queue<Enemy>();
 
     protected override void Awake()
     {
@@ -27,18 +27,18 @@ public class PoolManager : Singleton<PoolManager>
     {
         Enemy newEnemy = Instantiate(_enemyPrefab, _poolParent);
         newEnemy.gameObject.SetActive(false);
-        enemyPool.Enqueue(newEnemy);
+        _enemyPool.Enqueue(newEnemy);
         return newEnemy;
     }
 
     public Enemy GetEnemy()
     {
-        if (enemyPool.Count == 0)
+        if (_enemyPool.Count == 0)
         {
             CreateEnemy();
         }
 
-        Enemy enemy = enemyPool.Dequeue();
+        Enemy enemy = _enemyPool.Dequeue();
         enemy.gameObject.SetActive(true);
         return enemy;
     }
@@ -47,7 +47,7 @@ public class PoolManager : Singleton<PoolManager>
     {
         enemy.gameObject.SetActive(false);
         enemy.transform.SetParent(_poolParent);
-        enemyPool.Enqueue(enemy);
+        _enemyPool.Enqueue(enemy);
     }
 
     public override void Init()
