@@ -62,11 +62,6 @@ public class ComboUITextBehaviour : MonoBehaviour
 
         if (_punchScaleTarget == null)
             _punchScaleTarget = selfRect;
-
-        if (_remainScaleTarget == _punchScaleTarget)
-        {
-            Debug.LogWarning("ComboUITextBehaviour : _remainScaleTarget 과 _punchScaleTarget 은 분리하는 것이 좋다. 같은 타깃이면 스케일 모션이 서로 간섭할 수 있다.", this);
-        }
     }
 
     private void OnEnable()
