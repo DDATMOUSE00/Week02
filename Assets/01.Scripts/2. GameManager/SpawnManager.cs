@@ -10,7 +10,7 @@ public class SpawnManager : MonoBehaviour
     [Header("Distance Spawn")]
     [SerializeField] private float _spawnInterval = 50f; //마지막 스폰 거리에서 스폰 거리 설정
     [SerializeField] private int _spawnCountPerInterval = 80; //소환 될 마릿수(랜덤 될듯)
-    [SerializeField] private float _minSpawnDistanceFromPlayer = 5f; //플레이어랑 가까우면 안 나오게
+    [SerializeField] private float _minSpawnDistanceFromPlayer = 28f; //플레이어랑 가까우면 안 나오게
 
     [SerializeField] private Vector3 _lastSpawnPosition; //마지막 스폰 기준 위치
     [SerializeField] private bool _isSpawnActive; //거리 스폰 활성화 여부
@@ -40,7 +40,6 @@ public class SpawnManager : MonoBehaviour
     {
         if (_player == null)
         {
-            Debug.Log("_player가 연결되지 않음");
             return;
         }
 
@@ -51,8 +50,6 @@ public class SpawnManager : MonoBehaviour
 
         _lastSpawnPosition = _player.position;
         _isSpawnActive = true;
-
-        Debug.Log("Start에서 스폰 활성화");
     }
 
     private void Update()
@@ -101,6 +98,7 @@ public class SpawnManager : MonoBehaviour
     }
 
 
+    //spawn인데 안 쓸듯
     //public void Spawn(int count)
     //{
     //    if (_player == null)
@@ -131,30 +129,30 @@ public class SpawnManager : MonoBehaviour
         int tryCount = 0;
         int maxTryCount = count * 5;
 
+
+        float minX = _player.position.x + _spawnForwardDistance;
+        float maxX = minX + _spawnXRandomRange;
+        float centerX = (minX + maxX) * 0.5f;
+        float halfRange = (maxX - minX) * 0.5f;
+
         while (spawnedCount < count && tryCount < maxTryCount)
         {
             tryCount++;
 
             Enemy enemy = PoolManager.Instance.GetEnemy();
 
-            //float offsetX = GetGaussianOffset(15f, 10); //(넓이, 몰리는정도)
-            //Vector3 spawnPos = center + new Vector3(offsetX, 0f, 0f);
+            float offsetX = GetGaussianOffset(halfRange, 3);
+            float spawnX = centerX + offsetX;
 
-            float offsetX = GetGaussianOffset(_spawnXRandomRange, 3); //(넓이 몰리는 정도)
+            //오른쪽 스폰 구간 밖으로 안 나가게 고정
+            spawnX = Mathf.Clamp(spawnX, minX, maxX);
 
-            //플레이어 오른쪽 바닥에서 생성
-            float spawnX = _player.position.x + _spawnForwardDistance + offsetX;
             Vector3 spawnPos = new Vector3(spawnX, _groundY, 0f);
 
-            //가까우면 소환 취소
-            if (_distanceChecker != null && _distanceChecker.IsInRange(spawnPos, _minSpawnDistanceFromPlayer))
-            {
-                PoolManager.Instance.ReturnEnemy(enemy);
-                continue;
-            }
-
             enemy.transform.position = spawnPos;
-            enemy.Init(_player);
+
+            Enemy.EnemyType randomType = (Enemy.EnemyType)Random.Range(0, 4);
+            enemy.Init(_player, randomType);
 
             spawnedCount++;
         }
@@ -175,6 +173,8 @@ public class SpawnManager : MonoBehaviour
 
 
 
+
+    //기즈모
     private void OnDrawGizmos()
     {
         if (_player == null)
