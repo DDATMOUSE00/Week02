@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7883344486485346768}
   - component: {fileID: 3410368792122736209}
   m_Layer: 0
-  m_Name: BackgroundGenerator
+  m_Name: BackgroundGeneratorRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,6 +48,9 @@ MonoBehaviour:
   _veryFarLayerRoot: {fileID: 0}
   _farLayerRoot: {fileID: 0}
   _frontLayerRoot: {fileID: 0}
+  _trainRailLayerRoot: {fileID: 0}
+  _trainRailPrefab: {fileID: 430755500266967413, guid: 855d62c7261ccbe47b054762ef4a9917, type: 3}
+  _trainRailZ: 0
   _veryFarMountainPrefab: {fileID: 4581805170861728863, guid: 1556b8d841fad994e934743096dd8224, type: 3}
   _farBuildingPrefab: {fileID: 8973405774428622669, guid: 87f386e031ab22149bf424addaef1249, type: 3}
   _frontBuildingPrefabs:
@@ -57,7 +60,7 @@ MonoBehaviour:
   - {fileID: 1094739479852101368, guid: bacab0a22c641154c8cc157cc836760a, type: 3}
   _frontGapRange: {x: 10, y: 15}
   _avoidRepeat: 1
-  _leftPadding: -20
-  _rightPadding: -100
+  _leftPadding: 0
+  _rightPadding: 0
   _useFixedSeed: 0
   _randomSeed: 0

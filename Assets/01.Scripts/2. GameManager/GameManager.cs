@@ -44,6 +44,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (_isStageEnded) return;
         _isStageEnded = true;
+        Debug.LogError("GameOver");
 
         ChangeState(GameState.GameOver);
         EventManager.Instance.PostNotification(MEventType.StageFailed, this);
