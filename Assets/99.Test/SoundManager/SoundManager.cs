@@ -17,7 +17,7 @@ public enum PlayerSFX
     SlamLight,
     Charge,
     Levelup,
-    Pint
+    Ping
 }
 
 

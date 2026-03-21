@@ -36,6 +36,12 @@ public class Test_SoundManager : MonoBehaviour
         if (keyboard.rKey.wasPressedThisFrame)
             SoundManager.Instance.PlaySFX(PlayerSFX.Charge);
 
+        if (keyboard.gKey.wasPressedThisFrame)
+            SoundManager.Instance.PlaySFX(PlayerSFX.Levelup);
+            
+        if (keyboard.hKey.wasPressedThisFrame)
+            SoundManager.Instance.PlaySFX(PlayerSFX.Ping);
+
         // --- Utility Testing ---
         if (keyboard.escapeKey.wasPressedThisFrame)
             SoundManager.Instance.StopBGM();
