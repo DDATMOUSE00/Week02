@@ -10,7 +10,7 @@ public class SpawnManager : MonoBehaviour
     [Header("Distance Spawn")]
     [SerializeField] private float _spawnInterval = 150f; //마지막 스폰 거리에서 스폰 거리 설정
     [SerializeField] private int _spawnCountPerInterval = 50; //소환 될 마릿수(랜덤 될듯)
-    [SerializeField] private float _minSpawnDistanceFromPlayer = 5f; //플레이어랑 가까우면 안 나오게
+    //[SerializeField] private float _minSpawnDistanceFromPlayer = 5f; //플레이어랑 가까우면 안 나오게
 
     [SerializeField] private Vector3 _lastSpawnPosition; //마지막 스폰 기준 위치
     [SerializeField] private bool _isSpawnActive; //거리 스폰 활성화 여부
@@ -24,13 +24,15 @@ public class SpawnManager : MonoBehaviour
     {
         if (EventManager.Instance != null)
         {
-            EventManager.Instance.AddListener(MEventType.GameStateChanged, OnRespawnStart);
+            EventManager.Instance.AddListener(MEventType.StageStarted, OnRespawnStart);
+            EventManager.Instance.AddListener(MEventType.GameStateChanged, OnRespawnEnd);
         }
     }
     private void OnDisable()
     {
         if (EventManager.Instance != null)
         {
+            EventManager.Instance.RemoveListener(MEventType.StageStarted, this);
             EventManager.Instance.RemoveListener(MEventType.GameStateChanged, this);
         }
 
@@ -57,6 +59,14 @@ public class SpawnManager : MonoBehaviour
         _lastSpawnPosition = _player.position;
         _isSpawnActive = true;
         Debug.Log("Start");
+    }
+
+    private void OnRespawnEnd(MEventType type, Component sender, System.EventArgs args)
+    {
+        _isSpawnActive = false;
+
+        PoolManager.Instance.ReturnAllEnemies();
+        Debug.Log("End");
     }
 
     public void CheckDistanceSpawn(Vector3 playerPosition)
