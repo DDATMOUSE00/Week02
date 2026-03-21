@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class RemainDistance_sj : MonoBehaviour
 {
-    [Header("°ÔÀÓÀÇ ½ÃÀÛ°ú ³¡ ÁÂÇ¥")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û°ï¿½ ï¿½ï¿½ ï¿½ï¿½Ç¥")]
     [SerializeField] private GameObject _startpoint;
     [SerializeField] private GameObject _endpoint;
     [SerializeField] private GameObject _playerpoint;
     
 
-    [Header("»ó´Ü UI¿¡ ÇÊ¿äÇÑ ÁÂÇ¥")]
+    [Header("ï¿½ï¿½ï¿½ UIï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥")]
      private float _iconStart;
      private float _iconEnd;
     [SerializeField] private GameObject _uiStartPoint;
@@ -41,13 +41,7 @@ public class RemainDistance_sj : MonoBehaviour
     }
 
 
-    public float TrainDistance()
-    {
-        _remainTime = GetComponent<TrainTimer>().RemainingTime;
-        _totalTime = GetComponent<TrainTimer>().totalTime;
-        
-        return  _iconStart+(_iconEnd - _iconStart) * Mathf.Clamp(_remainTime / _totalTime, 0, 1);
-    }
+    
     public float RemainDistance()
     {
         _startPosition = _startpoint.transform.localPosition.x;

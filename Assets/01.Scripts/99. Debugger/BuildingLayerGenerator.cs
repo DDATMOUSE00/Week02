@@ -16,7 +16,13 @@ public class BuildingLayerGenerator : MonoBehaviour
     [SerializeField] private Transform _veryFarLayerRoot;
     [SerializeField] private Transform _farLayerRoot;
     [SerializeField] private Transform _frontLayerRoot;
+    
+    [Header("기차세팅")]
 
+    [SerializeField] private Transform _trainRailLayerRoot;
+    
+    [SerializeField] private GameObject _trainRailPrefab;
+    [SerializeField] private float _trainRailZ = 0f; 
     [Header("Very Far Layer Settings")]
     [SerializeField] private GameObject _veryFarMountainPrefab;
    
@@ -45,7 +51,10 @@ public class BuildingLayerGenerator : MonoBehaviour
         GenerateVeryFarLayer();
         GenerateFarLayer();
         GenerateFrontLayer();
+        GenerateTrainRailLayer();
     }
+
+
     public void GenerateVeryFarLayer()
     {
         if (_veryFarLayerRoot == null || _veryFarMountainPrefab == null)
@@ -137,7 +146,45 @@ public class BuildingLayerGenerator : MonoBehaviour
             currentLeftX += worldWidth;
         }
     }
+    public void GenerateTrainRailLayer()
+    {
+        if (_trainRailLayerRoot == null || _trainRailPrefab == null)
+        {
+            return;
+        }
 
+        if (!TryGetFloorRange(out float minX, out float maxX))
+        {
+            return;
+        }
+
+        ClearLayer(_trainRailLayerRoot);
+
+        float startX = minX - _leftPadding;
+        float endX = maxX + _rightPadding;
+
+        float worldWidth = GetPrefabWidth(_trainRailPrefab);
+        if (worldWidth <= 0f)
+        {
+            Debug.LogWarning("프리펩 크기문제");
+            return;
+        }
+
+        float currentLeftX = startX;
+
+        while (currentLeftX < endX)
+        {
+            GameObject instance = CreateInstance(_trainRailPrefab, _trainRailLayerRoot);
+            instance.name = $"{_trainRailPrefab.name}_TrainRail";
+
+            Vector3 pos = instance.transform.position;
+            pos.x = currentLeftX + (worldWidth * 0.5f);
+            pos.z = _trainRailZ;
+            instance.transform.position = pos;
+
+            currentLeftX += worldWidth; //무간격
+        }
+    }
     public void GenerateFrontLayer()
     {
         if (_frontLayerRoot == null || _frontBuildingPrefabs == null || _frontBuildingPrefabs.Count == 0)
@@ -207,6 +254,7 @@ public class BuildingLayerGenerator : MonoBehaviour
         ClearLayer(_veryFarLayerRoot);
         ClearLayer(_farLayerRoot);
         ClearLayer(_frontLayerRoot);
+        ClearLayer(_trainRailLayerRoot);
     }
 
     public void ClearFarLayer()
