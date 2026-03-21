@@ -6371,7 +6371,7 @@ PrefabInstance:
       objectReference: {fileID: 459899554}
     - target: {fileID: 2064479366512104761, guid: 08bf7373fd15be349922c575d703db17, type: 3}
       propertyPath: _initialSize
-      value: 400
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 5033074320114786687, guid: 08bf7373fd15be349922c575d703db17, type: 3}
       propertyPath: m_Name
@@ -42804,7 +42804,6 @@ MonoBehaviour:
   _chargeSlider: {fileID: 1349983763}
   _chargeSliderCanvasGroup: {fileID: 1349983764}
   _yOffest: 0
-  _showOffest: 0.1
   _chargeExitDuration: 0.1
   _maxChargeScaleX: 1.13
   _maxChargeScaleY: 0.64
@@ -42861,9 +42860,10 @@ MonoBehaviour:
   _slamImpactBoxSizePerHeight: {x: 1, y: 0}
   _slamImpactBoxSizePerChargeRatio: {x: 20, y: 1}
   _slamMaxImpactBoxSize: {x: 100, y: 3}
-  _slamBaseDamage: 10
-  _slamDamagePerHeight: 4
-  _slamMaxDamage: 999
+  _comboLevel00ImpactBoxBonus: {x: 0, y: 0}
+  _comboLevel01ImpactBoxBonus: {x: 0.75, y: 0.75}
+  _comboLevel02ImpactBoxBonus: {x: 1.5, y: 1.5}
+  _comboLevel03ImpactBoxBonus: {x: 2.25, y: 2.25}
   _playerCombo: {fileID: 9208425882444731572}
   _slamShakeFullHeight: 8
   _playerHitEffect: {fileID: 9208425882444731571}
@@ -52954,9 +52954,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f78bb9a3c80ddb545a56db00eb53bfb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHitEffect
+  _playerCombo: {fileID: 9208425882444731572}
   _normalHitParticle: {fileID: 860333442}
-  _starParticle: {fileID: 1305992077405437236}
-  _hitParticle: {fileID: 420995441249368361}
+  _starLevel_1_Particle: {fileID: 0}
+  _starLevel_2_Particle: {fileID: 0}
+  _starLevel_3_Particle: {fileID: 0}
+  _hitLevel_1_Particle: {fileID: 0}
+  _hitLevel_2_Particle: {fileID: 0}
+  _hitLevel_3_Particle: {fileID: 0}
   _starWorldOffset: {x: 0, y: 0, z: 0}
   _hitWorldOffset: {x: 0, y: 0, z: 0}
   _useForcedY: 1
@@ -52976,6 +52981,10 @@ MonoBehaviour:
   _maxMultipy: {x: 3, y: 1}
   _maxCombo: 100
   _comboDuration: 3
+  _combo_level_01: 100
+  _combo_level_02: 100
+  _combo_level_03: 100
+  _comboText: {fileID: 0}
 --- !u!114 &9208425882444731573
 MonoBehaviour:
   m_ObjectHideFlags: 0

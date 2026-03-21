@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HotdogStore : MonoBehaviour
 {
@@ -55,17 +55,6 @@ public class HotdogStore : MonoBehaviour
         // 콜라이더 킴
         if (_col != null)
             _col.enabled = true;
-    }
-
-    // Delete this before using;
-    private void Update()
-    {
-        // If some external script set the state to Dead, but we haven't finished the "done" logic
-        if (!_isAlive && !_hasCalled)
-        {
-            ExecuteDeathSequence(); 
-            _hasCalled = true;
-        }
     }
 
     public void DestoyStore()
