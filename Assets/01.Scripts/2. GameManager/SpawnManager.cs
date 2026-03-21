@@ -8,16 +8,16 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Transform[] _spawnPoints; //스폰 위치
 
     [Header("Distance Spawn")]
-    [SerializeField] private float _spawnInterval = 50f; //마지막 스폰 거리에서 스폰 거리 설정
-    [SerializeField] private int _spawnCountPerInterval = 80; //소환 될 마릿수(랜덤 될듯)
+    [SerializeField] private float _spawnInterval = 150f; //마지막 스폰 거리에서 스폰 거리 설정
+    [SerializeField] private int _spawnCountPerInterval = 50; //소환 될 마릿수(랜덤 될듯)
     [SerializeField] private float _minSpawnDistanceFromPlayer = 5f; //플레이어랑 가까우면 안 나오게
 
     [SerializeField] private Vector3 _lastSpawnPosition; //마지막 스폰 기준 위치
     [SerializeField] private bool _isSpawnActive; //거리 스폰 활성화 여부
 
-    [SerializeField] private float _groundY = -4.8f; //바닥 높이
+    [SerializeField] private float _groundY = -4.3f; //바닥 높이
     [SerializeField] private float _spawnForwardDistance = 50f; //플레이어 기준 앞쪽 거리
-    [SerializeField] private float _spawnXRandomRange = 60f; //X축 랜덤 퍼짐 범위
+    [SerializeField] private float _spawnXRandomRange = 200f; //X축 랜덤 퍼짐 범위
 
 
     private void OnEnable()
@@ -34,25 +34,6 @@ public class SpawnManager : MonoBehaviour
             EventManager.Instance.RemoveListener(MEventType.GameStateChanged, this);
         }
 
-    }
-
-    private void Start()
-    {
-        if (_player == null)
-        {
-            Debug.Log("_player가 연결되지 않음");
-            return;
-        }
-
-        if (_distanceChecker != null)
-        {
-            _distanceChecker.Init(_player);
-        }
-
-        _lastSpawnPosition = _player.position;
-        _isSpawnActive = true;
-
-        Debug.Log("Start에서 스폰 활성화");
     }
 
     private void Update()
@@ -75,6 +56,7 @@ public class SpawnManager : MonoBehaviour
 
         _lastSpawnPosition = _player.position;
         _isSpawnActive = true;
+        Debug.Log("Start");
     }
 
     public void CheckDistanceSpawn(Vector3 playerPosition)
@@ -101,6 +83,7 @@ public class SpawnManager : MonoBehaviour
     }
 
 
+    //spawn인데 안 쓸듯
     //public void Spawn(int count)
     //{
     //    if (_player == null)
@@ -131,30 +114,30 @@ public class SpawnManager : MonoBehaviour
         int tryCount = 0;
         int maxTryCount = count * 5;
 
+
+        float minX = _player.position.x + _spawnForwardDistance;
+        float maxX = minX + _spawnXRandomRange;
+        float centerX = (minX + maxX) * 0.5f;
+        float halfRange = (maxX - minX) * 0.5f;
+
         while (spawnedCount < count && tryCount < maxTryCount)
         {
             tryCount++;
 
             Enemy enemy = PoolManager.Instance.GetEnemy();
 
-            //float offsetX = GetGaussianOffset(15f, 10); //(넓이, 몰리는정도)
-            //Vector3 spawnPos = center + new Vector3(offsetX, 0f, 0f);
+            float offsetX = GetGaussianOffset(halfRange, 7);
+            float spawnX = centerX + offsetX;
 
-            float offsetX = GetGaussianOffset(_spawnXRandomRange, 3); //(넓이 몰리는 정도)
+            //오른쪽 스폰 구간 밖으로 안 나가게 고정
+            spawnX = Mathf.Clamp(spawnX, minX, maxX);
 
-            //플레이어 오른쪽 바닥에서 생성
-            float spawnX = _player.position.x + _spawnForwardDistance + offsetX;
             Vector3 spawnPos = new Vector3(spawnX, _groundY, 0f);
 
-            //가까우면 소환 취소
-            if (_distanceChecker != null && _distanceChecker.IsInRange(spawnPos, _minSpawnDistanceFromPlayer))
-            {
-                PoolManager.Instance.ReturnEnemy(enemy);
-                continue;
-            }
-
             enemy.transform.position = spawnPos;
-            enemy.Init(_player);
+
+            Enemy.EnemyType randomType = (Enemy.EnemyType)Random.Range(0, 4);
+            enemy.Init(_player, randomType);
 
             spawnedCount++;
         }
@@ -175,25 +158,27 @@ public class SpawnManager : MonoBehaviour
 
 
 
-    private void OnDrawGizmos()
-    {
-        if (_player == null)
-            return;
 
-        // 플레이어 위치
-        Vector3 playerPos = _player.position;
+    //범위표시
+    //private void OnDrawGizmos()
+    //{
+    //    if (_player == null)
+    //        return;
 
-        //빨강 최소 스폰 거리 (가까우면 안되는 영역)
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(playerPos, _minSpawnDistanceFromPlayer);
+    //    // 플레이어 위치
+    //    Vector3 playerPos = _player.position;
 
-        //노랑 스폰 트리거 거리 (이동 기준)
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(playerPos, _spawnInterval);
+    //    //빨강 최소 스폰 거리 (가까우면 안되는 영역)
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(playerPos, _minSpawnDistanceFromPlayer);
 
-        //초록 실제 적이 생길 위치
-        Gizmos.color = Color.green;
-        Vector3 spawnBasePos = new Vector3(_player.position.x + _spawnForwardDistance, _groundY, 0f);
-        Gizmos.DrawWireSphere(spawnBasePos, 1.5f);
-    }
+    //    //노랑 스폰 트리거 거리 (이동 기준)
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawWireSphere(playerPos, _spawnInterval);
+
+    //    //초록 실제 적이 생길 위치
+    //    Gizmos.color = Color.green;
+    //    Vector3 spawnBasePos = new Vector3(_player.position.x + _spawnForwardDistance, _groundY, 0f);
+    //    Gizmos.DrawWireSphere(spawnBasePos, 1.5f);
+    //}
 }

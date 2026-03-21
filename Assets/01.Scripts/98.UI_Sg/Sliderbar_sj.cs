@@ -3,16 +3,16 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Sliderbar_sj : MonoBehaviour
 {
-    //privateÀÎµ¥ ´ë¹®ÀÚ ¾²¸é ¾ÈµÊ
+    //privateï¿½Îµï¿½ ï¿½ë¹®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½
     [SerializeField] private Image _fullimage;
     [SerializeField] private Image _playerIcon;
     [SerializeField] private Image _trainIcon;
                                    
-    //¸¶Âù°¡Áö                     
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½                     
     [SerializeField] private float _playerIconY;
     [SerializeField] private float _trainIconY;
 
-    [Header("ÇÒ´çX, ÀÚµ¿À¸·Î ÇÒ´çµÊ")]
+    [Header("ï¿½Ò´ï¿½X, ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½")]
     private RemainDistance_sj _remainDistance;
 
     [Space(10)]
@@ -46,7 +46,6 @@ public class Sliderbar_sj : MonoBehaviour
         EventManager.Instance.RemoveListener(MEventType.StageFailed, this);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (_stageStart == false)
@@ -56,18 +55,14 @@ public class Sliderbar_sj : MonoBehaviour
         }
   
         _remain = _remainDistance.RemainDistance();
-        _time = _remainDistance.TrainDistance();
+        //_time = _remainDistance.TrainDistance();
 
         _trainIcon.transform.localPosition = new Vector3(1 - _time, _trainIconY, 0);
 
-        // Debug.Log("remain"+remain);
-        _playerIcon.transform.localPosition = new Vector3(_remainDistance.UiPosition(), _playerIconY, 0);
+        //_playerIcon.transform.localPosition = new Vector3(_remainDistance.UiPosition(), _playerIconY, 0);
 
         _fullimage.fillAmount = _remain;
-        //if (Fullimage.fillAmount==0)
-        //{
-        //    GameManager.Instance.GameOver();
-        //}
+        
     }
     #endregion
 

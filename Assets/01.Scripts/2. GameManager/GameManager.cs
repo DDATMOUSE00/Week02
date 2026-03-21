@@ -14,13 +14,23 @@ public class GameManager : Singleton<GameManager>
 
     public GameState CurrentState = GameState.Lobby;
     private bool _isStageEnded = false;
+    public void StartCutScene()
+    {
+        ChangeState(GameState.StartCutScene);
+        EventManager.Instance.PostNotification(MEventType.StartCutScene, this);
+    }
 
-    
+    public void TutorialStart()
+    {
+        ChangeState(GameState.Tutorial);
+        EventManager.Instance.PostNotification(MEventType.TutorialStarted, this);
+    }
+        
     public void GameStart()
-        {
-            ChangeState(GameState.Play);
-            EventManager.Instance.PostNotification(MEventType.StageStarted, this);
-        }
+    {
+        ChangeState(GameState.Play);
+        EventManager.Instance.PostNotification(MEventType.StageStarted, this);
+    }
     public void GameClear()
     {
         if (_isStageEnded) return;
@@ -34,6 +44,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (_isStageEnded) return;
         _isStageEnded = true;
+        Debug.LogError("GameOver");
 
         ChangeState(GameState.GameOver);
         EventManager.Instance.PostNotification(MEventType.StageFailed, this);
@@ -43,28 +54,12 @@ public class GameManager : Singleton<GameManager>
     private void ChangeState(GameState nextstate)
     {
         if (CurrentState == nextstate) return;
-  
+
         GameState prev = CurrentState;
         CurrentState = nextstate;
-        if (nextstate == GameState.Play)
-        {
-            Debug.Log("GameStart");
-        }
-        if (nextstate == GameState.Clear || nextstate == GameState.GameOver) 
-        {
-            Debug.Log("GameStop");
-            Debug.Log("몬스터 스폰 정지");
-            // 이건 EnemySpawner에서 이벤트 구독해서 구현해야함. 여기서 구현하는게 아님.
-            //Player MoveLock true
-        }
-        if(nextstate == GameState.Ready)
-        {
-            Debug.Log("시작컷씬 실행");
-            //Player MoveLock true
+        EventManager.Instance.PostNotification(MEventType.GameStateChanged, this, new GameStateChangedEventArgs(prev, CurrentState));
 
-        }
-
-        EventManager.Instance.PostNotification( MEventType.GameStateChanged, this, new GameStateChangedEventArgs(prev, CurrentState));
+       
     }
     public void DebugSetState(GameState nextstate)
     {

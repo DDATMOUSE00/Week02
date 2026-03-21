@@ -15,8 +15,12 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     [Header("Landing Jump Assist")]
     [SerializeField] private float _preLandBufferCheckDistance = 0.28f;
 
+    [Header("SuperChargeThreshold | 수-퍼! 차지의 경계선 (이 값보다 높으면 수-퍼! 차지 점프임!)")]
+    [SerializeField] private float _superchargeThreshold = 0.7f;
+
     [Header("Debug")]
     [SerializeField] private bool _showDebugLog = false;
+
 
     #endregion
 
@@ -60,6 +64,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     public bool ShowDebugLog => _showDebugLog;
     public bool LastJumpWasCharged => _lastJumpWasCharged;
     public float LastJumpChargeRatio => _lastJumpChargeRatio;
+    public float SuperChargeThreshold => _superchargeThreshold;
 
     public bool IsWalking =>
         IsGrounded &&
