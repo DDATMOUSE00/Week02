@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 
-public class PlayerHitEffect : MonoBehaviour
+public class PlayerJumpEffect : MonoBehaviour
 {
     [Header("Particle")]
-    [SerializeField] private ParticleSystem _starParticle;
-    [SerializeField] private ParticleSystem _hitParticle;
+    [SerializeField] private ParticleSystem _jumpEffect;
 
     [Header("World Offset")]
     [SerializeField] private Vector3 _starWorldOffset;
@@ -16,11 +15,6 @@ public class PlayerHitEffect : MonoBehaviour
 
     private bool _hasPendingPlay;
     private Vector3 _pendingWorldPosition;
-
-    public void Play()
-    {
-        PlayAt(transform.position);
-    }
 
     public void PlayAt(Vector2 worldPosition)
     {
@@ -42,8 +36,7 @@ public class PlayerHitEffect : MonoBehaviour
 
         Vector3 playPosition = GetResolvedPlayPosition(_pendingWorldPosition);
 
-        PlayParticle(_starParticle, playPosition + _starWorldOffset);
-        PlayParticle(_hitParticle, playPosition + _hitWorldOffset);
+        PlayParticle(_jumpEffect, playPosition + _starWorldOffset);
     }
 
     private Vector3 GetResolvedPlayPosition(Vector3 worldPosition)

@@ -10,6 +10,11 @@ public class PlayerMovementMotor : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private Vector2 _groundCheckSize = new(0.6f, 0.12f);
 
+    [Header("Ground Resolve")]
+    [SerializeField] private float _impactResolveCastStartOffsetY = 0.3f;
+    [SerializeField] private float _impactResolveCastExtraDistance = 0.3f;
+    [SerializeField] private float _impactSurfaceOffsetY = 0.02f;
+
     [Header("Grounded Guard")]
     [SerializeField] private float _jumpDetachIgnoreTime = 0.08f;
 
@@ -68,6 +73,21 @@ public class PlayerMovementMotor : MonoBehaviour
     {
         if (_jumpDetachIgnoreTimer > 0f)
             _jumpDetachIgnoreTimer -= Time.deltaTime;
+    }
+
+    // 인스펙터 값이 잘못되면 안전한 최소값으로 보정한다.
+    private void OnValidate()
+    {
+        _groundCheckSize.x = Mathf.Max(0.01f, _groundCheckSize.x);
+        _groundCheckSize.y = Mathf.Max(0.01f, _groundCheckSize.y);
+        _impactResolveCastStartOffsetY = Mathf.Max(0f, _impactResolveCastStartOffsetY);
+        _impactResolveCastExtraDistance = Mathf.Max(0f, _impactResolveCastExtraDistance);
+        _jumpDetachIgnoreTime = Mathf.Max(0f, _jumpDetachIgnoreTime);
+        _groundMoveSpeed = Mathf.Max(0f, _groundMoveSpeed);
+        _inputDeadZone = Mathf.Clamp(_inputDeadZone, 0f, 1f);
+        _riseGravityScale = Mathf.Max(0f, _riseGravityScale);
+        _fallGravityScale = Mathf.Max(0f, _fallGravityScale);
+        _launchMomentumDecay = Mathf.Max(0f, _launchMomentumDecay);
     }
 
     #endregion
@@ -279,17 +299,37 @@ public class PlayerMovementMotor : MonoBehaviour
 
     #region Utility
 
-    // 슬램 충돌 중심점을 반환한다.
+    // 슬램 충돌 중심점을 지면 표면 기준의 안전한 좌표로 복원한다.
     public Vector2 GetImpactPoint(Vector3 fallbackPosition)
     {
-        return _groundCheck != null ? (Vector2)_groundCheck.position : (Vector2)fallbackPosition;
+        if (_groundCheck == null)
+            return fallbackPosition;
+
+        Vector2 castOrigin = (Vector2)_groundCheck.position + Vector2.up * _impactResolveCastStartOffsetY;
+        float castDistance = _impactResolveCastStartOffsetY + _impactResolveCastExtraDistance;
+
+        RaycastHit2D hit = Physics2D.BoxCast(
+            castOrigin,
+            _groundCheckSize,
+            0f,
+            Vector2.down,
+            castDistance,
+            _groundLayer);
+
+        if (hit.collider != null)
+        {
+            float resolvedSurfaceY = hit.centroid.y - (_groundCheckSize.y * 0.5f) + _impactSurfaceOffsetY;
+            return new Vector2(_groundCheck.position.x, resolvedSurfaceY);
+        }
+
+        return _groundCheck.position;
     }
 
     #endregion
 
     #region Gizmos
 
-    // 에디터에서 바닥 체크 박스를 시각화한다.
+    // 에디터에서 바닥 체크 박스와 충돌 복원 캐스트를 시각화한다.
     private void OnDrawGizmosSelected()
     {
         if (_groundCheck == null)
@@ -297,6 +337,13 @@ public class PlayerMovementMotor : MonoBehaviour
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(_groundCheck.position, _groundCheckSize);
+
+        Vector3 castOrigin = _groundCheck.position + Vector3.up * _impactResolveCastStartOffsetY;
+        float castDistance = _impactResolveCastStartOffsetY + _impactResolveCastExtraDistance;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(castOrigin, _groundCheckSize);
+        Gizmos.DrawLine(castOrigin, castOrigin + Vector3.down * castDistance);
     }
 
     #endregion
