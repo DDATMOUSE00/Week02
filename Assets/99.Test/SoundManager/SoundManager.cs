@@ -1,25 +1,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MusicTrack
+{
+    None = 0,
+    MainMenu,
+    GameScene,
+    GameOver,
+    GameClear,
+    Tutorial
+}
+
+public enum SoundEffect
+{
+    PlayerJump,
+    PlayerSlam,
+    EnemyDeath,
+    Exlposion,
+}
+
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
 
     [Header("BGM")]
-    [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private AudioSource _bgmSource;
 
     [Header("SFX Pool")]
-    [SerializeField] private int sfxPoolSize = 10;
-    private List<AudioSource> sfxSources = new List<AudioSource>();
+    [SerializeField] private int sfxPoolSize = 5;
+    private List<AudioSource> _sfxSources = new List<AudioSource>();
 
     [Header("Audio Clips")]
-    [SerializeField] private List<AudioClip> bgmClips;
-    [SerializeField] private List<AudioClip> sfxClips;
+    [SerializeField] private List<AudioClip> _bgmClips;
+    [SerializeField] private List<AudioClip> _sfxClips;
 
-    private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
-    private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
+    private Dictionary<MusicTrack, AudioClip> bgmDict = new Dictionary<MusicTrack, AudioClip>();
+    private Dictionary<SoundEffect, AudioClip> sfxDict = new Dictionary<SoundEffect, AudioClip>();
 
-    private int sfxIndex = 0;
+    [SerializeField] private int sfxIndex = 0;
 
 
 /****************************************************************************************/
@@ -28,7 +46,7 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton
+        // 싱글톤 구조 적용
         if (Instance == null)
         {
             Instance = this;
@@ -43,23 +61,23 @@ public class SoundManager : MonoBehaviour
 
     private void Init()
     {
-        // Dictionary 초기화
-        foreach (var clip in bgmClips)
-            bgmDict[clip.name] = clip;
+        // 각 enum 에 맞추어 bgm 사운드 클립 조정
+        for (int i = 0; i < _bgmClips.Count; i++)
+            bgmDict[(MusicTrack)i] = _bgmClips[i];
 
-        foreach (var clip in sfxClips)
-            sfxDict[clip.name] = clip;
+        // 각 enum 에 맞추어 sfx 사운드 클립 조정
+        for (int i = 0; i < _sfxClips.Count; i++)
+            sfxDict[(SoundEffect)i] = _sfxClips[i];
 
-        // SFX AudioSource 풀 생성
+        // SFX AudioSource pool 적용
         for (int i = 0; i < sfxPoolSize; i++)
         {
-            GameObject obj = new GameObject("SFX_" + i);
-            obj.transform.parent = transform;
-
-            AudioSource source = obj.AddComponent<AudioSource>();
-            source.playOnAwake = false;
-
-            sfxSources.Add(source);
+            GameObject obj = new GameObject("SFX_" + i);  
+            obj.transform.parent = transform; // 사운드 매니저와 같은 위치에서 스폰
+        
+            AudioSource source = obj.AddComponent<AudioSource>(); // 생성된 오브젝트에 사운드소스 추가
+            source.playOnAwake = false; // 생성시 자동으로 사운드 플레이 제거
+            _sfxSources.Add(source); // 소스 리스트에 등록
         }
     }
 
@@ -69,22 +87,20 @@ public class SoundManager : MonoBehaviour
 /****************************************************************************************/
     #region BGM
 
-    public void PlayBGM(string key)
+    public void PlayBGM(MusicTrack track)
     {
-        if (!bgmDict.ContainsKey(key))
-        {
-            Debug.LogWarning($"BGM '{key}' not found");
-            return;
-        }
+        // 만약 사운드가 없을시 리턴
+        if (!bgmDict.TryGetValue(track, out AudioClip clip)) return;
 
-        bgmSource.clip = bgmDict[key];
-        bgmSource.loop = true;
-        bgmSource.Play();
+        _bgmSource.clip = clip; // 클립 정보 등록
+        _bgmSource.loop = true; // 루프 적용
+        _bgmSource.Play(); // 사운드 플레이
     }
 
     public void StopBGM()
     {
-        bgmSource.Stop();
+        if (!_bgmSource.isPlaying || _bgmSource == null) return;
+        _bgmSource.Stop();
     }
 
     #endregion
@@ -94,23 +110,23 @@ public class SoundManager : MonoBehaviour
 
     #region SFX
 
-    public void PlaySFX(string key)
+    public void PlaySFX(SoundEffect sfx)
     {
-        if (!sfxDict.ContainsKey(key))
-        {
-            Debug.LogWarning($"SFX '{key}' not found");
-            return;
-        }
+        // 만약 사운드가 없을시 리턴
+        if (!sfxDict.TryGetValue(sfx, out AudioClip clip)) return;
 
+        // 가장 늦게 사용된 사운드 소스 등록
         AudioSource source = GetAvailableSFXSource();
-        source.PlayOneShot(sfxDict[key]);
+        source.PlayOneShot(clip);
     }
 
+
+    // 만들어진 사운드 소스들중 가장 나중에 사용된 pool 하여 사용
     private AudioSource GetAvailableSFXSource()
     {
-        // 순환 방식 (라운드 로빈)
-        AudioSource source = sfxSources[sfxIndex];
-        sfxIndex = (sfxIndex + 1) % sfxSources.Count;
+        // 플레이된 사운드 매니저의 다음 순서 적용
+        AudioSource source = _sfxSources[sfxIndex];
+        sfxIndex = (sfxIndex + 1) % _sfxSources.Count;
         return source;
     }
 
@@ -121,14 +137,16 @@ public class SoundManager : MonoBehaviour
 
     #region Volume
 
+    // BGM 사운드 볼륨 적용
     public void SetBGMVolume(float volume)
     {
-        bgmSource.volume = volume;
+        _bgmSource.volume = volume;
     }
 
+    // SFX 사운드 볼륨 적용
     public void SetSFXVolume(float volume)
     {
-        foreach (var source in sfxSources)
+        foreach (var source in _sfxSources)
             source.volume = volume;
     }
 
