@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a18ee23082e9ebe42a17c386ecf5eb94
+guid: 5582a5a96086ae340979b1c446a925ad
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1936935298350409196
-    second: gorila_0
+      213: -6030868120235579396
+    second: Gollira_Lv0_Jump_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,10 +46,10 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
-  alignment: 0
+  spriteMeshType: 0
+  alignment: 7
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: gorila_0
+      name: Gollira_Lv0_Jump_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 290
-        height: 280
+        x: 17
+        y: 16
+        width: 30
+        height: 33
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 41a98e4cb9f9e15e0800000000000000
-      internalID: -1936935298350409196
+      spriteID: cf76126c56d0e4ca0800000000000000
+      internalID: -6030868120235579396
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      gorila_0: -1936935298350409196
+      Gollira_Lv0_Jump_0: -6030868120235579396
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
