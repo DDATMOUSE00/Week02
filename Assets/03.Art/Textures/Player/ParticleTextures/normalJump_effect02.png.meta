@@ -1,0 +1,312 @@
+fileFormatVersion: 2
+guid: f9b6b12decdc3c34c88c6fd90e951fb5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6967573378600377097
+    second: normalJump_effect02_0
+  - first:
+      213: -2101590258052920655
+    second: normalJump_effect02_1
+  - first:
+      213: -5937429432520309931
+    second: normalJump_effect02_2
+  - first:
+      213: 6827260732713822914
+    second: normalJump_effect02_3
+  - first:
+      213: 8807667405115734894
+    second: normalJump_effect02_4
+  - first:
+      213: -8994977380710134583
+    second: normalJump_effect02_5
+  - first:
+      213: -3517946571658216020
+    second: normalJump_effect02_6
+  - first:
+      213: 7054412881570948507
+    second: normalJump_effect02_7
+  - first:
+      213: -3765938381011873873
+    second: normalJump_effect02_8
+  - first:
+      213: 6275697304253894931
+    second: normalJump_effect02_9
+  - first:
+      213: 1253197778360781732
+    second: normalJump_effect02_10
+  - first:
+      213: 266249972863688226
+    second: normalJump_effect02_11
+  - first:
+      213: -7111579591394514672
+    second: normalJump_effect02_12
+  - first:
+      213: 3661195620842924847
+    second: normalJump_effect02_13
+  - first:
+      213: 7725675449671596969
+    second: normalJump_effect02_14
+  - first:
+      213: -6583498630566542426
+    second: normalJump_effect02_15
+  - first:
+      213: -5221318674895640251
+    second: normalJump_effect02_16
+  - first:
+      213: 9113748352304099395
+    second: normalJump_effect02_17
+  - first:
+      213: -6270818985896569423
+    second: normalJump_effect02_18
+  - first:
+      213: 3754564339146607293
+    second: normalJump_effect02_19
+  - first:
+      213: -6714449534522507037
+    second: normalJump_effect02_20
+  - first:
+      213: 8744789582633721906
+    second: normalJump_effect02_21
+  - first:
+      213: 4673521418542905839
+    second: normalJump_effect02_22
+  - first:
+      213: 4203259170585722404
+    second: normalJump_effect02_23
+  - first:
+      213: 1166673973762714159
+    second: normalJump_effect02_24
+  - first:
+      213: -6920338001788264335
+    second: normalJump_effect02_25
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: normalJump_effect02_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 132
+        height: 42
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90b91f1721bc1b060800000000000000
+      internalID: 6967573378600377097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: normalJump_effect02_1
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 0
+        width: 132
+        height: 42
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ba85558bc6a5d2e0800000000000000
+      internalID: -2101590258052920655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: normalJump_effect02_2
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 0
+        width: 132
+        height: 42
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5538da393630a9da0800000000000000
+      internalID: -5937429432520309931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: normalJump_effect02_3
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 0
+        width: 132
+        height: 42
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ca616ac67d4fbe50800000000000000
+      internalID: 6827260732713822914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: normalJump_effect02_4
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 0
+        width: 132
+        height: 42
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6bb5b507de1b3a70800000000000000
+      internalID: 8807667405115734894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: f083eb11e05207f4d895058a45858e64
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":132.0,"y":42.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      normalJump_effect02_0: 6967573378600377097
+      normalJump_effect02_1: -2101590258052920655
+      normalJump_effect02_2: -5937429432520309931
+      normalJump_effect02_3: 6827260732713822914
+      normalJump_effect02_4: 8807667405115734894
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

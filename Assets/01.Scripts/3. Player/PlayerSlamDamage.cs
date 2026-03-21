@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class PlayerSlamDamage : MonoBehaviour
 {
+    [Header("Player Controller")]
+    [SerializeField] private PlayerControllerVersionTwo _controller;
+
     [Header("Slam Impact Damage")]
     [SerializeField] private LayerMask _slamDamageLayer;
     [SerializeField] private Vector2 _slamBaseImpactBoxSize = new(2.4f, 2.4f);
@@ -27,6 +31,8 @@ public class PlayerSlamDamage : MonoBehaviour
 
     private void OnValidate()
     {
+        _controller = GetComponent<PlayerControllerVersionTwo>();
+
         _slamBaseImpactBoxSize.x = Mathf.Max(0.01f, _slamBaseImpactBoxSize.x);
         _slamBaseImpactBoxSize.y = Mathf.Max(0.01f, _slamBaseImpactBoxSize.y);
 
@@ -49,7 +55,7 @@ public class PlayerSlamDamage : MonoBehaviour
     public void ApplySlamDamage(Vector2 impactPoint, float slamStartY, float slamChargeRatio, bool showDebugLog)
     {
         if (_playerHitEffect != null)
-            _playerHitEffect.PlayAt(impactPoint);
+            _playerHitEffect.PlayAt(impactPoint, slamChargeRatio >= _controller.SuperChargeThreshold);
 
         float fallDistance = GetCurrentSlamFallDistance(slamStartY, impactPoint.y);
         Vector2 impactBoxSize = GetSlamImpactBoxSize(fallDistance, slamChargeRatio);
@@ -72,6 +78,8 @@ public class PlayerSlamDamage : MonoBehaviour
             return;
         }
 
+        int killedCount = 0;
+
         for (int i = 0; i < hits.Length; i++)
         {
             Collider2D hit = hits[i];
@@ -83,10 +91,14 @@ public class PlayerSlamDamage : MonoBehaviour
                 continue;
 
             enemy.Kill();
+            killedCount++;
 
             if (_playerCombo != null)
                 _playerCombo.AddKill();
         }
+
+        if (killedCount > 0 && ComboPoolManager.Instance != null && _playerCombo != null)
+            ComboPoolManager.Instance.Play(impactPoint, _playerCombo.CurrentCombo);
     }
 
     // 슬램 낙하 높이를 기준으로 카메라 흔들림용 0~1 비율을 계산한다.

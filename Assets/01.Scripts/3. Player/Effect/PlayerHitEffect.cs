@@ -2,7 +2,10 @@
 
 public class PlayerHitEffect : MonoBehaviour
 {
-    [Header("Particle")]
+    [Header("Normal Slam Particle")]
+    [SerializeField] private ParticleSystem _normalHitParticle;
+
+    [Header("Charging Slam Particle")]
     [SerializeField] private ParticleSystem _starParticle;
     [SerializeField] private ParticleSystem _hitParticle;
 
@@ -15,22 +18,14 @@ public class PlayerHitEffect : MonoBehaviour
     [SerializeField] private float _forcedY;
 
     private bool _hasPendingPlay;
+    private bool _pendingIsCharging = false;
     private Vector3 _pendingWorldPosition;
 
-    public void Play()
-    {
-        PlayAt(transform.position);
-    }
-
-    public void PlayAt(Vector2 worldPosition)
-    {
-        PlayAt((Vector3)worldPosition);
-    }
-
-    public void PlayAt(Vector3 worldPosition)
+    public void PlayAt(Vector3 worldPosition, bool isCharging)
     {
         _pendingWorldPosition = worldPosition;
         _hasPendingPlay = true;
+        _pendingIsCharging = isCharging;
     }
 
     private void LateUpdate()
@@ -38,12 +33,18 @@ public class PlayerHitEffect : MonoBehaviour
         if (!_hasPendingPlay)
             return;
 
-        _hasPendingPlay = false;
-
         Vector3 playPosition = GetResolvedPlayPosition(_pendingWorldPosition);
 
-        PlayParticle(_starParticle, playPosition + _starWorldOffset);
-        PlayParticle(_hitParticle, playPosition + _hitWorldOffset);
+        if(_pendingIsCharging)
+        {
+            PlayParticle(_starParticle, playPosition + _starWorldOffset);
+            PlayParticle(_hitParticle, playPosition + _hitWorldOffset);
+        }
+        else
+            PlayParticle(_normalHitParticle, playPosition + _hitWorldOffset);
+
+        _hasPendingPlay = false;
+        _pendingIsCharging = false;
     }
 
     private Vector3 GetResolvedPlayPosition(Vector3 worldPosition)
