@@ -98,6 +98,7 @@ public class SpawnManager : MonoBehaviour
     }
 
 
+    //spawn인데 안 쓸듯
     //public void Spawn(int count)
     //{
     //    if (_player == null)
@@ -172,6 +173,8 @@ public class SpawnManager : MonoBehaviour
 
 
 
+
+    //기즈모
     private void OnDrawGizmos()
     {
         if (_player == null)

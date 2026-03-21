@@ -254,9 +254,14 @@ public class Enemy : MonoBehaviour
         _rb.linearVelocity = Vector2.zero;
         _rb.angularVelocity = 0f;
 
-        Vector2 force = new Vector2(dirX * 80f, 3.5f);
-        _rb.AddForce(force, ForceMode2D.Impulse);
+        float randomX = Random.Range(20f, 50f);
+        float randomY = Random.Range(5f, 30f);
 
+        Vector2 force = new Vector2(dirX * randomX, randomY);
+
+        //x나 y날라가게
+        _rb.AddForce(force, ForceMode2D.Impulse);
+        //회전
         _rb.AddTorque(-dirX * 42f, ForceMode2D.Impulse);
 
         if (_visual != null)
