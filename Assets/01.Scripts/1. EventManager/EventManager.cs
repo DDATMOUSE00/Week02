@@ -29,7 +29,7 @@ public class EventManager : Singleton<EventManager>
 
     // 이벤트 호출
     public void PostNotification(MEventType MEventType, Component Sender, EventArgs args = null)
-    {
+    {   
         if (!Listeners.TryGetValue(MEventType, out List<OnEvent> listenList))
             return;
 

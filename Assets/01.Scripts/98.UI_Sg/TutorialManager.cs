@@ -8,7 +8,7 @@ public class TutorialManager : Singleton<TutorialManager>
     public enum TutorialStep { None, MoveAD, JumpCharge, InAir, SlamWait, Finished }
 
     [Header("현재 튜토리얼 단계")]
-    [SerializeField] private TutorialStep _currentStep = TutorialStep.MoveAD;
+    [SerializeField] private TutorialStep _currentStep = TutorialStep.None;
 
     [Header("참조 설정")]
     [SerializeField] private PlayerControllerVersionTwo _playerController;
@@ -29,14 +29,17 @@ public class TutorialManager : Singleton<TutorialManager>
     [Header("입력 레퍼런스")]
     [SerializeField] private InputActionReference _slamActionReference; // 인스펙터에서 Jump 액션 연결
 
+
+
     private bool _isPeakDetected = false;
     private bool _canJumpNow = false;
     public override void Init() { Debug.Log("Tutorial Manager Initialized."); }
 
-    private void Start() { SetStep(TutorialStep.MoveAD); }
+    private void Start() { /*SetStep(TutorialStep.MoveAD); */}
 
     private void Update()
     {
+       //Debug.Log($"<color=cyan>[StateCheck]</color> 현재 상태: <b>{_currentStep}</b>");
         if (_playerRb == null) return;
 
         switch (_currentStep)
@@ -112,6 +115,7 @@ public class TutorialManager : Singleton<TutorialManager>
             if (_pressHold_Image != null) _pressHold_Image.gameObject.SetActive(true);
         }
     }
+
     private void CheckPeakHeight()
     {
         if (_playerRb == null) return;
@@ -130,7 +134,18 @@ public class TutorialManager : Singleton<TutorialManager>
         if (_currentStep == TutorialStep.SlamWait)
             SetStep(TutorialStep.Finished);
     }
+    public void StartTutorial()
+    {
+        Debug.Log("<color=green>[Tutorial]</color> 튜토리얼 본격 시작!");
 
+        // [핵심 추가] 시작 씬에서 꺼졌던 UI 오브젝트 자체를 강제로 다시 켭니다.
+        if (_uiManager != null)
+        {
+            _uiManager.gameObject.SetActive(true);
+        }
+
+        SetStep(TutorialStep.MoveAD);
+    }
     private IEnumerator FinishTutorialRoutine()
     {
         yield return new WaitForSecondsRealtime(_postSlamDelay);
