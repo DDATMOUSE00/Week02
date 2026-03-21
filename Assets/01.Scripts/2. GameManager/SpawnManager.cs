@@ -36,22 +36,6 @@ public class SpawnManager : MonoBehaviour
 
     }
 
-    private void Start()
-    {
-        if (_player == null)
-        {
-            return;
-        }
-
-        if (_distanceChecker != null)
-        {
-            _distanceChecker.Init(_player);
-        }
-
-        _lastSpawnPosition = _player.position;
-        _isSpawnActive = true;
-    }
-
     private void Update()
     {
         if (_player == null)
@@ -72,6 +56,7 @@ public class SpawnManager : MonoBehaviour
 
         _lastSpawnPosition = _player.position;
         _isSpawnActive = true;
+        Debug.Log("Start");
     }
 
     public void CheckDistanceSpawn(Vector3 playerPosition)
