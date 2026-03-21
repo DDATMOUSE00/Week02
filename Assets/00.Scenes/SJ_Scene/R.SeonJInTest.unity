@@ -92330,7 +92330,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 34157096930702955, guid: 39d71269ae199774ebd6fe751b4c04aa, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 252495137486219555, guid: 39d71269ae199774ebd6fe751b4c04aa, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -92422,7 +92422,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2729968771040679990, guid: 39d71269ae199774ebd6fe751b4c04aa, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2751773504164723010, guid: 39d71269ae199774ebd6fe751b4c04aa, type: 3}
       propertyPath: _playerRb
@@ -92690,10 +92690,6 @@ PrefabInstance:
     - target: {fileID: 7537632005417825883, guid: c343a822642a5514680eea0f1d73f43f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8390582108809104553, guid: c343a822642a5514680eea0f1d73f43f, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
