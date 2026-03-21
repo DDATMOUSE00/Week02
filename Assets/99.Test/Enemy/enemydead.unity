@@ -2784,6 +2784,14 @@ PrefabInstance:
       value: -4.3
       objectReference: {fileID: 0}
     - target: {fileID: 1888167626769599454, guid: e32f0ab8bd3afa24ba56afdfb7d694a6, type: 3}
+      propertyPath: _spawnInterval
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1888167626769599454, guid: e32f0ab8bd3afa24ba56afdfb7d694a6, type: 3}
+      propertyPath: _spawnCountPerInterval
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1888167626769599454, guid: e32f0ab8bd3afa24ba56afdfb7d694a6, type: 3}
       propertyPath: _minSpawnDistanceFromPlayer
       value: 28
       objectReference: {fileID: 0}
