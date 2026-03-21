@@ -6,12 +6,14 @@ public class PlayerCharacterVisual : MonoBehaviour
 
     [Header("Reference | Inspector 연결 필요")]
     [SerializeField] private PlayerControllerVersionTwo _controller;
+    [SerializeField] private PlayerCombo _playerCombo;
+
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
     [Header("Sprite")]
-    [SerializeField] private Sprite _defaultSprite;
-    [SerializeField] private Sprite _jumpSprite;
-    [SerializeField] private Sprite _slamSprite;
+    [SerializeField] private Sprite[] _defaultSprite;
+    [SerializeField] private Sprite[] _jumpSprite;
+    [SerializeField] private Sprite[] _slamSprite;
 
     [Header("Walk Visual | 선택 사항")]
     [SerializeField] private GorillaWalkBounce _gorillaWalkBounce;
@@ -57,7 +59,7 @@ public class PlayerCharacterVisual : MonoBehaviour
     // 현재 플레이어 상태에 맞게 비주얼을 갱신한다.
     private void Update()
     {
-        UpdateSpriteByState();
+        UpdateSpriteByState(_playerCombo.CurrentComboLevel);
         UpdateWalkVisual();
         UpdateWalkDust();
     }
@@ -91,19 +93,19 @@ public class PlayerCharacterVisual : MonoBehaviour
     #region Visual Update
 
     // 현재 상태에 따라 표시할 스프라이트를 선택한다.
-    private void UpdateSpriteByState()
+    private void UpdateSpriteByState(int level)
     {
         if (_spriteRenderer == null || _controller == null)
             return;
 
-        Sprite targetSprite = _defaultSprite;
+        Sprite targetSprite = _defaultSprite[level];
 
         if (_controller.IsSlamming)
-            targetSprite = _slamSprite ?? _jumpSprite ?? _defaultSprite;
+            targetSprite = _slamSprite[level] ?? _jumpSprite[level] ?? _defaultSprite[level];
         else if (!_controller.IsGrounded)
-            targetSprite = _jumpSprite ?? _defaultSprite;
+            targetSprite = _jumpSprite[level] ?? _defaultSprite[level];
         else
-            targetSprite = _defaultSprite;
+            targetSprite = _defaultSprite[level];
 
         if (_spriteRenderer.sprite != targetSprite)
             _spriteRenderer.sprite = targetSprite;
