@@ -5,8 +5,10 @@
     StageCleared,
     StageFailed,
     StageExited,
+    
+    StartCutScene,
+    TutorialStarted,
 
-    EnemyKilled,
 
     TrainTimeChanged,
     TrainTimeOver,
