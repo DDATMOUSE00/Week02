@@ -20,8 +20,11 @@ public class PlayerJumpAction : MonoBehaviour
     [Header("Buffer")]
     [SerializeField] private float _jumpBufferTime = 0.12f;
 
-    [Header("Jump Particle")]
-    [SerializeField] private ParticleSystem _jumpParticle;
+    [Header("Combo")]
+    [SerializeField] private PlayerCombo _playerCombo;
+
+    [Header("Jump Effect")]
+    [SerializeField] private PlayerJumpEffect _jumpEffect;
 
     #endregion
 
@@ -102,12 +105,21 @@ public class PlayerJumpAction : MonoBehaviour
             ? Mathf.Lerp(_normalJumpForceX, _maxChargeJumpForceX, effectiveRatio)
             : _normalJumpForceX;
 
-        LaunchJump(controller, movement, jumpForceX, jumpForceY, isChargedJump);
+        Vector2 comboMultiplier = Vector2.one;
+
+        if (isChargedJump)
+        {
+            comboMultiplier = GetChargeJumpComboMultiplier();
+            jumpForceX *= comboMultiplier.x;
+            jumpForceY *= comboMultiplier.y;
+        }
+
+        LaunchJump(controller, movement, jumpForceX, jumpForceY, isChargedJump, effectiveRatio);
 
         if (controller.ShowDebugLog)
         {
             Debug.Log(isChargedJump
-                ? $"Charged Jump | ChargeTime: {chargeTime:F2}, EvaluatedRatio: {effectiveRatio:F2}"
+                ? $"Charged Jump | ChargeTime: {chargeTime:F2}, EvaluatedRatio: {effectiveRatio:F2}, ComboMultiplier: {comboMultiplier}"
                 : $"Normal Jump | TapTime: {chargeTime:F2}");
         }
     }
@@ -127,7 +139,7 @@ public class PlayerJumpAction : MonoBehaviour
         }
 
         controller.LockFacingForAction();
-        LaunchJump(controller, movement, _normalJumpForceX, _normalJumpForceY, false);
+        LaunchJump(controller, movement, _normalJumpForceX, _normalJumpForceY, false, 0f);
 
         if (controller.ShowDebugLog)
             Debug.Log("Buffered Normal Jump");
@@ -139,9 +151,12 @@ public class PlayerJumpAction : MonoBehaviour
         PlayerMovementMotor movement,
         float jumpForceX,
         float jumpForceY,
-        bool wasChargedJump)
+        bool wasChargedJump,
+        float jumpChargeRatio)
     {
-        controller.OnJumpLaunched(wasChargedJump);
+        Vector3 jumpEffectPosition = controller.transform.position;
+
+        controller.OnJumpLaunched(wasChargedJump, jumpChargeRatio);
 
         movement.StartJumpDetachIgnore();
 
@@ -152,8 +167,17 @@ public class PlayerJumpAction : MonoBehaviour
         _chargeTimer = 0f;
         _jumpBufferTimer = 0f;
 
-        if (_jumpParticle != null)
-            _jumpParticle.Play();
+        if (_jumpEffect != null)
+            _jumpEffect.PlayAt(jumpEffectPosition);
+    }
+
+    // 차지 점프에 적용할 콤보 배율을 반환한다.
+    private Vector2 GetChargeJumpComboMultiplier()
+    {
+        if (_playerCombo == null)
+            return Vector2.one;
+
+        return _playerCombo.CurrentComboMultiplier;
     }
 
     #endregion
