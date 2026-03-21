@@ -45,5 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolManager
   _enemyPrefab: {fileID: 7587107075301689535, guid: a80b7fdd43ba35c4c85cfa250761a33e, type: 3}
-  _initialSize: 200
+  _initialSize: 300
   _poolParent: {fileID: 0}
