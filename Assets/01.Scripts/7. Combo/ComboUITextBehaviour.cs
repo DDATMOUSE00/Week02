@@ -9,6 +9,7 @@ public class ComboUITextBehaviour : MonoBehaviour
     [SerializeField] private RectTransform _idleRotationTarget;
     [SerializeField] private RectTransform _impactRotationTarget;
     [SerializeField] private RectTransform _scaleTarget;
+    [SerializeField] private ComboTextRainbowGradient _rainbowGradient;
 
     [Header("Display")]
     [SerializeField] private string _suffix = " COMBO";
@@ -57,7 +58,7 @@ public class ComboUITextBehaviour : MonoBehaviour
     {
         RefreshText();
         RefreshVisible();
-        RestartIdleMotion(_lastComboRatio, true);
+        RestartIdleMotion(true);
     }
 
     private void OnDisable()
@@ -74,20 +75,9 @@ public class ComboUITextBehaviour : MonoBehaviour
 
         RefreshText();
         RefreshVisible();
-        RestartIdleMotion(_lastComboRatio, false);
-        PlayKillReaction(_lastComboRatio);
-    }
-
-    // 최대 콤보를 모를 때는 내부 설정값 기준으로 비율을 계산해 사용한다.
-    public void AddKill(int currentCombo)
-    {
-        _currentCombo = Mathf.Max(0, currentCombo);
-        _lastComboRatio = GetComboRatioFromCount(_currentCombo);
-
-        RefreshText();
-        RefreshVisible();
-        RestartIdleMotion(_lastComboRatio, false);
-        PlayKillReaction(_lastComboRatio);
+        RestartIdleMotion(false);
+        PlayKillReaction();
+        RainbowEnable();
     }
 
     // 콤보를 초기화하고 기본 상태로 되돌린다.
@@ -98,16 +88,31 @@ public class ComboUITextBehaviour : MonoBehaviour
 
         RefreshText();
         RefreshVisible();
-        RestartIdleMotion(0f, false);
+        RestartIdleMotion(false);
+        RainbowEnable();
     }
 
+    private void RainbowEnable()
+    {
+        if (_rainbowGradient == null)
+            return;
+
+        if (_lastComboRatio >= 0.999f)
+            _rainbowGradient.enabled = true;
+        else
+            _rainbowGradient.enabled = false;
+
+    }
     // 텍스트를 현재 콤보 값으로 갱신한다.
     private void RefreshText()
     {
         if (_tmp == null)
             return;
 
-        _tmp.text = $"{_currentCombo}{_suffix}";
+        if(_lastComboRatio >= 1.0f)
+            _tmp.text = $"MAX!{_suffix}";
+        else
+            _tmp.text = $"{_currentCombo}{_suffix}";
     }
 
     // 0콤보일 때 숨김 옵션을 반영한다.
@@ -123,7 +128,7 @@ public class ComboUITextBehaviour : MonoBehaviour
     }
 
     // 콤보에 따라 더 빨라지는 기본 갸우뚱 모션을 재시작한다.
-    private void RestartIdleMotion(float comboRatio, bool immediateReset)
+    private void RestartIdleMotion(bool immediateReset)
     {
         KillTween(ref _idleTween);
 
@@ -133,29 +138,23 @@ public class ComboUITextBehaviour : MonoBehaviour
         if (immediateReset)
             _idleRotationTarget.localRotation = Quaternion.identity;
 
-        float duration = Mathf.Lerp(_idleMaxDuration, _idleMinDuration, comboRatio);
+        float duration = Mathf.Lerp(_idleMaxDuration, _idleMinDuration, _lastComboRatio);
         duration = Mathf.Max(0.05f, duration);
 
-        Sequence idleSequence = DOTween.Sequence();
-        idleSequence.Append(_idleRotationTarget.DOLocalRotate(
-            new Vector3(0f, 0f, -_idleRotateAngle),
-            duration * 0.5f).SetEase(Ease.InOutSine));
-        idleSequence.Append(_idleRotationTarget.DOLocalRotate(
-            new Vector3(0f, 0f, _idleRotateAngle),
-            duration).SetEase(Ease.InOutSine));
-        idleSequence.Append(_idleRotationTarget.DOLocalRotate(
-            Vector3.zero,
-            duration * 0.5f).SetEase(Ease.InOutSine));
-        idleSequence.SetLoops(-1, LoopType.Restart);
-
-        _idleTween = idleSequence;
+        _idleTween = DOVirtual.Float(0f, Mathf.PI * 2f, duration, value =>
+        {
+            float angle = Mathf.Sin(value) * _idleRotateAngle;
+            _idleRotationTarget.localRotation = Quaternion.Euler(0f, 0f, angle);
+        })
+        .SetEase(Ease.Linear)
+        .SetLoops(-1, LoopType.Restart);
     }
 
     // 킬 발생 시 z축 강한 흔들림과 스케일 펀치를 재생한다.
-    private void PlayKillReaction(float comboRatio)
+    private void PlayKillReaction()
     {
-        float rotateAmount = _basePunchRotate + (_maxExtraPunchRotate * comboRatio);
-        float scaleAmount = _basePunchScale + (_maxExtraPunchScale * comboRatio);
+        float rotateAmount = _basePunchRotate + (_maxExtraPunchRotate * _lastComboRatio);
+        float scaleAmount = _basePunchScale + (_maxExtraPunchScale * _lastComboRatio);
 
         _punchDirection *= -1f;
 
@@ -221,5 +220,8 @@ public class ComboUITextBehaviour : MonoBehaviour
 
         if (_scaleTarget != null)
             _scaleTarget.localScale = Vector3.one;
+
+        if (_rainbowGradient != null)
+            _rainbowGradient.enabled = false;
     }
 }
