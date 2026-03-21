@@ -5,8 +5,6 @@ public class HotdogStore : MonoBehaviour
     [Header("State")]
 
     [Header("Start Setting")]
-    [SerializeField] private bool _isAlive;
-    [SerializeField] private bool _hasCalled;
     [SerializeField] private int _hotdogCount = 1;
 
     [Header("Plater data")]
@@ -47,9 +45,6 @@ public class HotdogStore : MonoBehaviour
 
         transform.rotation = Quaternion.identity; //회전 초기화
 
-        _isAlive = true;
-        _hasCalled = false;
-
         _spriteRenderer.sprite = _startSprite;
 
         // 콜라이더 킴
@@ -59,7 +54,6 @@ public class HotdogStore : MonoBehaviour
 
     public void DestoyStore()
     {
-        _isAlive = false;
         ExecuteDeathSequence();
     }
 
@@ -86,11 +80,6 @@ public class HotdogStore : MonoBehaviour
     }
 
     //----------죽는 모션 끝----------
-
-    private void DoIdle() //Idle상태 움직임
-    {
-        
-    }
 
     
 }
