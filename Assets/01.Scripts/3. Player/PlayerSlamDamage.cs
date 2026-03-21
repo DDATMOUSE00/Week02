@@ -1,75 +1,104 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class PlayerSlamDamage : MonoBehaviour
 {
+    [Header("Player Controller")]
+    [SerializeField] private PlayerControllerVersionTwo _controller;
+
     [Header("Slam Impact Damage")]
     [SerializeField] private LayerMask _slamDamageLayer;
-    [SerializeField] private float _slamBaseImpactRadius = 1.2f;
-    [SerializeField] private float _slamImpactRadiusPerHeight = 0.35f;
-    [SerializeField] private float _slamMaxImpactRadius = 3.5f;
+    [SerializeField] private Vector2 _slamBaseImpactBoxSize = new(2.4f, 2.4f);
+    [SerializeField] private Vector2 _slamImpactBoxSizePerHeight = new(0.7f, 0.7f);
+    [SerializeField] private Vector2 _slamImpactBoxSizePerChargeRatio = new(1.2f, 1.2f);
+    [SerializeField] private Vector2 _slamMaxImpactBoxSize = new(7f, 7f);
     [SerializeField] private float _slamBaseDamage = 10f;
     [SerializeField] private float _slamDamagePerHeight = 4f;
     [SerializeField] private float _slamMaxDamage = 999f;
 
+    [Header("Combo System")]
+    [SerializeField] private PlayerCombo _playerCombo;
+
     [Header("Slam Shake")]
     [SerializeField] private float _slamShakeFullHeight = 8f;
 
+    [Header("Effect")]
+    [SerializeField] private PlayerHitEffect _playerHitEffect;
+
     private bool _hasLastImpact;
     private Vector2 _lastImpactPoint;
-    private float _lastSlamImpactRadius;
+    private Vector2 _lastSlamImpactBoxSize;
 
-    // 슬램 낙하 높이를 바탕으로 범위와 데미지를 계산해 적에게 적용한다.
-    public void ApplySlamDamage(Vector2 impactPoint, float slamStartY, bool showDebugLog)
+    private void OnValidate()
     {
+        _controller = GetComponent<PlayerControllerVersionTwo>();
+
+        _slamBaseImpactBoxSize.x = Mathf.Max(0.01f, _slamBaseImpactBoxSize.x);
+        _slamBaseImpactBoxSize.y = Mathf.Max(0.01f, _slamBaseImpactBoxSize.y);
+
+        _slamImpactBoxSizePerHeight.x = Mathf.Max(0f, _slamImpactBoxSizePerHeight.x);
+        _slamImpactBoxSizePerHeight.y = Mathf.Max(0f, _slamImpactBoxSizePerHeight.y);
+
+        _slamImpactBoxSizePerChargeRatio.x = Mathf.Max(0f, _slamImpactBoxSizePerChargeRatio.x);
+        _slamImpactBoxSizePerChargeRatio.y = Mathf.Max(0f, _slamImpactBoxSizePerChargeRatio.y);
+
+        _slamMaxImpactBoxSize.x = Mathf.Max(_slamBaseImpactBoxSize.x, _slamMaxImpactBoxSize.x);
+        _slamMaxImpactBoxSize.y = Mathf.Max(_slamBaseImpactBoxSize.y, _slamMaxImpactBoxSize.y);
+
+        _slamBaseDamage = Mathf.Max(0f, _slamBaseDamage);
+        _slamDamagePerHeight = Mathf.Max(0f, _slamDamagePerHeight);
+        _slamMaxDamage = Mathf.Max(_slamBaseDamage, _slamMaxDamage);
+        _slamShakeFullHeight = Mathf.Max(0f, _slamShakeFullHeight);
+    }
+
+    // 슬램 낙하 높이와 차지 비율을 바탕으로 범위와 데미지를 계산해 적에게 적용한다.
+    public void ApplySlamDamage(Vector2 impactPoint, float slamStartY, float slamChargeRatio, bool showDebugLog)
+    {
+        if (_playerHitEffect != null)
+            _playerHitEffect.PlayAt(impactPoint, slamChargeRatio >= _controller.SuperChargeThreshold);
+
         float fallDistance = GetCurrentSlamFallDistance(slamStartY, impactPoint.y);
-        float impactRadius = GetSlamImpactRadius(fallDistance);
+        Vector2 impactBoxSize = GetSlamImpactBoxSize(fallDistance, slamChargeRatio);
         float damage = GetSlamDamage(fallDistance);
 
         _hasLastImpact = true;
         _lastImpactPoint = impactPoint;
-        _lastSlamImpactRadius = impactRadius;
+        _lastSlamImpactBoxSize = impactBoxSize;
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(impactPoint, impactRadius, _slamDamageLayer);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(impactPoint, impactBoxSize, 0f, _slamDamageLayer);
         if (hits == null || hits.Length == 0)
         {
             if (showDebugLog)
             {
                 Debug.Log(
                     $"Slam Impact | No Target | fallDistance: {fallDistance:F2}, " +
-                    $"radius: {impactRadius:F2}, damage: {damage:F2}");
+                    $"chargeRatio: {slamChargeRatio:F2}, boxSize: {impactBoxSize}, damage: {damage:F2}");
             }
 
             return;
         }
 
-        //HashSet<ISlamDamageable> damagedTargets = new();
+        int killedCount = 0;
 
-        //for (int i = 0; i < hits.Length; i++)
-        //{
-        //    Collider2D hit = hits[i];
-        //    if (hit == null)
-        //        continue;
+        for (int i = 0; i < hits.Length; i++)
+        {
+            Collider2D hit = hits[i];
+            if (hit == null)
+                continue;
 
-        //    ISlamDamageable damageable = hit.GetComponent<ISlamDamageable>();
-        //    damageable ??= hit.GetComponentInParent<ISlamDamageable>();
+            EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
+            if (enemy == null)
+                continue;
 
-        //    if (damageable == null)
-        //        continue;
+            enemy.Kill();
+            killedCount++;
 
-        //    if (!damagedTargets.Add(damageable))
-        //        continue;
+            if (_playerCombo != null)
+                _playerCombo.AddKill();
+        }
 
-        //    damageable.TakeSlamDamage(damage, impactPoint);
-        //}
-
-        //if (showDebugLog)
-        //{
-        //    Debug.Log(
-        //        $"Slam Impact | fallDistance: {fallDistance:F2}, " +
-        //        $"radius: {impactRadius:F2}, damage: {damage:F2}, " +
-        //        $"rawHits: {hits.Length}, uniqueTargets: {damagedTargets.Count}");
-        //}
+        if (killedCount > 0 && ComboPoolManager.Instance != null && _playerCombo != null)
+            ComboPoolManager.Instance.Play(impactPoint, _playerCombo.CurrentCombo);
     }
 
     // 슬램 낙하 높이를 기준으로 카메라 흔들림용 0~1 비율을 계산한다.
@@ -89,11 +118,19 @@ public class PlayerSlamDamage : MonoBehaviour
         return Mathf.Max(0f, slamStartY - impactY);
     }
 
-    // 낙하 높이에 비례한 충돌 반경을 계산한다.
-    private float GetSlamImpactRadius(float fallDistance)
+    // 낙하 높이와 차지 비율에 비례한 충돌 박스 크기를 계산한다.
+    private Vector2 GetSlamImpactBoxSize(float fallDistance, float slamChargeRatio)
     {
-        float radius = _slamBaseImpactRadius + (fallDistance * _slamImpactRadiusPerHeight);
-        return Mathf.Clamp(radius, _slamBaseImpactRadius, _slamMaxImpactRadius);
+        float clampedChargeRatio = Mathf.Clamp01(slamChargeRatio);
+
+        Vector2 boxSize = _slamBaseImpactBoxSize;
+        boxSize += _slamImpactBoxSizePerHeight * fallDistance;
+        boxSize += _slamImpactBoxSizePerChargeRatio * clampedChargeRatio;
+
+        boxSize.x = Mathf.Clamp(boxSize.x, _slamBaseImpactBoxSize.x, _slamMaxImpactBoxSize.x);
+        boxSize.y = Mathf.Clamp(boxSize.y, _slamBaseImpactBoxSize.y, _slamMaxImpactBoxSize.y);
+
+        return boxSize;
     }
 
     // 낙하 높이에 비례한 슬램 데미지를 계산한다.
@@ -103,13 +140,16 @@ public class PlayerSlamDamage : MonoBehaviour
         return Mathf.Clamp(damage, _slamBaseDamage, _slamMaxDamage);
     }
 
-    // 마지막 슬램 범위를 에디터에서 시각화한다.
+    // 현재 설정된 기본 박스와 마지막 실제 박스를 에디터에서 시각화한다.
     private void OnDrawGizmosSelected()
     {
-        if (!_hasLastImpact || _lastSlamImpactRadius <= 0f)
+        Gizmos.color = new Color(1f, 0.75f, 0f, 0.9f);
+        Gizmos.DrawWireCube(transform.position, _slamBaseImpactBoxSize);
+
+        if (!_hasLastImpact || _lastSlamImpactBoxSize.x <= 0f || _lastSlamImpactBoxSize.y <= 0f)
             return;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_lastImpactPoint, _lastSlamImpactRadius);
+        Gizmos.DrawWireCube(_lastImpactPoint, _lastSlamImpactBoxSize);
     }
 }

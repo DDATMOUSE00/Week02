@@ -1,6 +1,13 @@
-﻿using UnityEngine;
-using DG.Tweening;
+﻿using DG.Tweening;
+using UnityEngine;
+using static Enemy;
 
+[System.Serializable]
+public class EnemySpriteSet
+{
+    public Sprite IdleSprite; //Idle 상태 스프라이트
+    public Sprite PanicSprite; //Panic 상태 스프라이트
+}
 public class Enemy : MonoBehaviour
 {
     public enum EnemyState
@@ -9,9 +16,25 @@ public class Enemy : MonoBehaviour
         Panic,
         Dead
     }
+    public enum EnemyType
+    {
+        A,
+        B,
+        C,
+        D
+    }
 
-    [SerializeField] private Transform _visual; //캐릭터 스프라이트
+    [SerializeField] private Transform _visual; //스프라이트 움직이기 위해
     [SerializeField] private Tween _panicTween;
+    [SerializeField] private PlayerControllerVersionTwo _playerController; //플레이어 차지 받아오기 위한
+
+    [Header("Sprite")]
+    [SerializeField] private SpriteRenderer _spriteRenderer; //적 스프라이트
+    [SerializeField] private EnemyType _enemyType; //적 종류
+    [SerializeField] private EnemySpriteSet _typeA; //A타입 스프라이트
+    [SerializeField] private EnemySpriteSet _typeB; //B타입 스프라이트
+    [SerializeField] private EnemySpriteSet _typeC; //C타입 스프라이트
+    [SerializeField] private EnemySpriteSet _typeD; //D타입 스프라이트
 
     [Header("State")]
     [SerializeField] private EnemyState _state;
@@ -25,8 +48,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _panicmaxSpeed = 1.3f; //공포상태 최고속도
 
     [Header("Panic Setting")]
-    [SerializeField] private float _detectRange = 5f; //플레이어 감지범위
-    [SerializeField] private float _runRange = 15; //공포상태에서 도망가는 범위
+    [SerializeField] private float _detectRange = 28f; //플레이어 감지범위
+    [SerializeField] private float _runRange = 35; //공포상태에서 도망가는 범위
     [SerializeField] private float _panicShake = 0.04f; //떨리는 정도
 
     [Header("Idle Setting")]
@@ -54,6 +77,9 @@ public class Enemy : MonoBehaviour
         _enemyHealth = GetComponent<EnemyHealth>();
         _rb = GetComponent<Rigidbody2D>();
 
+        if (_spriteRenderer == null)
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         if (_visual != null)
         {
             _visualOriginalPos = _visual.localPosition;
@@ -65,10 +91,55 @@ public class Enemy : MonoBehaviour
 
         if (_rb != null)
         {
-            _rb.simulated = false; //평소엔 물리 끔
+            //_rb.simulated = false; //평소엔 물리 끔
             _rb.linearVelocity = Vector2.zero;
             _rb.angularVelocity = 0f;
         }
+
+        UpdateSpriteByState();
+    }
+
+    private void UpdateSpriteByState()
+    {
+        if (_spriteRenderer == null)
+            return;
+
+        EnemySpriteSet spriteSet = GetCurrentSpriteSet();
+
+        switch (_state)
+        {
+            case EnemyState.Idle:
+                _spriteRenderer.sprite = spriteSet.IdleSprite;
+                break;
+
+            case EnemyState.Panic:
+                _spriteRenderer.sprite = spriteSet.PanicSprite;
+                break;
+
+            case EnemyState.Dead:
+                _spriteRenderer.sprite = spriteSet.PanicSprite; //Dead일 땐 Panic 상태로 죽을 거라서 Panic 스프라이트 유지
+                break;
+        }
+    }
+
+    private EnemySpriteSet GetCurrentSpriteSet()  //enemy 스프라이트 선택
+    {
+        switch (_enemyType)
+        {
+            case EnemyType.A:
+                return _typeA;
+
+            case EnemyType.B:
+                return _typeB;
+
+            case EnemyType.C:
+                return _typeC;
+
+            case EnemyType.D:
+                return _typeD;
+        }
+
+        return _typeA;
     }
 
     private void Update()
@@ -104,9 +175,12 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void Init(Transform targetPlayer) //오브젝트풀링을 위한
+    public void Init(Transform targetPlayer, EnemyType enemyType) //오브젝트풀링을 위한
     {
         _player = targetPlayer;
+        _enemyType = enemyType;
+
+        _playerController = targetPlayer.GetComponent<PlayerControllerVersionTwo>(); //적 찾긴 하는데 다르게 해야할듯
 
         _state = EnemyState.Idle;
         _dirtimer = 0f;
@@ -130,7 +204,7 @@ public class Enemy : MonoBehaviour
 
         if (_rb != null)
         {
-            _rb.simulated = false;
+            //_rb.simulated = false;
             _rb.linearVelocity = Vector2.zero;
             _rb.angularVelocity = 0f;
             _rb.rotation = 0f;
@@ -138,6 +212,8 @@ public class Enemy : MonoBehaviour
 
         if (_enemyHealth != null)
             _enemyHealth.Init();
+
+        UpdateSpriteByState();
     }
 
     public void OnDeath()
@@ -146,6 +222,8 @@ public class Enemy : MonoBehaviour
             return;
 
         _state = EnemyState.Dead;
+
+        UpdateSpriteByState();
 
         StopPanicShake();
 
@@ -179,23 +257,63 @@ public class Enemy : MonoBehaviour
         _rb.linearVelocity = Vector2.zero;
         _rb.angularVelocity = 0f;
 
-        Vector2 force = new Vector2(dirX * 5f, 3.5f);
-        _rb.AddForce(force, ForceMode2D.Impulse);
+        //플레이어 차지 안 받고 랜덤, 밑에 어색하면 넣고 아님 없애자
+        //float randomX = Random.Range(20f, 50f);
+        //float randomY = Random.Range(5f, 30f);
+        //Vector2 force = new Vector2(dirX * randomX, randomY);
 
-        _rb.AddTorque(-dirX * 8f, ForceMode2D.Impulse);
+        //플레이어 차지 받기 시작
+        float chargeRatio = 0f;
+
+        if (_playerController != null)
+        {
+            chargeRatio = _playerController.LastJumpChargeRatio;
+
+            if (!_playerController.LastJumpWasCharged) 
+                chargeRatio = 0.02f; //일반 점프 값 조절하기
+        }
+
+        chargeRatio = Mathf.Clamp01(chargeRatio);
+
+        float normalizedCharge = Mathf.InverseLerp(0f, 0.7f, chargeRatio); //70%부터 최대치 되게 보정하는(슈퍼슬램)
+        normalizedCharge = Mathf.Pow(normalizedCharge, 2.2f); //낮은 차지 강한 차지 차이나게 하기
+
+        float minForceX = 3f;
+        float maxForceX = 4f;
+        float minForceY = 1f;
+        float maxForceY = 10f;
+
+        float baseForceX = Mathf.Lerp(minForceX, maxForceX, normalizedCharge);
+        float baseForceY = Mathf.Lerp(minForceY, maxForceY, normalizedCharge);
+
+        float randomX = baseForceX * Random.Range(0.8f, 1.2f);
+        float randomY = baseForceY * Random.Range(0.1f, 1.2f);
+
+        Vector2 force = new Vector2(dirX * randomX, randomY);
+
+        float minTorque = 20f;
+        float maxTorque = 60f;
+        float torque = Mathf.Lerp(minTorque, maxTorque, normalizedCharge);
+        torque *= Random.Range(0.8f, 1.2f);
+        //플레이어 차지 받기 끝
+
+        //x나 y날라가게
+        _rb.AddForce(force, ForceMode2D.Impulse);
+        //회전
+        _rb.AddTorque(-dirX * torque, ForceMode2D.Impulse);
 
         if (_visual != null)
         {
             _visual.DOPunchScale(new Vector3(0.15f, -0.1f, 0f), 0.2f, 8, 0.8f);
         }
 
-        Invoke(nameof(ReturnToPool), 1.2f);
+        Invoke(nameof(ReturnToPool), 8f);
     }
     private void ReturnToPool()
     {
         if (_rb != null)
         {
-            _rb.simulated = false;
+            //_rb.simulated = false;
             _rb.linearVelocity = Vector2.zero;
             _rb.angularVelocity = 0f;
             _rb.rotation = 0f;
@@ -213,6 +331,8 @@ public class Enemy : MonoBehaviour
             return;
 
         _state = newState;
+
+        UpdateSpriteByState();
 
         if (_state == EnemyState.Panic)
             StartPanicShake();
@@ -245,6 +365,14 @@ public class Enemy : MonoBehaviour
         //플레이어 반대 방향으로만 이동
         float dirX = transform.position.x - _player.position.x;
         float runX = Mathf.Sign(dirX);
+
+        //스프라이트 뒤집기
+        if (_visual != null)
+        {
+            Vector3 scale = _visual.localScale;
+            scale.x = runX * Mathf.Abs(_visualOriginalScale.x);
+            _visual.localScale = scale;
+        }
 
         //x가 같으면 랜덤
         if (runX == 0f)
@@ -291,7 +419,7 @@ public class Enemy : MonoBehaviour
             _visual.localPosition = _visualOriginalPos;
     }
 
-    
+
     //private void OnDrawGizmos()
     //{
     //    // 감지 범위
@@ -301,16 +429,17 @@ public class Enemy : MonoBehaviour
     //    // Panic 해제 범위
     //    Gizmos.color = Color.red;
     //    Gizmos.DrawWireSphere(transform.position, _runRange);
-
-    //    // Idle 배회 범위
-    //    Gizmos.color = Color.green;
-    //    Gizmos.DrawWireSphere(transform.position, _idleRange);
-
-    //    // 플레이어와 현재 거리 선
-    //    if (_player != null)
-    //    {
-    //        Gizmos.color = Color.white;
-    //        Gizmos.DrawLine(transform.position, _player.position);
-    //    }
     //}
-}
+
+        //    // Idle 배회 범위
+        //    Gizmos.color = Color.green;
+        //    Gizmos.DrawWireSphere(transform.position, _idleRange);
+
+        //    // 플레이어와 현재 거리 선
+        //    if (_player != null)
+        //    {
+        //        Gizmos.color = Color.white;
+        //        Gizmos.DrawLine(transform.position, _player.position);
+        //    }
+        //}
+    }

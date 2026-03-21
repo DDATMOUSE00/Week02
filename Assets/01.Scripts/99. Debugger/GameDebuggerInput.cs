@@ -8,7 +8,7 @@ public class GameDebuggerInput : MonoBehaviour
     {
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
-            GameManager.Instance.DebugSetState(GameState.Ready);
+            GameManager.Instance.DebugSetState(GameState.Lobby);
         }
         else if (Keyboard.current.digit2Key.wasPressedThisFrame)
         {
@@ -22,14 +22,14 @@ public class GameDebuggerInput : MonoBehaviour
         {
             GameManager.Instance.GameOver();
         }
-        else if (Keyboard.current.digit5Key.wasPressedThisFrame)
-        {
-            spawnManager.Spawn(1);
-        }
-        else if (Keyboard.current.digit6Key.wasPressedThisFrame)
-        {
-            spawnManager.Spawn(10);
-        }
+        //else if (Keyboard.current.digit5Key.wasPressedThisFrame)
+        //{
+        //    spawnManager.Spawn(1);
+        //}
+        //else if (Keyboard.current.digit6Key.wasPressedThisFrame)
+        //{
+        //    spawnManager.Spawn(10);
+        //}
         else if (Keyboard.current.digit7Key.wasPressedThisFrame)
         {
             EnemyHealth[] enemies = Object.FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None);
@@ -47,7 +47,7 @@ public class GameDebuggerInput : MonoBehaviour
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
             worldPos.z = 0f;
 
-            spawnManager.SpawnAt(worldPos, 15);
+            spawnManager.SpawnAt(15);
         }
     }
 }

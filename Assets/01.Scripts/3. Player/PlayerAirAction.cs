@@ -12,6 +12,13 @@ public class PlayerAirAction : MonoBehaviour
     [SerializeField] private float _slamSpeed = 22f;
     [SerializeField] private float _slamAnticipationDuration = 0.08f;
 
+    [Header("Charged Slam")]
+    [SerializeField] private float _chargedSlamSpeed = 30f;
+    [SerializeField] private float _chargedSlamAnticipationDuration = 0.14f;
+
+    [Header("Effect")]
+    [SerializeField] private PlayerSlamBeforeEffect _effect;
+
     #endregion
 
     #region Runtime Fields
@@ -20,12 +27,14 @@ public class PlayerAirAction : MonoBehaviour
 
     private float _slamAnticipationTimer;
     private float _slamStartY;
+    private float _currentSlamSpeed;
+    private float _currentSlamChargeRatio;
 
     #endregion
 
     #region Properties
 
-    public float SlamSpeed => _slamSpeed;
+    public float SlamSpeed => _currentSlamSpeed > 0f ? _currentSlamSpeed : _slamSpeed;
 
     #endregion
 
@@ -58,14 +67,35 @@ public class PlayerAirAction : MonoBehaviour
     {
         controller.EnterSlamAnticipationState();
 
-        _slamAnticipationTimer = _slamAnticipationDuration;
+        bool useChargedSlam = controller.LastJumpWasCharged;
+
+        _slamAnticipationTimer = useChargedSlam
+            ? _chargedSlamAnticipationDuration
+            : _slamAnticipationDuration;
+
+        _currentSlamSpeed = useChargedSlam
+            ? _chargedSlamSpeed
+            : _slamSpeed;
+
+        _currentSlamChargeRatio = useChargedSlam
+            ? controller.LastJumpChargeRatio
+            : 0f;
+
         _slamStartY = controller.transform.position.y;
 
         movement.ClearJumpLaunchMomentum();
         movement.FreezeBody();
 
+        if (_effect != null && useChargedSlam == true && controller.LastJumpChargeRatio >= controller.SuperChargeThreshold)
+            _effect.Play();
+
         if (controller.ShowDebugLog)
-            Debug.Log($"Start Slam Anticipation | slamStartY: {_slamStartY:F2}");
+        {
+            Debug.Log(
+                $"Start Slam Anticipation | charged: {useChargedSlam}, " +
+                $"slamStartY: {_slamStartY:F2}, anticipation: {_slamAnticipationTimer:F2}, " +
+                $"slamSpeed: {_currentSlamSpeed:F2}, chargeRatio: {_currentSlamChargeRatio:F2}");
+        }
     }
 
     // 슬램 예고 타이머를 갱신하고, 시간이 끝나면 슬램 돌입을 시작한다.
@@ -89,20 +119,20 @@ public class PlayerAirAction : MonoBehaviour
         controller.EnterSlamDiveState();
         _slamAnticipationTimer = 0f;
 
-        movement.SetVelocity(new Vector2(0f, -_slamSpeed));
+        movement.SetVelocity(new Vector2(0f, -SlamSpeed));
 
         if (controller.ShowDebugLog)
-            Debug.Log("Start Slam Dive");
+            Debug.Log($"Start Slam Dive | slamSpeed: {SlamSpeed:F2}, chargeRatio: {_currentSlamChargeRatio:F2}");
     }
 
-    // 슬램 낙하 높이를 바탕으로 데미지를 적용하고, 비율에 따라 카메라 흔들림을 재생한다.
-    public void ApplySlamDamage(PlayerMovementMotor movement, Vector3 fallbackPosition, bool showDebugLog)
+    // 슬램 낙하 높이와 차지 비율을 바탕으로 데미지를 적용하고, 카메라 흔들림을 재생한다.
+    public void ApplySlamDamage(PlayerControllerVersionTwo controller, PlayerMovementMotor movement, Vector3 fallbackPosition, bool showDebugLog)
     {
         Vector2 impactPoint = movement.GetImpactPoint(fallbackPosition);
 
         float slamRatio = _slamDamage.EvaluateSlamShakeRatio(impactPoint, _slamStartY);
 
-        _slamDamage.ApplySlamDamage(impactPoint, _slamStartY, showDebugLog);
+        _slamDamage.ApplySlamDamage(impactPoint, _slamStartY, _currentSlamChargeRatio, showDebugLog);
         _cameraController?.PlaySlamLandShake(slamRatio, impactPoint.x);
     }
 
@@ -110,6 +140,8 @@ public class PlayerAirAction : MonoBehaviour
     public void ResetRuntimeState()
     {
         _slamAnticipationTimer = 0f;
+        _currentSlamSpeed = 0f;
+        _currentSlamChargeRatio = 0f;
     }
 
     #endregion

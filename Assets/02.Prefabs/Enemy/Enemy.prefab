@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.25, z: 1}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1743862947850704257}
@@ -77,11 +77,11 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 2007200235
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 17bad782b07d70843a91043904d64067, type: 3}
   m_Color: {r: 0.8113208, g: 0.5754128, b: 0.31763974, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -140,13 +140,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   _visual: {fileID: 2420665293574089471}
+  _spriteRenderer: {fileID: 0}
+  _enemyType: 0
+  _typeA:
+    IdleSprite: {fileID: 21300000, guid: 17bad782b07d70843a91043904d64067, type: 3}
+    PanicSprite: {fileID: 21300000, guid: 865872765653edc439f06002199c9e7d, type: 3}
+  _typeB:
+    IdleSprite: {fileID: 21300000, guid: 4f3822e75568d4e488c8237781567774, type: 3}
+    PanicSprite: {fileID: 21300000, guid: 1acbc955aa519974494cc01d2b9f0312, type: 3}
+  _typeC:
+    IdleSprite: {fileID: 21300000, guid: a6f550440cd1e8d4c865850f20be5291, type: 3}
+    PanicSprite: {fileID: 21300000, guid: 0fadd5676162f0441aa8f68cbc39a72a, type: 3}
+  _typeD:
+    IdleSprite: {fileID: 21300000, guid: c44412d97b17f034b9cd0abe022770e0, type: 3}
+    PanicSprite: {fileID: 21300000, guid: 0fcb4f6522d4512499f4605cdba23487, type: 3}
   _state: 0
   _player: {fileID: 0}
   _idleSpeed: 0.3
   _panicminSpeed: 0.8
   _panicmaxSpeed: 1.3
-  _detectRange: 5
-  _runRange: 15
+  _detectRange: 28
+  _runRange: 35
   _panicShake: 0.04
   _changeDirTime: 2
   _idleRange: 0.4
@@ -207,8 +221,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.5, y: 0.5}
+  m_Offset: {x: 0, y: -0.28}
+  m_Size: {x: 1, y: 2.8}
   m_Direction: 0
 --- !u!50 &-5696688024312518445
 Rigidbody2D:
@@ -222,9 +236,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 4.64
-  m_AngularDamping: 1.92
+  m_Mass: 0.5
+  m_LinearDamping: 0
+  m_AngularDamping: 2
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -233,7 +247,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0

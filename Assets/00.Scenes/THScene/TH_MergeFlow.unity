@@ -2202,9 +2202,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f364ade490de9764981a475d66a5df6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
+  _distanceChecker: {fileID: 0}
   _player: {fileID: 348217326}
   _spawnPoints:
   - {fileID: 517059999}
+  _spawnInterval: 50
+  _spawnCountPerInterval: 80
+  _minSpawnDistanceFromPlayer: 5
+  _lastSpawnPosition: {x: 0, y: 0, z: 0}
+  _isSpawnActive: 0
+  _groundY: -4.8
+  _spawnForwardDistance: 50
+  _spawnXRandomRange: 60
 --- !u!4 &1235190217
 Transform:
   m_ObjectHideFlags: 0
@@ -3321,10 +3330,6 @@ MonoBehaviour:
   _trainIcon: {fileID: 1551620536}
   _playerIconY: 0
   _trainIconY: 0
-  _remainDistance: {fileID: 0}
-  _stageStart: 0
-  _remain: 0
-  _time: 0
 --- !u!114 &2125740198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3353,16 +3358,8 @@ MonoBehaviour:
   _startpoint: {fileID: 378871974}
   _endpoint: {fileID: 116603752}
   _playerpoint: {fileID: 348217324}
-  _iconStart: 0
-  _iconEnd: 0
-  UiStartPoint: {fileID: 1484083227}
-  UiEndPoint: {fileID: 1386334464}
-  StartPosition: 0
-  EndPosition: 400
-  NowPosition: 0
-  IconPosition: 0
-  RemainTime: 0
-  TotalTime: 180
+  _uiStartPoint: {fileID: 0}
+  _uiEndPoint: {fileID: 0}
 --- !u!114 &2125740200
 MonoBehaviour:
   m_ObjectHideFlags: 0
