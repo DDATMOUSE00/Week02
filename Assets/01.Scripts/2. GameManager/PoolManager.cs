@@ -5,7 +5,7 @@ public class PoolManager : Singleton<PoolManager>
 {
     [Header("Pool Setting")]
     [SerializeField] private Enemy _enemyPrefab;
-    [SerializeField] private int _initialSize = 400;
+    [SerializeField] private int _initialSize = 300;
     [SerializeField] private Transform _poolParent;
 
     [SerializeField] private Queue<Enemy> _enemyPool = new Queue<Enemy>();
