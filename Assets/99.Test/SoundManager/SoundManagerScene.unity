@@ -1706,17 +1706,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 188caca9b29bffd41a3b99f64ecb4500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Test_SoundManager
-  testInput: {fileID: 0}
-  testAction:
-    m_Name: Test
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: d4006403-91fd-45de-a1e1-8246356e0f21
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  playerIsPressed: 0
 --- !u!4 &881431343
 Transform:
   m_ObjectHideFlags: 0
@@ -2291,13 +2280,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   _bgmSource: {fileID: 1381752820}
-  sfxPoolSize: 10
-  _bgmClips:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 8300000, guid: 0697b17af7877734f8f7f06af80d732f, type: 3}
-  _sfxClips: []
-  sfxIndex: 0
+  playerSFXPoolSize: 5
+  enemySFXPoolSize: 5
+  _bGMClips: []
+  _playerSFXClips: []
+  _enemySFXClips: []
+  _currentBGM: {fileID: 0}
+  _playerSFXIndex: 0
+  _enemySFXIndex: 0
 --- !u!4 &1381752819
 Transform:
   m_ObjectHideFlags: 0
@@ -2326,7 +2316,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.479
   m_Pitch: 1
   Loop: 0
   Mute: 0

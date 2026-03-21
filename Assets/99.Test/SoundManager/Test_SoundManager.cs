@@ -1,32 +1,46 @@
-using System;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Test_SoundManager : MonoBehaviour
 {
-    [SerializeField] InputActionReference testInput;
-    [SerializeField] InputAction testAction;
-
-    [SerializeField] bool playerIsPressed;
-    void Start()
-    {
-        testAction = testInput.action;
-    }
 
     void Update()
     {
-        if (testAction.IsPressed())
-        {
-            playerIsPressed = !playerIsPressed;
-        }
+        // Get the current keyboard state
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return; // Case where no keyboard is plugged in
 
-        if (playerIsPressed)
-        {
-            SoundManager.Instance.PlayBGM(MusicTrack.GameScene);
-        }
-        else
-        {
+        // --- BGM Testing ---
+        if (keyboard.digit1Key.wasPressedThisFrame)
+            SoundManager.Instance.PlayBGM(BGM.MainMenu);
+
+        if (keyboard.digit2Key.wasPressedThisFrame)
+            SoundManager.Instance.PlayBGM(BGM.GameScene);
+
+        if (keyboard.digit3Key.wasPressedThisFrame)
+            SoundManager.Instance.PlayBGM(BGM.GameOver);
+
+        if (keyboard.digit4Key.wasPressedThisFrame)
+            SoundManager.Instance.PlayBGM(BGM.GameClear);
+
+        if (keyboard.digit4Key.wasPressedThisFrame)
+            SoundManager.Instance.PlayBGM(BGM.Tutorial);
+
+
+        // --- SFX Testing ---
+        if (keyboard.spaceKey.wasPressedThisFrame)
+            SoundManager.Instance.PlaySFX(PlayerSFX.Jump);
+
+        if (keyboard.fKey.wasPressedThisFrame)
+            SoundManager.Instance.PlaySFX(PlayerSFX.Slam);
+
+        if (keyboard.rKey.wasPressedThisFrame)
+            SoundManager.Instance.PlaySFX(PlayerSFX.Charge);
+
+        // --- Utility Testing ---
+        if (keyboard.escapeKey.wasPressedThisFrame)
             SoundManager.Instance.StopBGM();
-        }
     }
+
 }
