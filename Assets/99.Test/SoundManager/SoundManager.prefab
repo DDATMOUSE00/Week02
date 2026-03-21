@@ -61,7 +61,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 06b040bd1af8e46439b2830bf5ce5ab6, type: 3}
   - {fileID: 8300000, guid: f4fc130f22f9ef947b1b32aa502971ff, type: 3}
   - {fileID: 8300000, guid: 751aef3c0f35b554b8ca3ed326b8e21b, type: 3}
-  _enemySFXClips: []
+  _enemySFXClips:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   _currentBGM: {fileID: 0}
   _playerSFXIndex: 0
   _enemySFXIndex: 0

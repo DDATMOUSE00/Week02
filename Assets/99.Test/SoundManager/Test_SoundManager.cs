@@ -34,13 +34,26 @@ public class Test_SoundManager : MonoBehaviour
             SoundManager.Instance.PlaySFX(PlayerSFX.SlamHeavy);
 
         if (keyboard.rKey.wasPressedThisFrame)
-            SoundManager.Instance.PlaySFX(PlayerSFX.Charge);
+            SoundManager.Instance.PlaySFX(PlayerSFX.SlamLight);
 
         if (keyboard.gKey.wasPressedThisFrame)
+            SoundManager.Instance.PlaySFX(PlayerSFX.Charge);
+
+        if (keyboard.hKey.wasPressedThisFrame)
             SoundManager.Instance.PlaySFX(PlayerSFX.Levelup);
             
-        if (keyboard.hKey.wasPressedThisFrame)
+        if (keyboard.jKey.wasPressedThisFrame)
             SoundManager.Instance.PlaySFX(PlayerSFX.Ping);
+
+        // --- SFX Testing ---
+        if (keyboard.zKey.wasPressedThisFrame)
+            SoundManager.Instance.PlaySFX(EnemySFX.Panic);
+
+        if (keyboard.xKey.wasPressedThisFrame)
+            SoundManager.Instance.PlaySFX(EnemySFX.Dead);
+
+        if (keyboard.cKey.wasPressedThisFrame)
+            SoundManager.Instance.PlaySFX(EnemySFX.Explosion);
 
         // --- Utility Testing ---
         if (keyboard.escapeKey.wasPressedThisFrame)

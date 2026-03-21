@@ -26,7 +26,7 @@ public enum EnemySFX
     None,
     Panic,
     Dead,
-    Exlposion,
+    Explosion,
 }
 
 public class SoundManager : MonoBehaviour
@@ -39,7 +39,7 @@ public class SoundManager : MonoBehaviour
     [Header("SFX Pool")]
     [SerializeField] private int playerSFXPoolSize = 5;
     [SerializeField] private int enemySFXPoolSize = 5;
-    private List<AudioSource> _playerSources = new List<AudioSource>();
+    private AudioSource _playerSources;
     private List<AudioSource> _enemySources = new List<AudioSource>();
 
     [Header("Audio Clips")]
@@ -95,17 +95,14 @@ public class SoundManager : MonoBehaviour
         for (int i = 0; i < _enemySFXClips.Count; i++)
             _enemySFXDict[(EnemySFX)i] = _enemySFXClips[i];
 
-
-        // 플레이어의 SFX 전용 pool 적용
-        for (int i = 0; i < playerSFXPoolSize; i++)
-        {
-            GameObject obj = new GameObject("Player_SFX_" + i);  // 카운트에 맞는 수의 오브젝트 생성
-            obj.transform.parent = transform; // 사운드 매니저와 같은 위치에서 스폰
         
-            AudioSource source = obj.AddComponent<AudioSource>(); // 생성된 오브젝트에 사운드소스 추가
-            source.playOnAwake = false; // 생성시 자동으로 사운드 플레이 제거
-            _playerSources.Add(source); // 소스 리스트에 등록
-        }
+        GameObject playerSFXSource = new GameObject("Player_SFX");  
+        playerSFXSource.transform.parent = transform; // 사운드 매니저와 같은 위치에서 스폰
+    
+        AudioSource playerSource = playerSFXSource.AddComponent<AudioSource>(); // 생성된 오브젝트에 사운드소스 추가
+        playerSource.playOnAwake = false; // 생성시 자동으로 사운드 플레이 제거
+        _playerSources = playerSource; // 소스 리스트에 등록
+
 
         // 에너미의 SFX 전용 pool 적용
         for (int i = 0; i < playerSFXPoolSize; i++)
@@ -162,8 +159,7 @@ public class SoundManager : MonoBehaviour
         }
 
         // 가장 늦게 사용된 사운드 소스 등록 // true 일 시 플레이어 효과음
-        AudioSource source = GetAvailableSFXSource(true);
-        source.PlayOneShot(clip);
+        _playerSources.PlayOneShot(clip);
     }
 
     public void PlaySFX(EnemySFX sfx)
@@ -174,29 +170,20 @@ public class SoundManager : MonoBehaviour
             Debug.Log("[SoundManager]: Give Enemy SFX is Null");
             return;
         }
-
+        AudioSource source = GetAvailableSFXSource();
         // 가장 늦게 사용된 사운드 소스 등록 // false 일 시 적 효과음
-        AudioSource source = GetAvailableSFXSource(false);
         source.PlayOneShot(clip);
     }
 
 
     // 만들어진 사운드 소스들중 가장 나중에 사용된 pool 하여 사용
-    private AudioSource GetAvailableSFXSource(bool isPlayerSFX)
+    private AudioSource GetAvailableSFXSource()
     {
         // 플레이된 사운드 매니저의 다음 순서 적용
         AudioSource source;
 
-        if (isPlayerSFX)
-        {
-            source = _playerSources[_playerSFXIndex];
-            _playerSFXIndex = (_playerSFXIndex + 1) % _playerSources.Count;
-        }
-        else
-        {
-            source = _enemySources[_enemySFXIndex];
-            _enemySFXIndex = (_enemySFXIndex + 1) % _enemySources.Count;
-        }
+        source = _enemySources[_enemySFXIndex];
+        _enemySFXIndex = (_enemySFXIndex + 1) % _enemySources.Count;
 
         return source;
     }
@@ -218,8 +205,7 @@ public class SoundManager : MonoBehaviour
     public void SetSFXVolume(float volume)
     {
         // set player audio sorce
-        foreach (var playerSource in _playerSources)
-            playerSource.volume = volume;
+        _playerSources.volume = volume;    
 
         // Set enemy effect audio source 
         foreach (var enemySource in _enemySources)
