@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform _visual; //스프라이트 움직이기 위해
     [SerializeField] private Tween _panicTween;
     [SerializeField] private PlayerControllerVersionTwo _playerController; //플레이어 차지 받아오기 위한
+    [SerializeField] private float _despawnRange = 500f; //멀어지면 풀에 돌아가게
 
     [Header("Sprite")]
     [SerializeField] private SpriteRenderer _spriteRenderer; //적 스프라이트
@@ -151,6 +152,8 @@ public class Enemy : MonoBehaviour
             return;
 
         _distance = Vector2.Distance(transform.position, _player.position);
+
+        CheckDespawn();
 
         switch (_state)
         {
@@ -325,6 +328,20 @@ public class Enemy : MonoBehaviour
     }
     //----------죽는 모션 끝----------
 
+    private void CheckDespawn()
+    {
+        float playerX = _player.position.x;
+        float myX = transform.position.x;
+
+        float minX = playerX - _despawnRange;
+        float maxX = playerX + _despawnRange;
+
+        if (myX < minX || myX > maxX)
+        {
+            ReturnToPool();
+        }
+    }
+
     private void ChangeState(EnemyState newState)
     {
         if (_state == newState)
@@ -431,15 +448,22 @@ public class Enemy : MonoBehaviour
     //    Gizmos.DrawWireSphere(transform.position, _runRange);
     //}
 
-        //    // Idle 배회 범위
-        //    Gizmos.color = Color.green;
-        //    Gizmos.DrawWireSphere(transform.position, _idleRange);
+    //    // Idle 배회 범위
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawWireSphere(transform.position, _idleRange);
 
-        //    // 플레이어와 현재 거리 선
-        //    if (_player != null)
-        //    {
-        //        Gizmos.color = Color.white;
-        //        Gizmos.DrawLine(transform.position, _player.position);
-        //    }
-        //}
-    }
+    //    // 플레이어와 현재 거리 선
+    //    if (_player != null)
+    //    {
+    //        Gizmos.color = Color.white;
+    //        Gizmos.DrawLine(transform.position, _player.position);
+    //    }
+    //}
+
+    //멀어지면 디스폰 거리체크
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawWireSphere(transform.position, _despawnRange);
+    //}
+}

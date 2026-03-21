@@ -81,10 +81,10 @@ MonoBehaviour:
   _spawnPoints:
   - {fileID: 8468067696839052193}
   _spawnInterval: 50
-  _spawnCountPerInterval: 80
+  _spawnCountPerInterval: 30
   _minSpawnDistanceFromPlayer: 5
   _lastSpawnPosition: {x: 0, y: 0, z: 0}
   _isSpawnActive: 0
   _groundY: -4.3
   _spawnForwardDistance: 50
-  _spawnXRandomRange: 60
+  _spawnXRandomRange: 100

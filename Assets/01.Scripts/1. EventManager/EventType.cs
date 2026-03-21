@@ -9,6 +9,8 @@
     StartCutScene,
     TutorialStarted,
 
+    ComboHit,
+
 
     TrainTimeChanged,
     TrainTimeOver,
