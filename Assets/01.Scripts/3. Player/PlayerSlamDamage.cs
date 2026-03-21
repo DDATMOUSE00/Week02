@@ -32,6 +32,8 @@ public class PlayerSlamDamage : MonoBehaviour
     private Vector2 _lastImpactPoint;
     private Vector2 _lastSlamImpactBoxSize;
 
+    private HotdogStore _hotDogChaching;
+
     private void OnValidate()
     {
         _controller = GetComponent<PlayerControllerVersionTwo>();
@@ -102,11 +104,16 @@ public class PlayerSlamDamage : MonoBehaviour
                 continue;
 
             EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
+            var hotDogStore = hit.GetComponent<HotdogStore>();
+            if (hotDogStore != null)
+                hotDogStore.DestoyStore();
+   
             if (enemy == null)
                 continue;
 
             enemy.Kill();
             killedCount++;
+
 
             if (_playerCombo != null)
                 _playerCombo.AddKill();
