@@ -1814,7 +1814,7 @@ GameObject:
   - component: {fileID: 116603754}
   - component: {fileID: 116603753}
   m_Layer: 0
-  m_Name: '[Point] Train_End'
+  m_Name: '[Point] Player&Train_End'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4496,7 +4496,7 @@ GameObject:
   - component: {fileID: 378871976}
   - component: {fileID: 378871975}
   m_Layer: 0
-  m_Name: '[Point] Train_Start'
+  m_Name: '[Point] Player&Train_Start'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
