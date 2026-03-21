@@ -1,13 +1,23 @@
 ﻿using UnityEngine;
 
+[RequireComponent (typeof(PlayerCombo))]
 public class PlayerHitEffect : MonoBehaviour
 {
+    [Header("Player Combo")]
+    [SerializeField] private PlayerCombo _playerCombo;
+
     [Header("Normal Slam Particle")]
     [SerializeField] private ParticleSystem _normalHitParticle;
 
-    [Header("Charging Slam Particle")]
-    [SerializeField] private ParticleSystem _starParticle;
-    [SerializeField] private ParticleSystem _hitParticle;
+    [Header("Charging Slam Particle - Star")]
+    [SerializeField] private ParticleSystem _starLevel_1_Particle;
+    [SerializeField] private ParticleSystem _starLevel_2_Particle;
+    [SerializeField] private ParticleSystem _starLevel_3_Particle;
+
+    [Header("Charging Slam Particle - Hit")]
+    [SerializeField] private ParticleSystem _hitLevel_1_Particle;
+    [SerializeField] private ParticleSystem _hitLevel_2_Particle;
+    [SerializeField] private ParticleSystem _hitLevel_3_Particle;
 
     [Header("World Offset")]
     [SerializeField] private Vector3 _starWorldOffset;
@@ -20,6 +30,11 @@ public class PlayerHitEffect : MonoBehaviour
     private bool _hasPendingPlay;
     private bool _pendingIsCharging = false;
     private Vector3 _pendingWorldPosition;
+
+    private void OnValidate()
+    {
+        _playerCombo = GetComponent<PlayerCombo>();
+    }
 
     public void PlayAt(Vector3 worldPosition, bool isCharging)
     {
@@ -36,10 +51,7 @@ public class PlayerHitEffect : MonoBehaviour
         Vector3 playPosition = GetResolvedPlayPosition(_pendingWorldPosition);
 
         if(_pendingIsCharging)
-        {
-            PlayParticle(_starParticle, playPosition + _starWorldOffset);
-            PlayParticle(_hitParticle, playPosition + _hitWorldOffset);
-        }
+            PlayParticlePerLevel(playPosition + _starWorldOffset);
         else
             PlayParticle(_normalHitParticle, playPosition + _hitWorldOffset);
 
@@ -55,6 +67,29 @@ public class PlayerHitEffect : MonoBehaviour
         return worldPosition;
     }
 
+    private void PlayParticlePerLevel(Vector3 worldPosition)
+    {
+        //PlayParticle(_hitParticle, playPosition + _hitWorldOffset);
+        switch (_playerCombo.CurrentComboLevel)
+        {
+            case 0:
+                break;
+            case 1:
+                PlayParticle(_starLevel_1_Particle, worldPosition);
+                PlayParticle(_hitLevel_1_Particle, worldPosition);
+                break;       
+            case 2:
+                PlayParticle(_starLevel_2_Particle, worldPosition);
+                PlayParticle(_hitLevel_2_Particle, worldPosition);
+                break;
+            case 3:
+                PlayParticle(_starLevel_3_Particle, worldPosition);
+                PlayParticle(_hitLevel_3_Particle, worldPosition);
+                break;
+            default:
+                break;
+        }
+    }
     private void PlayParticle(ParticleSystem particle, Vector3 worldPosition)
     {
         if (particle == null)

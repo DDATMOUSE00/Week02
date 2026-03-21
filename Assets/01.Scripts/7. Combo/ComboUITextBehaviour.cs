@@ -6,21 +6,26 @@ public class ComboUITextBehaviour : MonoBehaviour
 {
     [Header("Reference")]
     [SerializeField] private TMP_Text _tmp;
+    [SerializeField] private RectTransform _remainScaleTarget;
     [SerializeField] private RectTransform _idleRotationTarget;
     [SerializeField] private RectTransform _impactRotationTarget;
-    [SerializeField] private RectTransform _scaleTarget;
+    [SerializeField] private RectTransform _punchScaleTarget;
     [SerializeField] private ComboTextRainbowGradient _rainbowGradient;
+    [SerializeField] private CanvasGroup _cg;
 
     [Header("Display")]
     [SerializeField] private string _suffix = " COMBO";
     [SerializeField] private bool _hideWhenZero = false;
-    [SerializeField] private CanvasGroup _cg;
 
     [Header("Idle Wobble")]
     [SerializeField] private float _idleRotateAngle = 6f;
     [SerializeField] private float _idleMaxDuration = 0.65f;
     [SerializeField] private float _idleMinDuration = 0.18f;
-    [SerializeField] private int _maxComboForSpeed = 30;
+
+    [Header("Remain Scale")]
+    [SerializeField] private float _fullRemainScale = 1f;
+    [SerializeField] private float _minRemainScale = 0.72f;
+    [SerializeField] private AnimationCurve _remainScaleCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     [Header("Kill Reaction")]
     [SerializeField] private float _basePunchRotate = 12f;
@@ -34,15 +39,20 @@ public class ComboUITextBehaviour : MonoBehaviour
 
     private Tween _idleTween;
     private Tween _impactRotationTween;
-    private Tween _scaleTween;
+    private Tween _punchScaleTween;
 
     private int _currentCombo;
     private float _lastComboRatio;
+    private float _lastRemainRatio;
+    private float _idlePhase;
     private float _punchDirection = 1f;
 
     private void Awake()
     {
         RectTransform selfRect = transform as RectTransform;
+
+        if (_remainScaleTarget == null)
+            _remainScaleTarget = selfRect;
 
         if (_idleRotationTarget == null)
             _idleRotationTarget = selfRect;
@@ -50,15 +60,22 @@ public class ComboUITextBehaviour : MonoBehaviour
         if (_impactRotationTarget == null)
             _impactRotationTarget = selfRect;
 
-        if (_scaleTarget == null)
-            _scaleTarget = selfRect;
+        if (_punchScaleTarget == null)
+            _punchScaleTarget = selfRect;
+
+        if (_remainScaleTarget == _punchScaleTarget)
+        {
+            Debug.LogWarning("ComboUITextBehaviour : _remainScaleTarget 과 _punchScaleTarget 은 분리하는 것이 좋다. 같은 타깃이면 스케일 모션이 서로 간섭할 수 있다.", this);
+        }
     }
 
     private void OnEnable()
     {
         RefreshText();
         RefreshVisible();
+        ApplyRemainScale();
         RestartIdleMotion(true);
+        RainbowEnable();
     }
 
     private void OnDisable()
@@ -67,49 +84,58 @@ public class ComboUITextBehaviour : MonoBehaviour
         ResetVisual();
     }
 
-    // 외부에서 현재 콤보와 비율을 받아 표시를 갱신하고 반응 모션을 재생한다.
-    public void AddKill(int currentCombo, float comboRatio)
+    // 외부에서 킬 누적 시 콤보 UI를 갱신하고 반응 모션을 재생한다.
+    public void AddKill(int currentCombo, float comboRatio, float remainRatio = 1f)
     {
         _currentCombo = Mathf.Max(0, currentCombo);
         _lastComboRatio = Mathf.Clamp01(comboRatio);
+        _lastRemainRatio = Mathf.Clamp01(remainRatio);
 
         RefreshText();
         RefreshVisible();
+        ApplyRemainScale();
         RestartIdleMotion(false);
         PlayKillReaction();
         RainbowEnable();
     }
 
-    // 콤보를 초기화하고 기본 상태로 되돌린다.
+    // 외부에서 남은 유지 시간 비율을 계속 넘겨주면 기본 스케일을 갱신한다.
+    public void SetRemainRatio(float remainRatio)
+    {
+        _lastRemainRatio = Mathf.Clamp01(remainRatio);
+        ApplyRemainScale();
+    }
+
+    // 콤보를 초기화하고 UI를 기본 상태로 되돌린다.
     public void ResetCombo()
     {
         _currentCombo = 0;
         _lastComboRatio = 0f;
+        _lastRemainRatio = 0f;
 
         RefreshText();
         RefreshVisible();
+        ApplyRemainScale();
         RestartIdleMotion(false);
         RainbowEnable();
     }
 
+    // 무지개 효과 활성 여부를 갱신한다.
     private void RainbowEnable()
     {
         if (_rainbowGradient == null)
             return;
 
-        if (_lastComboRatio >= 0.999f)
-            _rainbowGradient.enabled = true;
-        else
-            _rainbowGradient.enabled = false;
-
+        _rainbowGradient.enabled = _lastComboRatio >= 0.999f;
     }
+
     // 텍스트를 현재 콤보 값으로 갱신한다.
     private void RefreshText()
     {
         if (_tmp == null)
             return;
 
-        if(_lastComboRatio >= 1.0f)
+        if (_lastComboRatio >= 1f)
             _tmp.text = $"MAX!{_suffix}";
         else
             _tmp.text = $"{_currentCombo}{_suffix}";
@@ -127,7 +153,18 @@ public class ComboUITextBehaviour : MonoBehaviour
             _cg.alpha = 1f;
     }
 
-    // 콤보에 따라 더 빨라지는 기본 갸우뚱 모션을 재시작한다.
+    // 남은 시간 비율에 따라 기본 스케일을 갱신한다.
+    private void ApplyRemainScale()
+    {
+        if (_remainScaleTarget == null)
+            return;
+
+        float evaluatedRatio = EvaluateRemainScaleRatio(_lastRemainRatio);
+        float scale = Mathf.Lerp(_minRemainScale, _fullRemainScale, evaluatedRatio);
+        _remainScaleTarget.localScale = Vector3.one * scale;
+    }
+
+    // 콤보가 높을수록 빨라지는 기본 갸우뚱 모션을 재시작한다.
     private void RestartIdleMotion(bool immediateReset)
     {
         KillTween(ref _idleTween);
@@ -136,18 +173,25 @@ public class ComboUITextBehaviour : MonoBehaviour
             return;
 
         if (immediateReset)
+        {
+            _idlePhase = 0f;
             _idleRotationTarget.localRotation = Quaternion.identity;
+        }
 
         float duration = Mathf.Lerp(_idleMaxDuration, _idleMinDuration, _lastComboRatio);
         duration = Mathf.Max(0.05f, duration);
 
-        _idleTween = DOVirtual.Float(0f, Mathf.PI * 2f, duration, value =>
+        float startPhase = _idlePhase;
+        float endPhase = startPhase + (Mathf.PI * 2f);
+
+        _idleTween = DOVirtual.Float(startPhase, endPhase, duration, value =>
         {
-            float angle = Mathf.Sin(value) * _idleRotateAngle;
+            _idlePhase = Mathf.Repeat(value, Mathf.PI * 2f);
+            float angle = Mathf.Sin(_idlePhase) * _idleRotateAngle;
             _idleRotationTarget.localRotation = Quaternion.Euler(0f, 0f, angle);
         })
         .SetEase(Ease.Linear)
-        .SetLoops(-1, LoopType.Restart);
+        .SetLoops(-1, LoopType.Incremental);
     }
 
     // 킬 발생 시 z축 강한 흔들림과 스케일 펀치를 재생한다.
@@ -159,7 +203,7 @@ public class ComboUITextBehaviour : MonoBehaviour
         _punchDirection *= -1f;
 
         KillTween(ref _impactRotationTween);
-        KillTween(ref _scaleTween);
+        KillTween(ref _punchScaleTween);
 
         if (_impactRotationTarget != null)
         {
@@ -170,9 +214,9 @@ public class ComboUITextBehaviour : MonoBehaviour
                 0.85f);
         }
 
-        if (_scaleTarget != null)
+        if (_punchScaleTarget != null)
         {
-            _scaleTween = _scaleTarget.DOPunchScale(
+            _punchScaleTween = _punchScaleTarget.DOPunchScale(
                 Vector3.one * scaleAmount,
                 _punchScaleDuration,
                 _punchScaleVibrato,
@@ -180,13 +224,15 @@ public class ComboUITextBehaviour : MonoBehaviour
         }
     }
 
-    // 콤보 수만으로 0~1 비율을 계산한다.
-    private float GetComboRatioFromCount(int comboCount)
+    // 남은 시간 비율에 curve를 적용한다.
+    private float EvaluateRemainScaleRatio(float remainRatio)
     {
-        if (_maxComboForSpeed <= 0)
-            return 0f;
+        float clampedRatio = Mathf.Clamp01(remainRatio);
 
-        return Mathf.Clamp01((float)comboCount / _maxComboForSpeed);
+        if (_remainScaleCurve == null || _remainScaleCurve.length == 0)
+            return clampedRatio;
+
+        return Mathf.Clamp01(_remainScaleCurve.Evaluate(clampedRatio));
     }
 
     // 모든 트윈을 안전하게 종료한다.
@@ -194,7 +240,7 @@ public class ComboUITextBehaviour : MonoBehaviour
     {
         KillTween(ref _idleTween);
         KillTween(ref _impactRotationTween);
-        KillTween(ref _scaleTween);
+        KillTween(ref _punchScaleTween);
     }
 
     // 단일 트윈을 안전하게 종료한다.
@@ -212,14 +258,17 @@ public class ComboUITextBehaviour : MonoBehaviour
     // 비활성화 시 남는 회전/스케일 값을 기본값으로 되돌린다.
     private void ResetVisual()
     {
+        if (_remainScaleTarget != null)
+            _remainScaleTarget.localScale = Vector3.one * _fullRemainScale;
+
         if (_idleRotationTarget != null)
             _idleRotationTarget.localRotation = Quaternion.identity;
 
         if (_impactRotationTarget != null)
             _impactRotationTarget.localRotation = Quaternion.identity;
 
-        if (_scaleTarget != null)
-            _scaleTarget.localScale = Vector3.one;
+        if (_punchScaleTarget != null)
+            _punchScaleTarget.localScale = Vector3.one;
 
         if (_rainbowGradient != null)
             _rainbowGradient.enabled = false;
