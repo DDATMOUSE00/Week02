@@ -14,8 +14,8 @@ public class CutScene_sj : Singleton<CutScene_sj>
     [SerializeField] private int _start_cutSceneNumber = 5;
     [SerializeField] private int _ending_cutSceneNumber = 5;
 
-    //[Header("뒤의 배경")]
-    //[SerializeField] private GameObject _cutScene_Background;
+    [Header("뒤의 배경")]
+    [SerializeField] private GameObject _cutScene_Background;
 
     [Header("임시)시작 컷씬인지 끝 컷씬인지 true면 엔딩")]
     [SerializeField] private bool _isEndingCutScene = false;
@@ -48,7 +48,7 @@ public class CutScene_sj : Singleton<CutScene_sj>
     }
 
     void Start() {
-        //_cutScene_Background.SetActive(true);
+        _cutScene_Background.SetActive(true);
     }
 
     void Update()
