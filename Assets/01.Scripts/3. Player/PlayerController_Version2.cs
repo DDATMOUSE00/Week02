@@ -20,7 +20,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool _showDebugLog = false;
-
+    [SerializeField] private bool _isPlayerInputLocked = false;
 
     #endregion
 
@@ -33,7 +33,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     private bool _isCharging;
     private bool _isSlamAnticipating;
     private bool _isSlamming;
-    private bool _canSlam = true;
+    private bool _canSlam;
 
     private float _moveInputX;
 
@@ -44,20 +44,24 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     private bool _lastJumpWasCharged;
     private float _lastJumpChargeRatio;
 
+    // 외부에서 플레이어 입력을 잠글 때 사용하는 플래그
+    
+
     #endregion
 
     #region Properties
 
     private InputAction MoveAction => _moveActionReference != null ? _moveActionReference.action : null;
     private InputAction JumpAction => _jumpActionReference != null ? _jumpActionReference.action : null;
-    private bool JumpHeld => JumpAction != null && JumpAction.IsPressed();
+    private bool JumpHeld => !_isPlayerInputLocked && JumpAction != null && JumpAction.IsPressed();
 
     public bool IsGrounded => _movement != null && _movement.IsGrounded;
     public bool IsCharging => _isCharging;
     public bool IsSlamAnticipating => _isSlamAnticipating;
     public bool IsSlamming => _isSlamming;
     public bool CanSlam => _canSlam;
-    public bool IsMoveLocked => _isCharging || _isSlamAnticipating || _isSlamming;
+    public bool IsMoveLocked => _isPlayerInputLocked || _isCharging || _isSlamAnticipating || _isSlamming;
+    public bool IsPlayerInputLocked => _isPlayerInputLocked;
     public float MoveInputX => _moveInputX;
     public int FacingDirection => _facingDirection;
     public int LockedActionFacingDirection => _lockedActionFacingDirection;
@@ -120,6 +124,14 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     // 입력과 타이머를 갱신한다.
     private void Update()
     {
+        if (_isPlayerInputLocked)
+        {
+            _moveInputX = 0f;
+            _jumpAction.TickTimers(_isCharging, false, Time.deltaTime);
+            _airAction.TickAnticipationTimer(this, _movement, Time.deltaTime);
+            return;
+        }
+
         ReadMoveInput();
         UpdateFacingDirection();
 
@@ -166,6 +178,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     #endregion
 
     #region Setup Validation
+
     // 공중에서 점프 버튼을 누른 채 바닥에 가까워지면 착지용 점프 버퍼를 예약한다.
     private void HandlePreLandHeldJumpBuffer()
     {
@@ -318,6 +331,15 @@ public class PlayerControllerVersionTwo : MonoBehaviour
         int inputFacing = GetInputFacingDirection();
         _lockedActionFacingDirection = inputFacing != 0 ? inputFacing : _facingDirection;
         _facingDirection = _lockedActionFacingDirection;
+    }
+
+    // 외부에서 플레이어 입력 잠금 여부를 설정한다.
+    public void PlayerInputLock(bool isLocked)
+    {
+        _isPlayerInputLocked = isLocked;
+
+        if (isLocked)
+            _moveInputX = 0f;
     }
 
     #endregion
