@@ -86,7 +86,7 @@ public class PlayerAirAction : MonoBehaviour
         movement.ClearJumpLaunchMomentum();
         movement.FreezeBody();
 
-        if (_effect != null && controller.LastJumpWasCharged)
+        if (_effect != null && useChargedSlam == true && controller.LastJumpChargeRatio >= controller.SuperChargeThreshold)
             _effect.Play();
 
         if (controller.ShowDebugLog)
