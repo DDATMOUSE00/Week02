@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2624608296754042053}
   - component: {fileID: 7752031987303613339}
   - component: {fileID: 9026323446592484680}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: HotdogStore
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7214420773972765254}
   - component: {fileID: 7080624882244369411}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Enemy
   m_Icon: {fileID: 0}
