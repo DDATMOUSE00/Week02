@@ -16,6 +16,20 @@ public class TransformEventArgs : EventArgs
     
 }
 
+
+[Serializable]
+public class ComboHitEventArgs : EventArgs
+{
+    public int ComboCount;
+    public float ComboRatio;
+
+    public ComboHitEventArgs(int comboCount, float comboRatio)
+    {
+        ComboCount = comboCount;
+        ComboRatio = comboRatio;
+    }
+}
+
 [Serializable]
 public class TimerEventArgs : EventArgs
 {
