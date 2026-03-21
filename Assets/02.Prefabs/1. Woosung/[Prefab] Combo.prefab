@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 5965994031321920215}
   - component: {fileID: 3869145325811101616}
   - component: {fileID: 1200437634312559331}
-  - component: {fileID: 2568827617943252040}
   - component: {fileID: 7603500074049184699}
+  - component: {fileID: 2568827617943252040}
   m_Layer: 5
   m_Name: '[Prefab] Combo'
   m_TagString: Untagged
@@ -160,18 +160,6 @@ MonoBehaviour:
   _punchScale: 1.3
   _moveEase: 9
   _scaleEase: 27
---- !u!225 &2568827617943252040
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 806584472033588332}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &7603500074049184699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,3 +177,15 @@ MonoBehaviour:
   _rightHueOffset: 0.15
   _saturation: 1
   _value: 1
+--- !u!225 &2568827617943252040
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806584472033588332}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

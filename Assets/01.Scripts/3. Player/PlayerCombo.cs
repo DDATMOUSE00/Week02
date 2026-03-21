@@ -7,6 +7,9 @@ public class PlayerCombo : MonoBehaviour
     [SerializeField] private int _maxCombo = 999;
     [SerializeField] private float _comboDuration = 1.0f;
 
+    [Header("UI | 채워야하는 필드. (없으면 UI 연동 안됨")]
+    [SerializeField] private ComboUITextBehaviour _comboText;
+
     private int _currentKill = 0;
     private int _currentCombo = 0;
     private float _currentComboDuration = 0f;
@@ -59,6 +62,9 @@ public class PlayerCombo : MonoBehaviour
         }
 
         _currentComboDuration = _comboDuration;
+
+        if(_comboText != null)
+            _comboText.AddKill(CurrentCombo, CurrentComboRatio);
     }
 
     private void AddCombo()
