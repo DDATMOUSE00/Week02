@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 17bad782b07d70843a91043904d64067, type: 3}
-  m_Color: {r: 0.8113208, g: 0.5754128, b: 0.31763974, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -140,22 +140,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   _visual: {fileID: 2420665293574089471}
-  _playerController: {fileID: 0}
+  _playerController: {fileID: 6132667342024847222, guid: f20a46613385cec449ca06b143d8b497, type: 3}
   _despawnRange: 500
-  _spriteRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 2551700821825313487}
   _enemyType: 0
   _typeA:
-    IdleSprite: {fileID: 21300000, guid: 17bad782b07d70843a91043904d64067, type: 3}
-    PanicSprite: {fileID: 21300000, guid: 865872765653edc439f06002199c9e7d, type: 3}
+    IdleSprite: {fileID: 21300000, guid: bc13cfb612096d64585d170c6cd356f2, type: 3}
+    PanicSprite: {fileID: 21300000, guid: 682b7118ad47db0459a266ea0b893584, type: 3}
   _typeB:
-    IdleSprite: {fileID: 21300000, guid: 4f3822e75568d4e488c8237781567774, type: 3}
-    PanicSprite: {fileID: 21300000, guid: 1acbc955aa519974494cc01d2b9f0312, type: 3}
+    IdleSprite: {fileID: 21300000, guid: 3c47d319ce5ab6940964d5b32d88ffc9, type: 3}
+    PanicSprite: {fileID: 21300000, guid: a2788aa9a480a50408b006dd03b2f717, type: 3}
   _typeC:
-    IdleSprite: {fileID: 21300000, guid: a6f550440cd1e8d4c865850f20be5291, type: 3}
-    PanicSprite: {fileID: 21300000, guid: 0fadd5676162f0441aa8f68cbc39a72a, type: 3}
+    IdleSprite: {fileID: 21300000, guid: e2db172d47385c244b7e2cafc1c47158, type: 3}
+    PanicSprite: {fileID: 21300000, guid: e36168a771fecf740ba15588c1818c59, type: 3}
   _typeD:
-    IdleSprite: {fileID: 21300000, guid: c44412d97b17f034b9cd0abe022770e0, type: 3}
-    PanicSprite: {fileID: 21300000, guid: 0fcb4f6522d4512499f4605cdba23487, type: 3}
+    IdleSprite: {fileID: 21300000, guid: 114e77e798bdfff43a3ac2b4c9299064, type: 3}
+    PanicSprite: {fileID: 21300000, guid: 5f251f0b1c37df242afbbd2726bd3c7a, type: 3}
   _state: 0
   _player: {fileID: 0}
   _idleSpeed: 0.3
