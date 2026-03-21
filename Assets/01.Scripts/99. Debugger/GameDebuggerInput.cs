@@ -8,7 +8,7 @@ public class GameDebuggerInput : MonoBehaviour
     {
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
-            GameManager.Instance.DebugSetState(GameState.Ready);
+            GameManager.Instance.DebugSetState(GameState.Lobby);
         }
         else if (Keyboard.current.digit2Key.wasPressedThisFrame)
         {
