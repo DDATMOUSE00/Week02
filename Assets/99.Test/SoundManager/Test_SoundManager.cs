@@ -12,8 +12,6 @@ public class Test_SoundManager : MonoBehaviour
         if (keyboard == null) return; // Case where no keyboard is plugged in
 
         // --- BGM Testing ---
-        if (keyboard.digit1Key.wasPressedThisFrame)
-            SoundManager.Instance.PlayBGM(BGM.MainMenu);
 
         if (keyboard.digit2Key.wasPressedThisFrame)
             SoundManager.Instance.PlayBGM(BGM.GameScene);
@@ -33,7 +31,7 @@ public class Test_SoundManager : MonoBehaviour
             SoundManager.Instance.PlaySFX(PlayerSFX.Jump);
 
         if (keyboard.fKey.wasPressedThisFrame)
-            SoundManager.Instance.PlaySFX(PlayerSFX.Slam);
+            SoundManager.Instance.PlaySFX(PlayerSFX.SlamHeavy);
 
         if (keyboard.rKey.wasPressedThisFrame)
             SoundManager.Instance.PlaySFX(PlayerSFX.Charge);

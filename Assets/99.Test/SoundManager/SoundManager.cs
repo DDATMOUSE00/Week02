@@ -4,7 +4,6 @@ using UnityEngine;
 public enum BGM
 {
     None = 0,
-    MainMenu,
     GameScene,
     GameOver,
     GameClear,
@@ -14,8 +13,11 @@ public enum BGM
 public enum PlayerSFX
 {
     Jump,
-    Slam,
-    Charge
+    SlamHeavy,
+    SlamLight,
+    Charge,
+    Levelup,
+    Pint
 }
 
 
