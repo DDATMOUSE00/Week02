@@ -1,0 +1,289 @@
+fileFormatVersion: 2
+guid: 9be93f75f5449aa4a913988ad48ce30e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2524331560248673982
+    second: slam_level_03_hit_far_0
+  - first:
+      213: 6671017818419973626
+    second: slam_level_03_hit_far_1
+  - first:
+      213: 6476642488512017715
+    second: slam_level_03_hit_far_2
+  - first:
+      213: 4794927276464912958
+    second: slam_level_03_hit_far_3
+  - first:
+      213: -47664203207294387
+    second: slam_level_03_hit_far_4
+  - first:
+      213: -4253262051464725840
+    second: slam_level_03_hit_far_5
+  - first:
+      213: 4145668133809177486
+    second: slam_level_03_hit_far_6
+  - first:
+      213: -7077859189452636168
+    second: slam_level_03_hit_far_7
+  - first:
+      213: 7884522766321793506
+    second: slam_level_03_hit_far_8
+  - first:
+      213: 3835670935860470340
+    second: slam_level_03_hit_far_9
+  - first:
+      213: 7870258752937756420
+    second: slam_level_03_hit_far_10
+  - first:
+      213: 1412324259860387381
+    second: slam_level_03_hit_far_11
+  - first:
+      213: -8689190887296264473
+    second: slam_level_03_hit_far_12
+  - first:
+      213: -4811580663951142482
+    second: slam_level_03_hit_far_13
+  - first:
+      213: -1910132573439601941
+    second: slam_level_03_hit_far_14
+  - first:
+      213: 9137990747575927368
+    second: slam_level_03_hit_far_15
+  - first:
+      213: -3068311627780644181
+    second: slam_level_03_hit_far_16
+  - first:
+      213: -7581296343126494866
+    second: slam_level_03_hit_far_17
+  - first:
+      213: -1592857749876605240
+    second: slam_level_03_hit_far_18
+  - first:
+      213: 9220053648258839992
+    second: slam_level_03_hit_far_19
+  - first:
+      213: 7020634009610370793
+    second: slam_level_03_hit_far_20
+  - first:
+      213: -1199530109290064429
+    second: slam_level_03_hit_far_21
+  - first:
+      213: 2556339202719831210
+    second: slam_level_03_hit_far_22
+  - first:
+      213: -5437807149580064831
+    second: slam_level_03_hit_far_23
+  - first:
+      213: 1775107093213306246
+    second: slam_level_03_hit_far_24
+  - first:
+      213: -3675401910214704069
+    second: slam_level_03_hit_far_25
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: slam_level_03_hit_far_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 277
+        height: 97
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 249f11802d5c7fcd0800000000000000
+      internalID: -2524331560248673982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slam_level_03_hit_far_1
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 0
+        width: 277
+        height: 97
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afd493d7c57349c50800000000000000
+      internalID: 6671017818419973626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slam_level_03_hit_far_2
+      rect:
+        serializedVersion: 2
+        x: 554
+        y: 0
+        width: 277
+        height: 97
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 335f5f05708a1e950800000000000000
+      internalID: 6476642488512017715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slam_level_03_hit_far_3
+      rect:
+        serializedVersion: 2
+        x: 831
+        y: 0
+        width: 277
+        height: 97
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3ab58d04f00b8240800000000000000
+      internalID: 4794927276464912958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 8dac9b21ed62a1d4fafdb5c16faabd42
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":277.0,"y":97.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      slam_level_03_hit_far_0: -2524331560248673982
+      slam_level_03_hit_far_1: 6671017818419973626
+      slam_level_03_hit_far_2: 6476642488512017715
+      slam_level_03_hit_far_3: 4794927276464912958
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

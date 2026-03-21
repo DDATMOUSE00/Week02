@@ -76,6 +76,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f364ade490de9764981a475d66a5df6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
+  _distanceChecker: {fileID: 0}
   _player: {fileID: 0}
   _spawnPoints:
   - {fileID: 8468067696839052193}
+  _spawnInterval: 50
+  _spawnCountPerInterval: 30
+  _minSpawnDistanceFromPlayer: 5
+  _lastSpawnPosition: {x: 0, y: 0, z: 0}
+  _isSpawnActive: 0
+  _groundY: -4.3
+  _spawnForwardDistance: 50
+  _spawnXRandomRange: 100

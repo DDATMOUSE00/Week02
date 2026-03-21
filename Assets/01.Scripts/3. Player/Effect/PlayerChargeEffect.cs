@@ -17,7 +17,7 @@ public class PlayerChargeEffect : MonoBehaviour
     [Header("Charge Squash")]
     [SerializeField] private float _yOffest = 0;
 
-    [Tooltip("차지 UI가 보여지기 시작하는 Ratio 값")][SerializeField] private float _showOffest = 0.1f;
+    [Tooltip("차지 UI가 보여지기 시작하는 Ratio 값")]
     [SerializeField] private float _chargeExitDuration = 0.1f;
     [SerializeField] private float _maxChargeScaleX = 1.12f;
     [SerializeField] private float _maxChargeScaleY = 0.88f;
