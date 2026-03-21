@@ -2,9 +2,11 @@
 
 public enum GameState
 {
-    Ready, 
+    StartCutScene,
+    Tutorial, 
     Play, 
     Clear, 
     GameOver,
+    EndingCutScene,
     Lobby
 }
