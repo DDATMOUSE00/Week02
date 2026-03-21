@@ -1,82 +1,42 @@
-using System;
-using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening; // DOTween을 쓰기 위해 필수!
 
 public class FadeController_sj : MonoBehaviour // Panel 불투명도 조절해 페이드인 or 페이드아웃
 {
-    public bool IsFadeIn; // true=FadeIn, false=FadeOut
-    //public GameObject Panel; // 불투명도를 조절할 Panel 오브젝트
-    private Action _onCompleteCallback; // FadeIn 또는 FadeOut 다음에 진행할 함수
+    [Header("테스트용 오브젝트")]
+    [SerializeField] private GameObject _cube;
+    [SerializeField] private RectTransform _uiPanel;
+    [SerializeField] private Image _fadeImage;
 
-    // [추가] 코루틴 중복 실행을 막기 위한 변수
-    private Coroutine _fadeCoroutine;
-
-   
-    // [수정] 매 프레임 무한 호출되던 Update() 함수 전체 삭제
-
-    public void FadeIn(GameObject Panel)
+    void Start()
     {
-        if (Panel == null) return;
-        Panel.SetActive(true);
-        Debug.Log("FadeCanvasController_ Fade In 시작");
-
-        // 실행 중인 페이드가 있다면 멈추고 새로 시작
-        if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
-        _fadeCoroutine = StartCoroutine(CoFadeIn(Panel));
+        // 0. 초기화 (선택사항이지만 권장)
+        DOTween.Init();
     }
 
-    public void FadeOut(GameObject Panel)
+    public void RunExample()
     {
-        if (Panel == null) return;
-        Panel.SetActive(true);
-        Debug.Log("FadeCanvasController_ Fade Out 시작");
+        // 1. 이동 (DOMove) - 2초 동안 (5, 5, 0) 위치로 이동
+        _cube.transform.DOMove(new Vector3(5, 5, 0), 2f)
+            .SetEase(Ease.OutBounce); // 튕기는 효과 추가
 
-        // 실행 중인 페이드가 있다면 멈추고 새로 시작
-        if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
-        _fadeCoroutine = StartCoroutine(CoFadeOut(Panel));
+        // 2. 크기 조절 (DOScale) - 1초 동안 2배로 커졌다가 다시 돌아오기
+        _cube.transform.DOScale(2f, 1f)
+            .SetLoops(2, LoopType.Yoyo); // 2번 반복 (커졌다 작아졌다)
 
+        // 3. UI 이동 (DOAnchorPos) - UI는 DOMove 대신 앵커 좌표를 써야 정확함
+        _uiPanel.DOAnchorPos(new Vector2(0, 0), 1.5f)
+            .From(new Vector2(0, -1000f)); // 밑에서 위로 슥 올라오는 연출
 
+        // 4. 투명도 (DOFade) - 1초 동안 서서히 사라지기
+        _fadeImage.DOFade(0f, 1f).OnComplete(() => {
+            Debug.Log("페이드가 끝났습니다! 오브젝트를 끕니다.");
+            _fadeImage.gameObject.SetActive(false);
+        });
+
+        // 5. 회전 (DORotate)
+        _cube.transform.DORotate(new Vector3(0, 180, 0), 1f);
     }
 
-    IEnumerator CoFadeIn(GameObject Panel)
-    {
-        float elapsedTime = 0f;
-        float fadedTime = 0.5f;
-
-        while (elapsedTime <= fadedTime)
-        {
-            Panel.GetComponent<CanvasRenderer>().SetAlpha(Mathf.Lerp(1f, 0f, elapsedTime / fadedTime));
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-        Debug.Log("Fade In 끝");
-        Panel.SetActive(false);
-        _onCompleteCallback?.Invoke();
-
-        _fadeCoroutine = null; // 초기화
-    }
-
-    IEnumerator CoFadeOut(GameObject Panel)
-    {
-        float elapsedTime = 0f;
-        float fadedTime = 0.5f;
-
-        while (elapsedTime <= fadedTime)
-        {
-            Panel.GetComponent<CanvasRenderer>().SetAlpha(Mathf.Lerp(0f, 1f, elapsedTime / fadedTime));
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-      
-        Debug.Log("Fade Out 끝");
-        Panel.SetActive(false);
-        _onCompleteCallback?.Invoke();
-
-        _fadeCoroutine = null; // 초기화
-    }
-
-    public void RegisterCallback(Action callback)
-    {
-        _onCompleteCallback = callback;
-    }
 }

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 // 1. Singleton<T>을 상속받도록 수정합니다.
 public class CutScene_sj : Singleton<CutScene_sj>
@@ -102,10 +103,11 @@ public class CutScene_sj : Singleton<CutScene_sj>
                 {
                     _start_cutSceneObjects[i].gameObject.SetActive(false);
                 }
-
-                // [추가3] 컷씬이 끝났을 때 페이드 아웃 및 튜토리얼 진입
-                FadeController_sj fade = FindObjectOfType<FadeController_sj>();
-                if (fade != null) fade.FadeOut(_cutScene_Background);
+                // _cutScene_Background가 GameObject일 때
+                _cutScene_Background.GetComponent<Image>().DOFade(1f, 1f); // 컷씬이 끝날 때 배경 페이드 인
+                //// [추가3] 컷씬이 끝났을 때 페이드 아웃 및 튜토리얼 진입
+                //FadeController_sj fade = FindObjectOfType<FadeController_sj>();
+                //if (fade != null) fade.FadeOut(_cutScene_Background);
 
                 if (GameManager.Instance != null)
                 {   Debug.Log("컷씬 끝, 튜토리얼 진입");
@@ -121,15 +123,17 @@ public class CutScene_sj : Singleton<CutScene_sj>
     private void OnCutsceneStart(MEventType MEventType, Component Sender, EventArgs args)
     {
         _currentCutScene = 0;
-        _isCutSceneFinished = false; // 컷씬 새로 시작할 때 자물쇠 풀기
+        _isCutSceneFinished = false;
 
-        // 엔딩컷씬이면 컷씬 상태 들어갈때 페이드인
-        if (_isEndingCutScene == true)
-        {
-            FadeController_sj fade = FindObjectOfType<FadeController_sj>();
-            if (fade != null) fade.FadeIn(_cutScene_Background);
-        }
+        // 1. 먼저 오브젝트를 켭니다.
+        _cutScene_Background.SetActive(true);
 
+        // 2. 배경 이미지를 찾아서
+        Image bgImage = _cutScene_Background.GetComponent<Image>();
+
+        // 3. 만약 '나타나게' 하고 싶다면 (알파 0 -> 1)
+        bgImage.color = new Color(bgImage.color.r, bgImage.color.g, bgImage.color.b, 0f);
+        bgImage.DOFade(0f, 1f);
         foreach (var img in _start_cutSceneObjects) if (img != null) img.gameObject.SetActive(false);
         foreach (var img in _ending_cutSceneObjects) if (img != null) img.gameObject.SetActive(false);
 
