@@ -12774,6 +12774,18 @@ PrefabInstance:
       propertyPath: _player
       value: 
       objectReference: {fileID: 8939529227513929847}
+    - target: {fileID: 1888167626769599454, guid: e32f0ab8bd3afa24ba56afdfb7d694a6, type: 3}
+      propertyPath: _spawnInterval
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 1888167626769599454, guid: e32f0ab8bd3afa24ba56afdfb7d694a6, type: 3}
+      propertyPath: _spawnXRandomRange
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 1888167626769599454, guid: e32f0ab8bd3afa24ba56afdfb7d694a6, type: 3}
+      propertyPath: _spawnCountPerInterval
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 9097749590006959072, guid: e32f0ab8bd3afa24ba56afdfb7d694a6, type: 3}
       propertyPath: m_Name
       value: SpawnManager

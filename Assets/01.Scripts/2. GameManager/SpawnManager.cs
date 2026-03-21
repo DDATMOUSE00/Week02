@@ -8,8 +8,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Transform[] _spawnPoints; //스폰 위치
 
     [Header("Distance Spawn")]
-    [SerializeField] private float _spawnInterval = 50f; //마지막 스폰 거리에서 스폰 거리 설정
-    [SerializeField] private int _spawnCountPerInterval = 30; //소환 될 마릿수(랜덤 될듯)
+    [SerializeField] private float _spawnInterval = 150f; //마지막 스폰 거리에서 스폰 거리 설정
+    [SerializeField] private int _spawnCountPerInterval = 50; //소환 될 마릿수(랜덤 될듯)
     [SerializeField] private float _minSpawnDistanceFromPlayer = 5f; //플레이어랑 가까우면 안 나오게
 
     [SerializeField] private Vector3 _lastSpawnPosition; //마지막 스폰 기준 위치
@@ -17,7 +17,7 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] private float _groundY = -4.3f; //바닥 높이
     [SerializeField] private float _spawnForwardDistance = 50f; //플레이어 기준 앞쪽 거리
-    [SerializeField] private float _spawnXRandomRange = 100f; //X축 랜덤 퍼짐 범위
+    [SerializeField] private float _spawnXRandomRange = 200f; //X축 랜덤 퍼짐 범위
 
 
     private void OnEnable()
