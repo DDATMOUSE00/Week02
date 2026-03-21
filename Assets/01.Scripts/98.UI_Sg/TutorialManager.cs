@@ -90,8 +90,12 @@ public class TutorialManager : Singleton<TutorialManager>
 
         switch (_currentStep)
         {
-            case TutorialStep.MoveAD: _uiManager.ShowOnlyAD(); break;
-            case TutorialStep.JumpCharge: _uiManager.ShowOnlySpace(); break;
+            case TutorialStep.MoveAD:
+                _uiManager.ShowOnlyAD();
+                break;
+            case TutorialStep.JumpCharge: 
+                _uiManager.ShowOnlySpace(); 
+                break;
             case TutorialStep.SlamWait:
                 Time.timeScale = _slowMotionScale;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;

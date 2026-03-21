@@ -35,6 +35,9 @@ public class Manual_Ui_sg : MonoBehaviour
     [SerializeField] private GameObject _player;
     [SerializeField] private RectTransform _manualRect;
     [SerializeField] private Vector3 _manualOffset;
+
+ 
+
     private Camera _mainCamera;
     private RectTransform _parentRect;
     private Camera _uiCamera;
@@ -169,4 +172,10 @@ public class Manual_Ui_sg : MonoBehaviour
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_parentRect, screenPos, _uiCamera, out Vector2 localPoint))
             _manualRect.localPosition = localPoint;
     }
+
+
+
+
+
+
 }
