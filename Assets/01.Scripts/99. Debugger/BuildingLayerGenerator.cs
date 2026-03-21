@@ -13,8 +13,12 @@ public class BuildingLayerGenerator : MonoBehaviour
     [SerializeField] private Transform _floorReference;
 
     [Header("레이어 루트")]
+    [SerializeField] private Transform _veryFarLayerRoot;
     [SerializeField] private Transform _farLayerRoot;
     [SerializeField] private Transform _frontLayerRoot;
+
+    [Header("Very Far Layer Settings")]
+    [SerializeField] private GameObject _veryFarMountainPrefab;
    
     [Header("Far Layer Settings")]
     [SerializeField] private GameObject _farBuildingPrefab;
@@ -38,10 +42,50 @@ public class BuildingLayerGenerator : MonoBehaviour
     public void GenerateAll()
     {
         ClearAll();
+        GenerateVeryFarLayer();
         GenerateFarLayer();
         GenerateFrontLayer();
     }
+    public void GenerateVeryFarLayer()
+    {
+        if (_veryFarLayerRoot == null || _veryFarMountainPrefab == null)
+        {
+            Debug.LogWarning("세팅실패");
+            return;
+        }
 
+        if (!TryGetFloorRange(out float minX, out float maxX))
+        {
+            Debug.LogWarning("바닥문제");
+            return;
+        }
+
+        ClearLayer(_veryFarLayerRoot);
+
+        float startX = minX - _leftPadding;
+        float endX = maxX + _rightPadding;
+
+        float worldWidth = GetPrefabWidth(_veryFarMountainPrefab);
+        if (worldWidth <= 0f)
+        {
+            Debug.LogWarning("산넓이맵넘음");
+            return;
+        }
+
+        float currentLeftX = startX;
+        while (currentLeftX < endX)
+        {
+            GameObject instance = CreateInstance(_veryFarMountainPrefab, _veryFarLayerRoot);
+            instance.name = $"{_veryFarMountainPrefab.name}_VeryFar";
+
+            Vector3 pos = instance.transform.position;
+            pos.x = currentLeftX + (worldWidth * 0.5f);
+            //pos.y = _veryFarY;
+            instance.transform.position = pos;
+
+            currentLeftX += worldWidth; 
+        }
+    }
     public void GenerateFarLayer()
     {
         if (_farLayerRoot == null || _farBuildingPrefab == null)
@@ -160,6 +204,7 @@ public class BuildingLayerGenerator : MonoBehaviour
 
     public void ClearAll()
     {
+        ClearLayer(_veryFarLayerRoot);
         ClearLayer(_farLayerRoot);
         ClearLayer(_frontLayerRoot);
     }
