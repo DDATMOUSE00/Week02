@@ -52,18 +52,29 @@ public class ComboTextRainbowGradient : MonoBehaviour
             .SetLoops(-1, LoopType.Restart);
     }
 
-    public void StopRainbow()
-    {
-        KillRainbow();
-    }
-
     private void KillRainbow()
     {
         if (_rainbowTween != null && _rainbowTween.IsActive())
-        {
             _rainbowTween.Kill();
-            _rainbowTween = null;
-        }
+
+        _rainbowTween = null;
+
+        ResetGradientToWhite();
+    }
+
+    private void ResetGradientToWhite()
+    {
+        if (_tmpText == null)
+            return;
+
+        Color white = Color.white;
+
+        _tmpText.colorGradient = new VertexGradient(
+            white,   // topLeft
+            white,   // topRight
+            white,   // bottomLeft
+            white    // bottomRight
+        );
     }
 
     private void ApplyGradient(float baseHue)

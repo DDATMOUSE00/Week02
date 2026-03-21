@@ -82,7 +82,8 @@ public class PlayerCombo : MonoBehaviour
 
         _currentComboDuration = _comboDuration;
         RefreshComboLevel();
-
+        
+        //효과
         if (_comboText != null)
             _comboText.AddKill(CurrentCombo, CurrentComboRatio, CurrentComboRemainRatio);
     }
