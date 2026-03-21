@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private Transform _visual; //스프라이트 움직이기 위해
     [SerializeField] private Tween _panicTween;
+    [SerializeField] private PlayerControllerVersionTwo _playerController; //플레이어 차지 받아오기 위한
 
     [Header("Sprite")]
     [SerializeField] private SpriteRenderer _spriteRenderer; //적 스프라이트
@@ -179,6 +180,8 @@ public class Enemy : MonoBehaviour
         _player = targetPlayer;
         _enemyType = enemyType;
 
+        _playerController = targetPlayer.GetComponent<PlayerControllerVersionTwo>(); //적 찾긴 하는데 다르게 해야할듯
+
         _state = EnemyState.Idle;
         _dirtimer = 0f;
         _moveDir = Vector2.zero;
@@ -254,22 +257,57 @@ public class Enemy : MonoBehaviour
         _rb.linearVelocity = Vector2.zero;
         _rb.angularVelocity = 0f;
 
-        float randomX = Random.Range(20f, 50f);
-        float randomY = Random.Range(5f, 30f);
+        //플레이어 차지 안 받고 랜덤, 밑에 어색하면 넣고 아님 없애자
+        //float randomX = Random.Range(20f, 50f);
+        //float randomY = Random.Range(5f, 30f);
+        //Vector2 force = new Vector2(dirX * randomX, randomY);
+
+        //플레이어 차지 받기 시작
+        float chargeRatio = 0f;
+
+        if (_playerController != null)
+        {
+            chargeRatio = _playerController.LastJumpChargeRatio;
+
+            if (!_playerController.LastJumpWasCharged) 
+                chargeRatio = 0.02f; //일반 점프 값 조절하기
+        }
+
+        chargeRatio = Mathf.Clamp01(chargeRatio);
+
+        float normalizedCharge = Mathf.InverseLerp(0f, 0.7f, chargeRatio); //70%부터 최대치 되게 보정하는(슈퍼슬램)
+        normalizedCharge = Mathf.Pow(normalizedCharge, 2.2f); //낮은 차지 강한 차지 차이나게 하기
+
+        float minForceX = 3f;
+        float maxForceX = 4f;
+        float minForceY = 1f;
+        float maxForceY = 10f;
+
+        float baseForceX = Mathf.Lerp(minForceX, maxForceX, normalizedCharge);
+        float baseForceY = Mathf.Lerp(minForceY, maxForceY, normalizedCharge);
+
+        float randomX = baseForceX * Random.Range(0.8f, 1.2f);
+        float randomY = baseForceY * Random.Range(0.1f, 1.2f);
 
         Vector2 force = new Vector2(dirX * randomX, randomY);
+
+        float minTorque = 20f;
+        float maxTorque = 60f;
+        float torque = Mathf.Lerp(minTorque, maxTorque, normalizedCharge);
+        torque *= Random.Range(0.8f, 1.2f);
+        //플레이어 차지 받기 끝
 
         //x나 y날라가게
         _rb.AddForce(force, ForceMode2D.Impulse);
         //회전
-        _rb.AddTorque(-dirX * 42f, ForceMode2D.Impulse);
+        _rb.AddTorque(-dirX * torque, ForceMode2D.Impulse);
 
         if (_visual != null)
         {
             _visual.DOPunchScale(new Vector3(0.15f, -0.1f, 0f), 0.2f, 8, 0.8f);
         }
 
-        Invoke(nameof(ReturnToPool), 1.2f);
+        Invoke(nameof(ReturnToPool), 8f);
     }
     private void ReturnToPool()
     {
@@ -327,6 +365,14 @@ public class Enemy : MonoBehaviour
         //플레이어 반대 방향으로만 이동
         float dirX = transform.position.x - _player.position.x;
         float runX = Mathf.Sign(dirX);
+
+        //스프라이트 뒤집기
+        if (_visual != null)
+        {
+            Vector3 scale = _visual.localScale;
+            scale.x = runX * Mathf.Abs(_visualOriginalScale.x);
+            _visual.localScale = scale;
+        }
 
         //x가 같으면 랜덤
         if (runX == 0f)
