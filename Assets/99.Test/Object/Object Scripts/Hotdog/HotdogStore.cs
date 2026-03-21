@@ -45,7 +45,6 @@ public class HotdogStore : MonoBehaviour
             Debug.Log("[HotdogStore] : Player Reference is null");
         }
 
-        _spriteRenderer.sprite = _startSprite;
         transform.rotation = Quaternion.identity; //회전 초기화
 
         _isAlive = true;

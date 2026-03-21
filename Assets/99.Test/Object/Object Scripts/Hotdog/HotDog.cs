@@ -11,6 +11,7 @@ public class Hotdog : MonoBehaviour
     [SerializeField] float _rotationalForce = 360f;
 
     [SerializeField] float _delayTime = .5f;
+    [SerializeField] float _deathTimeAfterSpawn = 15f;
 
     void Awake()
     {
@@ -35,7 +36,7 @@ public class Hotdog : MonoBehaviour
         _rb.angularVelocity = Random.Range(-_rotationalForce, _rotationalForce);
         StartCoroutine( EnableColliderAfter(_delayTime) );
 
-        StartCoroutine (DestroyHotdogAfter( 15f ));
+        StartCoroutine (DestroyHotdogAfter( _deathTimeAfterSpawn ));
     }
 
 
@@ -52,7 +53,7 @@ public class Hotdog : MonoBehaviour
         
         yield return new WaitForSeconds(duration);
 
-        _col.enabled = true;
+        Destroy(gameObject);
     }
 
 

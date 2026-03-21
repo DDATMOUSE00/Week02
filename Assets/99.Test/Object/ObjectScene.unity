@@ -275,11 +275,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8939529229189183035, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.83
+      value: -18.8
       objectReference: {fileID: 0}
     - target: {fileID: 8939529229189183035, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.75
+      value: -4.9
       objectReference: {fileID: 0}
     - target: {fileID: 8939529229189183035, guid: f20a46613385cec449ca06b143d8b497, type: 3}
       propertyPath: m_LocalPosition.z
@@ -514,7 +514,7 @@ PrefabInstance:
       objectReference: {fileID: 604197378}
     - target: {fileID: 7752031987303613339, guid: 6f8b575949ca4ad4f87a5c3d1c3202d7, type: 3}
       propertyPath: _hotdogCount
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
