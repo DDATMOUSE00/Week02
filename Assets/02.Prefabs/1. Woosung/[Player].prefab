@@ -39456,9 +39456,10 @@ MonoBehaviour:
   _slamDamageLayer:
     serializedVersion: 2
     m_Bits: 128
-  _slamBaseImpactRadius: 1.2
-  _slamImpactRadiusPerHeight: 0.35
-  _slamMaxImpactRadius: 3.5
+  _slamBaseImpactBoxSize: {x: 4, y: 3}
+  _slamImpactBoxSizePerHeight: {x: 1, y: 0}
+  _slamImpactBoxSizePerChargeRatio: {x: 20, y: 1}
+  _slamMaxImpactBoxSize: {x: 100, y: 3}
   _slamBaseDamage: 10
   _slamDamagePerHeight: 4
   _slamMaxDamage: 999
@@ -39481,6 +39482,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _groundCheckSize: {x: 0.6, y: 0.12}
+  _impactResolveCastStartOffsetY: 0.3
+  _impactResolveCastExtraDistance: 0.3
+  _impactSurfaceOffsetY: 0.02
   _jumpDetachIgnoreTime: 0.08
   _groundMoveSpeed: 6
   _inputDeadZone: 0.1
@@ -39585,6 +39589,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHitEffect
   _starParticle: {fileID: 1305992075724188536}
   _hitParticle: {fileID: 420995442789085029}
+  _starWorldOffset: {x: 0, y: 0, z: 0}
+  _hitWorldOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &361629483890648459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39598,6 +39604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSlamBeforeEffect
   _particle: {fileID: 8867245166479291965}
+  _worldOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &9102630547781074732
 GameObject:
   m_ObjectHideFlags: 0

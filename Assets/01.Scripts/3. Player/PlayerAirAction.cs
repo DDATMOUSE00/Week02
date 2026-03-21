@@ -28,6 +28,7 @@ public class PlayerAirAction : MonoBehaviour
     private float _slamAnticipationTimer;
     private float _slamStartY;
     private float _currentSlamSpeed;
+    private float _currentSlamChargeRatio;
 
     #endregion
 
@@ -76,12 +77,16 @@ public class PlayerAirAction : MonoBehaviour
             ? _chargedSlamSpeed
             : _slamSpeed;
 
+        _currentSlamChargeRatio = useChargedSlam
+            ? controller.LastJumpChargeRatio
+            : 0f;
+
         _slamStartY = controller.transform.position.y;
 
         movement.ClearJumpLaunchMomentum();
         movement.FreezeBody();
 
-        if (_effect != null && controller.LastJumpWasCharged)
+        if (_effect != null && useChargedSlam == true && controller.LastJumpChargeRatio >= controller.SuperChargeThreshold)
             _effect.Play();
 
         if (controller.ShowDebugLog)
@@ -89,7 +94,7 @@ public class PlayerAirAction : MonoBehaviour
             Debug.Log(
                 $"Start Slam Anticipation | charged: {useChargedSlam}, " +
                 $"slamStartY: {_slamStartY:F2}, anticipation: {_slamAnticipationTimer:F2}, " +
-                $"slamSpeed: {_currentSlamSpeed:F2}");
+                $"slamSpeed: {_currentSlamSpeed:F2}, chargeRatio: {_currentSlamChargeRatio:F2}");
         }
     }
 
@@ -117,17 +122,17 @@ public class PlayerAirAction : MonoBehaviour
         movement.SetVelocity(new Vector2(0f, -SlamSpeed));
 
         if (controller.ShowDebugLog)
-            Debug.Log($"Start Slam Dive | slamSpeed: {SlamSpeed:F2}");
+            Debug.Log($"Start Slam Dive | slamSpeed: {SlamSpeed:F2}, chargeRatio: {_currentSlamChargeRatio:F2}");
     }
 
-    // 슬램 낙하 높이를 바탕으로 데미지를 적용하고, 비율에 따라 카메라 흔들림을 재생한다.
-    public void ApplySlamDamage(PlayerMovementMotor movement, Vector3 fallbackPosition, bool showDebugLog)
+    // 슬램 낙하 높이와 차지 비율을 바탕으로 데미지를 적용하고, 카메라 흔들림을 재생한다.
+    public void ApplySlamDamage(PlayerControllerVersionTwo controller, PlayerMovementMotor movement, Vector3 fallbackPosition, bool showDebugLog)
     {
         Vector2 impactPoint = movement.GetImpactPoint(fallbackPosition);
 
         float slamRatio = _slamDamage.EvaluateSlamShakeRatio(impactPoint, _slamStartY);
 
-        _slamDamage.ApplySlamDamage(impactPoint, _slamStartY, showDebugLog);
+        _slamDamage.ApplySlamDamage(impactPoint, _slamStartY, _currentSlamChargeRatio, showDebugLog);
         _cameraController?.PlaySlamLandShake(slamRatio, impactPoint.x);
     }
 
@@ -136,6 +141,7 @@ public class PlayerAirAction : MonoBehaviour
     {
         _slamAnticipationTimer = 0f;
         _currentSlamSpeed = 0f;
+        _currentSlamChargeRatio = 0f;
     }
 
     #endregion
