@@ -27,6 +27,7 @@ public class SpawnManager : MonoBehaviour
             EventManager.Instance.AddListener(MEventType.StageStarted, OnRespawnStart);
             EventManager.Instance.AddListener(MEventType.StageCleared, OnRespawnEnd);
             EventManager.Instance.AddListener(MEventType.StageFailed, OnRespawnEnd);
+            EventManager.Instance.AddListener(MEventType.TutorialStarted, OnTutorialStarte);
 
         }
     }
@@ -41,7 +42,6 @@ public class SpawnManager : MonoBehaviour
         }
 
     }
-
     private void Update()
     {
         if (_player == null)
@@ -71,6 +71,11 @@ public class SpawnManager : MonoBehaviour
         PoolManager.Instance.ReturnAllEnemies();
     }
 
+    private void OnTutorialStarte(MEventType type, Component sender, System.EventArgs args)
+    {
+        TutorialSpawnPoints(40);
+    }
+
     public void CheckDistanceSpawn(Vector3 playerPosition)
     {
         //실제 움직였을 때 적 소환
@@ -92,6 +97,32 @@ public class SpawnManager : MonoBehaviour
 
         //이번 스폰 시점을 새로운 기준 위치로 저장
         _lastSpawnPosition = playerPosition;
+    }
+
+    private void TutorialSpawnPoints(int count)
+    {
+        if (_player == null || _spawnPoints.Length == 0)
+            return;
+
+        // 각 스폰 포인트마다 반복
+        foreach (Transform point in _spawnPoints)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Enemy enemy = PoolManager.Instance.GetEnemy();
+
+                //기본 위치
+                Vector3 pos = point.position;
+
+                //살짝 퍼뜨리기 (겹침 방지)
+                pos.x += Random.Range(0f, 40f);
+
+                enemy.transform.position = pos;
+
+                Enemy.EnemyType randomType = (Enemy.EnemyType)Random.Range(0, 4);
+                enemy.Init(_player, randomType);
+            }
+        }
     }
 
 

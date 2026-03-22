@@ -2,28 +2,29 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Manual_Ui_Press_sg : MonoBehaviour
 {
-    [Header("¿‘∑¬ æ◊º« ∑π∆€∑±Ω∫")]
-    [SerializeField] private InputActionReference _navigateActionReference;
-    [SerializeField] private InputActionReference _spaceActionReference;
+    [Header("ÏûÖÎ†• Ïï°ÏÖò Î†àÌçºÎü∞Ïä§")]
+    private InputActionReference _navigateActionReference;
+    private InputActionReference _spaceActionReference;
 
-    [Header("≈∞∫∏µÂ ¿⁄∆« æ∆¿Ãƒ‹")]
-    [SerializeField] private Image _a;
-    [SerializeField] private Image _d;
-    [SerializeField] private Image _spacebar;
+    [Header("ÌÇ§Î≥¥Îìú ÏûêÌåê ÏïÑÏù¥ÏΩò")]
+    private Image _a;
+    private Image _d;
+    private Image _spacebar;
 
-    [Header("∆–µÂ ¿⁄∆« æ∆¿Ãƒ‹")]
-    [SerializeField] private Image _jumpStick;
+    [Header("Ìå®Îìú ÏûêÌåê ÏïÑÏù¥ÏΩò")]
+    private Image _gamepadJump;
 
-    [Header("A, D æ∆¿Ãƒ‹ Ω√∞¢ »ø∞˙ º≥¡§")]
+    [Header("A, D ÏïÑÏù¥ÏΩò ÏãúÍ∞Å Ìö®Í≥º ÏÑ§Ï†ï")]
     [SerializeField] private float _adDefaultSizeY = 100f;
     [SerializeField] private float _adPressedSizeY = 80f;
     [SerializeField] private Color _adDefaultColor = Color.white;
     [SerializeField] private Color _adPressedColor = new Color(123f / 255f, 123f / 255f, 123f / 255f, 1f);
 
-    [Header("Ω∫∆‰¿ÃΩ∫πŸ æ∆¿Ãƒ‹ Ω√∞¢ »ø∞˙ º≥¡§")]
+    [Header("Ïä§ÌéòÏù¥Ïä§Î∞î ÏïÑÏù¥ÏΩò ÏãúÍ∞Å Ìö®Í≥º ÏÑ§Ï†ï")]
     [SerializeField] private float _spaceDefaultSizeY = 100f;
     [SerializeField] private float _spacePressedSizeY = 80f;
     [SerializeField] private Color _spaceDefaultColor = Color.white;
@@ -31,6 +32,17 @@ public class Manual_Ui_Press_sg : MonoBehaviour
 
     private bool _stageStart = false;
     
+    private void Awake()
+    {
+        _navigateActionReference = UIManager.Instance.NavigateActionReference;
+        _spaceActionReference = UIManager.Instance.SpaceActionReference;
+        _a = UIManager.Instance.A;
+        _d = UIManager.Instance.D;
+        _spacebar = UIManager.Instance.Spacebar;
+
+        _gamepadJump = UIManager.Instance.GamepadJump;
+
+    }
 
     private void OnEnable()
     {
@@ -80,7 +92,7 @@ public class Manual_Ui_Press_sg : MonoBehaviour
 
 
 
-    #region ¿‘∑¬ √≥∏Æ (Navigate: A, D)
+    #region ÏûÖÎ†• Ï≤òÎ¶¨ (Navigate: A, D)
 
     private void OnNavigatePerformed(InputAction.CallbackContext context)
     {
@@ -90,7 +102,7 @@ public class Manual_Ui_Press_sg : MonoBehaviour
         {
             ExecuteLeftAction();
             ResetRightAction();
-            // √ﬂ∞°
+            // Ï∂îÍ∞Ä
 
         }
         else if (navigationInput.x > 0.5f)
@@ -111,7 +123,7 @@ public class Manual_Ui_Press_sg : MonoBehaviour
     #endregion
 
  
-    #region ¿‘∑¬ √≥∏Æ (Space)
+    #region ÏûÖÎ†• Ï≤òÎ¶¨ (Space)
 
     private void OnSpacePerformed(InputAction.CallbackContext context)
     {
@@ -125,7 +137,7 @@ public class Manual_Ui_Press_sg : MonoBehaviour
 
     #endregion
 
-    #region UI Ω√∞¢ »ø∞˙ Ω««‡ / √ ±‚»≠
+    #region UI ÏãúÍ∞Å Ìö®Í≥º Ïã§Ìñâ / Ï¥àÍ∏∞Ìôî
 
     private void ExecuteLeftAction()
     {
@@ -151,8 +163,8 @@ public class Manual_Ui_Press_sg : MonoBehaviour
         
          _spacebar.rectTransform.sizeDelta = new Vector2(_spacebar.rectTransform.sizeDelta.x, _spacePressedSizeY);
          _spacebar.color = _spacePressedColor;
-        _jumpStick.rectTransform.sizeDelta = new Vector2(_jumpStick.rectTransform.sizeDelta.x, _spacePressedSizeY);
-        _jumpStick.color = _spacePressedColor;
+        _gamepadJump.rectTransform.sizeDelta = new Vector2(_gamepadJump.rectTransform.sizeDelta.x, _spacePressedSizeY);
+        _gamepadJump.color = _spacePressedColor;
 
 
     }
@@ -183,14 +195,14 @@ public class Manual_Ui_Press_sg : MonoBehaviour
         if (_spacebar == null) return;
         _spacebar.rectTransform.sizeDelta = new Vector2(_spacebar.rectTransform.sizeDelta.x, _spaceDefaultSizeY);
         _spacebar.color = _spaceDefaultColor;
-        _jumpStick.rectTransform.sizeDelta = new Vector2(_jumpStick.rectTransform.sizeDelta.x, _spaceDefaultSizeY);
-        _jumpStick.color = _spaceDefaultColor;
+        _gamepadJump.rectTransform.sizeDelta = new Vector2(_gamepadJump.rectTransform.sizeDelta.x, _spaceDefaultSizeY);
+        _gamepadJump.color = _spaceDefaultColor;
 
     }
 
     #endregion
 
-    #region ¿Ã∫•∆Æ
+    #region Ïù¥Î≤§Ìä∏
 
     private void OnGameFail(MEventType MEventType, Component Sender, EventArgs args)
     {
