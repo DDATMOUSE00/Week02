@@ -6,7 +6,7 @@
     StageFailed,
     StageExited,
     
-    StartCutScene,
+    StartingCutScene,
     TutorialStarted,
 
     ComboHit,
@@ -15,7 +15,6 @@
     TrainTimeChanged,
     TrainTimeOver,
 
-    GameStateChanged
 
 
 }

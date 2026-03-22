@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using TMPro.EditorUtilities;
 public class GameTimer : MonoBehaviour
 {
     [Header("TimeSetting")]
@@ -10,29 +9,31 @@ public class GameTimer : MonoBehaviour
 
 
     [Header("UI Reference")]
-
-    //[SerializeField] private GameObject _uiStartPoint;
-    //[SerializeField] private GameObject _uiEndPoint;
-
-    private float _iconStart;
-    private float _iconEnd;
-
+    
     private Coroutine _timerCoroutine;
 
     void Awake()
     {
-        //_iconStart = _uiStartPoint.transform.localPosition.x;
-        //_iconEnd = _uiEndPoint.transform.localPosition.x;
+
     }
     private void OnEnable()
     {
         if (EventManager.Instance != null)
-        EventManager.Instance.AddListener(MEventType.StageStarted, OnTimerStart);
+        {
+            EventManager.Instance.AddListener(MEventType.StageStarted, OnTimerStart);
+            EventManager.Instance.AddListener(MEventType.StageCleared, OnTimerStop);
+        }
+        
     }
     private void OnDisable()
     {
         if (EventManager.Instance != null)
+        {
             EventManager.Instance.RemoveListener(MEventType.StageStarted, this);
+            EventManager.Instance.RemoveListener(MEventType.StageCleared, this);
+        }
+
+
         StopTimer();
     }
     
@@ -40,6 +41,11 @@ public class GameTimer : MonoBehaviour
     {
         StartTimer(_totalTime);
     }
+    private void OnTimerStop(MEventType type, Component sender, System.EventArgs args)
+    {
+        StopTimer();
+    }
+
 
     //UI Manager 처리과정
     /*
@@ -81,6 +87,7 @@ public class GameTimer : MonoBehaviour
             RemainingTime -= Time.deltaTime;
             if (RemainingTime <= 0f)
             {
+                RemainingTime = 0f;
                 _isRunning = false;
                 GameManager.Instance.GameOver();
             }

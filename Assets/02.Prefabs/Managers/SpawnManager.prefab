@@ -82,7 +82,6 @@ MonoBehaviour:
   - {fileID: 8468067696839052193}
   _spawnInterval: 150
   _spawnCountPerInterval: 50
-  _minSpawnDistanceFromPlayer: 5
   _lastSpawnPosition: {x: 0, y: 0, z: 0}
   _isSpawnActive: 0
   _groundY: -4.3

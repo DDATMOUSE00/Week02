@@ -14,16 +14,27 @@ public class GameManager : Singleton<GameManager>
 
     public GameState CurrentState = GameState.Lobby;
     private bool _isStageEnded = false;
-    public void StartCutScene()
+
+    void Start()
+    {
+        CurrentState = GameState.Lobby;
+        StartingCutScene();
+    }
+
+
+    public void StartingCutScene()
     {
         ChangeState(GameState.StartCutScene);
-        EventManager.Instance.PostNotification(MEventType.StartCutScene, this);
+        EventManager.Instance.PostNotification(MEventType.StartingCutScene, this);
+        //이벤트 구독해서 게임 시작 컷씬 실행
+
     }
 
     public void TutorialStart()
     {
         ChangeState(GameState.Tutorial);
         EventManager.Instance.PostNotification(MEventType.TutorialStarted, this);
+        TutorialManager.Instance.StartTutorial();
     }
         
     public void GameStart()
@@ -37,7 +48,10 @@ public class GameManager : Singleton<GameManager>
         _isStageEnded = true;
 
         ChangeState(GameState.Clear);
+        
         EventManager.Instance.PostNotification(MEventType.StageCleared, this);
+
+
     }
 
     public void GameOver()
@@ -48,16 +62,22 @@ public class GameManager : Singleton<GameManager>
 
         ChangeState(GameState.GameOver);
         EventManager.Instance.PostNotification(MEventType.StageFailed, this);
-
+    }
+    public void ClearCutSceneFinished()
+    {
+        UIManager.Instance.GameClearUIActivate();
     }
 
+    public void GameOverCutSceneFinished()
+    {
+        UIManager.Instance.GameOverUIActivate();
+    }
     private void ChangeState(GameState nextstate)
     {
         if (CurrentState == nextstate) return;
 
         GameState prev = CurrentState;
         CurrentState = nextstate;
-        EventManager.Instance.PostNotification(MEventType.GameStateChanged, this, new GameStateChangedEventArgs(prev, CurrentState));
 
        
     }
