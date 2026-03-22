@@ -38,6 +38,8 @@ public class GameTimer : MonoBehaviour
     
     private void OnTimerStart(MEventType type, Component sender, System.EventArgs args)
     {
+
+        Debug.Log("시간 시작!");
         StartTimer(_totalTime);
     }
 

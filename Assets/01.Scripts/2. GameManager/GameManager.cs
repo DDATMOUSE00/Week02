@@ -14,16 +14,31 @@ public class GameManager : Singleton<GameManager>
 
     public GameState CurrentState = GameState.Lobby;
     private bool _isStageEnded = false;
-    public void StartCutScene()
+
+    void Start()
+    {
+        CurrentState = GameState.Lobby;
+        StartingCutScene();
+    }
+
+
+    public void StartingCutScene()
     {
         ChangeState(GameState.StartCutScene);
-        EventManager.Instance.PostNotification(MEventType.StartCutScene, this);
+        EventManager.Instance.PostNotification(MEventType.StartingCutScene, this);
+    }
+    
+    public void EndingCutScene()
+    {
+        ChangeState(GameState.EndingCutScene);
+        EventManager.Instance.PostNotification(MEventType.EndingCutScene, this);
     }
 
     public void TutorialStart()
     {
         ChangeState(GameState.Tutorial);
         EventManager.Instance.PostNotification(MEventType.TutorialStarted, this);
+        TutorialManager.Instance.StartTutorial();
     }
         
     public void GameStart()
@@ -37,6 +52,7 @@ public class GameManager : Singleton<GameManager>
         _isStageEnded = true;
 
         ChangeState(GameState.Clear);
+        
         EventManager.Instance.PostNotification(MEventType.StageCleared, this);
     }
 
@@ -57,7 +73,6 @@ public class GameManager : Singleton<GameManager>
 
         GameState prev = CurrentState;
         CurrentState = nextstate;
-        EventManager.Instance.PostNotification(MEventType.GameStateChanged, this, new GameStateChangedEventArgs(prev, CurrentState));
 
        
     }
