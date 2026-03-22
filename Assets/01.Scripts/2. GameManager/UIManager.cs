@@ -70,16 +70,10 @@ public class UIManager : Singleton<UIManager>
     {
         if (EventManager.Instance != null)
         {
-<<<<<<< HEAD
-
-            EventManager.Instance.AddListener(MEventType.StageStarted, OnSliderStart);
-            EventManager.Instance.AddListener(MEventType.StageCleared, OnSliderStop);
-=======
             EventManager.Instance.AddListener(MEventType.TutorialStarted, OnTutorialStart);
             EventManager.Instance.AddListener(MEventType.StageStarted, OnGameStart);
             EventManager.Instance.AddListener(MEventType.StageCleared, OnGameCleared);
             EventManager.Instance.AddListener(MEventType.StageFailed, OnGameFailed);
->>>>>>> dev
         }
 
     }
