@@ -6,40 +6,58 @@ using UnityEngine.UI;
 public class Manual_Ui_sg : MonoBehaviour
 {
     [Header("입력 액션 레퍼런스")]
-    [SerializeField] private InputActionReference _navigateActionReference;
-    [SerializeField] private InputActionReference _spaceActionReference;
+  
+    private InputActionReference _navigateActionReference;
+    private InputActionReference _spaceActionReference;
 
     [Header("키보드 UI 세트 (Image 객체)")]
-    [SerializeField] private Image _a;
-    [SerializeField] private Image _d;
-    [SerializeField] private Image _spacebar;
+    private Image _a;
+    private Image _d;
+    private Image _spacebar;
 
     [Header("패드 UI 세트 (Image 객체)")]
-    [SerializeField] private Image _gamepadLeft;
-    [SerializeField] private Image _gamepadRight;
-    [SerializeField] private Image _gamepadJump;
+    private Image _gamepadLeft;
+    private Image _gamepadRight;
+    private Image _gamepadJump;
 
-    [Header("깜빡이 설정")]
-    [SerializeField] private float _switchInterval = 0.5f; // 깜빡임 속도
+    [Header("위치 추적")]
+    private GameObject _player; // 플레이어 위치 추적용
+    private RectTransform _manualRect; // UI 위치 조정을 위한 RectTransform
+    private Vector3 _manualOffset; // 플레이어 대비 UI 위치 오프셋
+
+
+    private float _switchInterval = 0.5f; // 깜빡임 속도
     private float _switchTimer = 0f;
     private bool _showLeftNow = true;
 
-    [Header("입력 감도 설정")]
-    [SerializeField] private float _stickDeadzone = 0.5f; // 쏠림 방지를 위해 데드존 상향
+    
+    private float _stickDeadzone = 0.5f; // 쏠림 방지를 위해 데드존 상향
 
     private bool _isGamepad = false;
     private bool _showAD = false;
     private bool _showSpace = false;
 
-    [Header("위치 추적")]
-    [SerializeField] private GameObject _player;
-    [SerializeField] private RectTransform _manualRect;
-    [SerializeField] private Vector3 _manualOffset;
+    
+
     private Camera _mainCamera;
     private RectTransform _parentRect;
     private Camera _uiCamera;
 
-    private void Awake() { _mainCamera = Camera.main; }
+    private void Awake() { _mainCamera = Camera.main;
+        _navigateActionReference = UIManager.Instance.NavigateActionReference;
+        _spaceActionReference = UIManager.Instance.SpaceActionReference;
+        _a = UIManager.Instance.A;
+        _d = UIManager.Instance.D;
+        _spacebar = UIManager.Instance.Spacebar;
+
+        _gamepadLeft = UIManager.Instance.GamepadLeft;
+        _gamepadRight = UIManager.Instance.GamepadRight;
+        _gamepadJump = UIManager.Instance.GamepadJump;
+
+        _player = UIManager.Instance.Player;
+        _manualRect = UIManager.Instance.ManualRect;
+        _manualOffset = UIManager.Instance.ManualOffset;
+    }
 
     private void Start()
     {
@@ -169,4 +187,10 @@ public class Manual_Ui_sg : MonoBehaviour
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_parentRect, screenPos, _uiCamera, out Vector2 localPoint))
             _manualRect.localPosition = localPoint;
     }
+
+
+
+
+
+
 }

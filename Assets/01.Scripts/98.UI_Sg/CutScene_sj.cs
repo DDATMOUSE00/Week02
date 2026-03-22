@@ -109,7 +109,6 @@ public class CutScene_sj : MonoBehaviour
                 if (GameManager.Instance != null)
 
                 {
-                    FadeController_sj.Instance.FadeOut();
                     Debug.Log("�ƾ� ��, Ʃ�丮�� ����");
                     GameManager.Instance.TutorialStart();
                     TutorialManager.Instance.StartTutorial();

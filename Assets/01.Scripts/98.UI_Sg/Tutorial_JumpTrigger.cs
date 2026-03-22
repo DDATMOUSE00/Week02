@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Trigger1 : MonoBehaviour
+public class Tutorial_JumpTrigger : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {

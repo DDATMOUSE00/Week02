@@ -29,6 +29,8 @@ public class TutorialManager : Singleton<TutorialManager>
     [Header("입력 레퍼런스")]
     [SerializeField] private InputActionReference _slamActionReference; // 인스펙터에서 Jump 액션 연결
 
+    public float GameStartPosition;
+
 
 
     private bool _isPeakDetected = false;
@@ -98,8 +100,12 @@ public class TutorialManager : Singleton<TutorialManager>
 
         switch (_currentStep)
         {
-            case TutorialStep.MoveAD: _uiManager.ShowOnlyAD(); break;
-            case TutorialStep.JumpCharge: _uiManager.ShowOnlySpace(); break;
+            case TutorialStep.MoveAD:
+                _uiManager.ShowOnlyAD();
+                break;
+            case TutorialStep.JumpCharge: 
+                _uiManager.ShowOnlySpace(); 
+                break;
             case TutorialStep.SlamWait:
                 Time.timeScale = _slowMotionScale;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
@@ -109,7 +115,7 @@ public class TutorialManager : Singleton<TutorialManager>
                 Time.timeScale = 1.0f;
                 Time.fixedDeltaTime = 0.02f;
                 _uiManager.HideAll();
-                StartCoroutine(FinishTutorialRoutine());
+                GameManager.Instance.GameStart(); //트리거로 작동하고 싶음 이줄 삭제하고 [Point]StartTrigger 프리팹 배치
                 break;
         }
     }
@@ -146,9 +152,5 @@ public class TutorialManager : Singleton<TutorialManager>
 
         SetStep(TutorialStep.MoveAD);
     }
-    private IEnumerator FinishTutorialRoutine()
-    {
-        yield return new WaitForSecondsRealtime(_postSlamDelay);
-        GameManager.Instance.GameStart();
-    }
+    
 }

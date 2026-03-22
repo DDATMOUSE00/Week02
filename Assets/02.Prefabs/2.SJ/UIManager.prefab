@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &629496324726333492
+--- !u!1 &6393088044141916572
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6172647187331126229}
-  - component: {fileID: 9079302449130884240}
+  - component: {fileID: 1271572709275962912}
+  - component: {fileID: 4945567791040141933}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -17,32 +17,56 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6172647187331126229
+--- !u!4 &1271572709275962912
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629496324726333492}
+  m_GameObject: {fileID: 6393088044141916572}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9079302449130884240
+--- !u!114 &4945567791040141933
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629496324726333492}
+  m_GameObject: {fileID: 6393088044141916572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e294bd9168ab074480709d74671fc4f, type: 3}
+  m_Script: {fileID: 11500000, guid: 033741e5cc5025a4a84111e689f453f8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FadeController_sj
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  ClearUI: {fileID: 0}
+  GameOverUI: {fileID: 0}
+  _startPoint: {fileID: 0}
+  _endPoint: {fileID: 0}
+  _playerPoint: {fileID: 0}
+  _uiStartPoint: {fileID: 0}
+  _uiEndPoint: {fileID: 0}
+  _fillBarImage: {fileID: 0}
+  _playerIcon: {fileID: 0}
+  _playerIconY: 0
+  _trainIcon: {fileID: 0}
+  _trainIconY: 25
+  _gameTimer: {fileID: 0}
   _targetPanel: {fileID: 0}
-  _duration: 0.5
+  _duration: 2
+  NavigateActionReference: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  SpaceActionReference: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  A: {fileID: 0}
+  D: {fileID: 0}
+  Spacebar: {fileID: 0}
+  GamepadLeft: {fileID: 0}
+  GamepadRight: {fileID: 0}
+  GamepadJump: {fileID: 0}
+  ManualRect: {fileID: 0}
+  ManualOffset: {x: 0, y: 5, z: 0}
+  Player: {fileID: 0}
