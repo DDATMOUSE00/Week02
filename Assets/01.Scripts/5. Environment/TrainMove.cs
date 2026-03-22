@@ -8,48 +8,54 @@ public class TrainMove : MonoBehaviour
     [SerializeField] private Transform _endPoint;
     [SerializeField] private GameTimer _gameTimer;
 
-    [Header("Speed")]
-    [SerializeField] private float _rushDurationEach = 1.0f;
+    [Header("Sprite 자식 오브젝트")]
+    [SerializeField] private GameObject _trainSprite;
 
+   
     [Header("Point 오프셋")]
     [SerializeField] private float _transformOffset = 10f;
 
     private Sequence _seq;
     private Tween _finalRunTween;
 
-    private float startX;
-    private float endX;
+    private float _startX;
+    private float _endX;
 
 
     private void Awake()
     {
-        startX = _startingPoint.position.x - _transformOffset;
-        endX = _endPoint.position.x - _transformOffset;
+        _startX = _startingPoint.position.x - _transformOffset;
+        _endX = _endPoint.position.x - _transformOffset;
 
-        transform.position = new Vector3(startX, transform.position.y, transform.position.z);
+        transform.position = new Vector3(_startX, transform.position.y, transform.position.z);
+        SetTrainVisual(false);
     }
 
     private void OnEnable()
     {
+        if (EventManager.Instance == null) return;        
+
         EventManager.Instance.AddListener(MEventType.StageStarted, OnStageStarted);
-        EventManager.Instance.AddListener(MEventType.StageCleared, OnStageGameClear);
+        EventManager.Instance.AddListener(MEventType.StageCleared, OnStageGameClear); // 현재는 Clear 만
         EventManager.Instance.AddListener(MEventType.StageFailed, OnStageGameOver);
     }
 
     private void OnDisable()
     {
-        if (EventManager.Instance != null)
-        {
-            EventManager.Instance.RemoveListener(MEventType.StageStarted, this);
-            EventManager.Instance.RemoveListener(MEventType.StageCleared, this);
-            EventManager.Instance.RemoveListener(MEventType.StageFailed, this);
-        }
+        if (EventManager.Instance == null) return;        
+
+        EventManager.Instance.RemoveListener(MEventType.StageStarted, this);
+        EventManager.Instance.RemoveListener(MEventType.StageCleared, this);
+        EventManager.Instance.RemoveListener(MEventType.StageFailed, this);
+        
 
         KillTweens();
     }
 
     private void OnStageStarted(MEventType type, Component sender, System.EventArgs args)
     {
+        transform.position = new Vector3(_startX, transform.position.y, transform.position.z);
+        SetTrainVisual(true);
         PlayTrainMove();
     }
     private void OnStageGameOver(MEventType type, Component sender, System.EventArgs args)
@@ -72,7 +78,7 @@ public class TrainMove : MonoBehaviour
         _seq.AppendCallback(() =>
         {
             float runDuration = Mathf.Max(0.01f, _gameTimer.RemainingTime);
-            _finalRunTween = transform.DOMoveX(endX, runDuration).SetEase(Ease.Linear);
+            _finalRunTween = transform.DOMoveX(_endX, runDuration).SetEase(Ease.Linear);
         });
     }
 
@@ -83,4 +89,14 @@ public class TrainMove : MonoBehaviour
         _seq = null;
         _finalRunTween = null;
     }
+    private void SetTrainVisual(bool isVisible)
+    {
+        if (_trainSprite != null)
+        {
+            _trainSprite.SetActive(isVisible);
+            return;
+        }
+
+    }
+
 }

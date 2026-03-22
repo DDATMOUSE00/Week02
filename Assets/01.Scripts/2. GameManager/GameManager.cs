@@ -26,12 +26,8 @@ public class GameManager : Singleton<GameManager>
     {
         ChangeState(GameState.StartCutScene);
         EventManager.Instance.PostNotification(MEventType.StartingCutScene, this);
-    }
-    
-    public void EndingCutScene()
-    {
-        ChangeState(GameState.EndingCutScene);
-        EventManager.Instance.PostNotification(MEventType.EndingCutScene, this);
+        //이벤트 구독해서 게임 시작 컷씬 실행
+
     }
 
     public void TutorialStart()
@@ -54,6 +50,8 @@ public class GameManager : Singleton<GameManager>
         ChangeState(GameState.Clear);
         
         EventManager.Instance.PostNotification(MEventType.StageCleared, this);
+
+
     }
 
     public void GameOver()
@@ -64,9 +62,16 @@ public class GameManager : Singleton<GameManager>
 
         ChangeState(GameState.GameOver);
         EventManager.Instance.PostNotification(MEventType.StageFailed, this);
-
+    }
+    public void ClearCutSceneFinished()
+    {
+        UIManager.Instance.GameClearUIActivate();
     }
 
+    public void GameOverCutSceneFinished()
+    {
+        UIManager.Instance.GameOverUIActivate();
+    }
     private void ChangeState(GameState nextstate)
     {
         if (CurrentState == nextstate) return;
