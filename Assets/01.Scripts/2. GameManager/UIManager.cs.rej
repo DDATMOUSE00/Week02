@@ -1,0 +1,9 @@
+diff a/Assets/01.Scripts/2. GameManager/UIManager.cs b/Assets/01.Scripts/2. GameManager/UIManager.cs	(rejected hunks)
+@@ -70,6 +70,7 @@
+     {
+         if (EventManager.Instance != null)
+         {
++<<<<<<< HEAD
+ 
+             EventManager.Instance.AddListener(MEventType.StageStarted, OnSliderStart);
+             EventManager.Instance.AddListener(MEventType.StageCleared, OnSliderStop);
