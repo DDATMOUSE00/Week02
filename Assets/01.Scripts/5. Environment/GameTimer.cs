@@ -3,7 +3,7 @@ using System.Collections;
 public class GameTimer : MonoBehaviour
 {
     [Header("TimeSetting")]
-    [SerializeField] private float _totalTime = 300f;
+    [SerializeField] public float _totalTime = 300f;
     [SerializeField] bool _isRunning = false;
     [SerializeField] public float RemainingTime;
 

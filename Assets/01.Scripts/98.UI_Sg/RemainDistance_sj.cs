@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class RemainDistance_sj : MonoBehaviour
 {
-    [Header("������ ���۰� �� ��ǥ")]
+    [Header("GameStartPoint")]
     [SerializeField] private GameObject _startpoint;
     [SerializeField] private GameObject _endpoint;
     [SerializeField] private GameObject _playerpoint;
     
 
-    [Header("��� UI�� �ʿ��� ��ǥ")]
+    [Header("Slider Icon StartPoinot")]
      private float _iconStart;
      private float _iconEnd;
     [SerializeField] private GameObject _uiStartPoint;
