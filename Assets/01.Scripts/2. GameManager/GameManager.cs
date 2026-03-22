@@ -99,5 +99,22 @@ public class GameManager : Singleton<GameManager>
         if (_player != null)
             _player.PlayerInputLock(false);
     }
+    
+    public void RestartGame()
+    {
+        EventManager.Instance?.PostNotification(MEventType.StageExited, this);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ExitGame()
+    {
+        EventManager.Instance?.PostNotification(MEventType.StageExited, this);
+
+    #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+    #else
+        Application.Quit();
+    #endif
+    }
         
 }
