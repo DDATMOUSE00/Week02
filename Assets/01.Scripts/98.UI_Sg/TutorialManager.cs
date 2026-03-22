@@ -29,6 +29,8 @@ public class TutorialManager : Singleton<TutorialManager>
     [Header("입력 레퍼런스")]
     [SerializeField] private InputActionReference _slamActionReference; // 인스펙터에서 Jump 액션 연결
 
+    public float GameStartPosition;
+
 
 
     private bool _isPeakDetected = false;
@@ -152,6 +154,7 @@ public class TutorialManager : Singleton<TutorialManager>
     }
     private IEnumerator FinishTutorialRoutine()
     {
+        
         yield return new WaitForSecondsRealtime(_postSlamDelay);
         GameManager.Instance.GameStart();
     }

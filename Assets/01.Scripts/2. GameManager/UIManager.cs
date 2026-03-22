@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -26,7 +27,7 @@ public class UIManager : Singleton<UIManager>
     private float _iconEnd;
 
     [Header("SliderIcon")]
-
+    [SerializeField] private Image _fillBarImage;
     [SerializeField] private GameObject _playerIcon;
     [SerializeField] private float _playerIconY;
 
@@ -41,20 +42,55 @@ public class UIManager : Singleton<UIManager>
     private float _totalTime;
     private float _remainingTime;
 
+    private void OnEnable()
+    {
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.AddListener(MEventType.StageStarted, OnSliderStart);
+            EventManager.Instance.AddListener(MEventType.StageCleared, OnSliderStop);
+        }
+
+    }
+    private void OnDisable()
+    {
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.RemoveListener(MEventType.StageStarted, this);
+            EventManager.Instance.RemoveListener(MEventType.StageCleared, this);
+        }
+
+    }
+    private void OnSliderStart(MEventType type, Component sender, System.EventArgs args)
+    {
+       InGameDistance();
+    }
+    private void OnSliderStop(MEventType type, Component sender, System.EventArgs args)
+    {
+        
+    }
+
+
+
     private void Start()
     {
-        InGameDistance();
+        //if (GameManager.Instance.CurrentState == GameState.Play)
+        //    InGameDistance();
         SliderDistance();
         _totalTime = _gameTimer._totalTime;
     }
     private void Update()
-    {   PlayerIconTransform();
-        TrainIconTransform();
+    {   if (GameManager.Instance.CurrentState == GameState.Play)
+        {
+            PlayerIconTransform();
+            TrainIconTransform();
+            Fill_Bar();
+        }
+
     }
 
     public void InGameDistance()
     {
-        _startPosition = _startPoint.transform.localPosition.x;
+        _startPosition = _playerPoint.transform.localPosition.x;
         _endPosition = _endPoint.transform.localPosition.x;
    
 
@@ -69,18 +105,23 @@ public class UIManager : Singleton<UIManager>
     }
     public float TrainDistance(float _remainingTime, float _totalTime)
     {
-        return ( 1-(_iconStart+(_iconEnd - _iconStart) * Mathf.Clamp(_remainingTime / _totalTime, 0, 1)));
+        return (_iconEnd+(_iconStart-_iconEnd) * Mathf.Clamp(_remainingTime / _totalTime, 0, 1));
 
     }
     public void PlayerIconTransform()
     {
-        _playerIcon.transform.localPosition = new Vector2(PlayerDistance(), _trainIconY);
+        _playerIcon.transform.localPosition = new Vector2(PlayerDistance(), _playerIconY);
     }
     public void TrainIconTransform()
-    {   
+    {
+        Debug.Log(TrainDistance(_gameTimer.RemainingTime, _totalTime));
         _trainIcon.transform.localPosition = new Vector2(TrainDistance(_gameTimer.RemainingTime, _totalTime), _trainIconY);
     }
-    
+    public void Fill_Bar()
+    {
+        _fillBarImage.fillAmount=Mathf.Clamp((_playerPoint.transform.localPosition.x - _startPosition) / (_endPosition - _startPosition), 0, 1);
+    }
+
     public void GameClearUIActivate()
     {
         ClearUI.SetActive(true);
@@ -90,5 +131,5 @@ public class UIManager : Singleton<UIManager>
     {
         GameOverUI.SetActive(true);
     }
-
+    
 }
