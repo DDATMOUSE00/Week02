@@ -1,7 +1,8 @@
 using DG.Tweening;
-using UnityEngine;
-using UnityEngine.UI;
 using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -12,6 +13,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject ClearUI;
     [SerializeField] private GameObject GameOverUI;
 
+
     [Header("InGame-Point")]
     [SerializeField] private GameObject _startPoint;
     [SerializeField] private GameObject _endPoint;
@@ -19,9 +21,6 @@ public class UIManager : Singleton<UIManager>
     private float _startPosition;
     private float _endPosition;
     
-  
-
-
     [Header("SliderIcon-Point")]
     [SerializeField] private GameObject _uiStartPoint;
     [SerializeField] private GameObject _uiEndPoint;
@@ -42,6 +41,27 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Image _targetPanel;
     [SerializeField] private float _duration = 0.5f;
 
+    [Header("입력 액션 레퍼런스")]
+    public InputActionReference NavigateActionReference;
+    public InputActionReference SpaceActionReference;
+
+
+    [Header("키보드 자판 아이콘")]
+    public Image A;
+    public Image D;
+    public Image Spacebar;
+
+    [Header("패드 UI 세트 (Image 객체)")]
+    public Image GamepadLeft;
+    public Image GamepadRight;
+    public Image GamepadJump;
+
+    [Header("위치 추적")]
+    public RectTransform ManualRect;
+    public Vector3 ManualOffset;
+
+    [Header("다른 스크립트가 참조하는 플레이어")]
+    public GameObject Player;
 
     private float _totalTime;
     private float _remainingTime;

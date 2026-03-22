@@ -59,3 +59,14 @@ MonoBehaviour:
   _gameTimer: {fileID: 0}
   _targetPanel: {fileID: 0}
   _duration: 2
+  NavigateActionReference: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  SpaceActionReference: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  A: {fileID: 0}
+  D: {fileID: 0}
+  Spacebar: {fileID: 0}
+  GamepadLeft: {fileID: 0}
+  GamepadRight: {fileID: 0}
+  GamepadJump: {fileID: 0}
+  ManualRect: {fileID: 0}
+  ManualOffset: {x: 0, y: 5, z: 0}
+  Player: {fileID: 0}
