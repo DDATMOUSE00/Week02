@@ -36,7 +36,15 @@ public class TutorialManager : Singleton<TutorialManager>
     public override void Init() { Debug.Log("Tutorial Manager Initialized."); }
 
     private void Start() { /*SetStep(TutorialStep.MoveAD); */}
-
+    public void OnTrigger1Entered()
+        {
+            // 중괄호를 추가하여 안전하게 처리
+            if (_currentStep == TutorialStep.MoveAD)
+            {
+                SetStep(TutorialStep.JumpCharge);
+                if (_pressHold_Image != null) _pressHold_Image.gameObject.SetActive(true);
+            }
+        }
     private void Update()
     {
        //Debug.Log($"<color=cyan>[StateCheck]</color> 현재 상태: <b>{_currentStep}</b>");
@@ -106,15 +114,7 @@ public class TutorialManager : Singleton<TutorialManager>
         }
     }
     //트리거 1 발동
-    public void OnTrigger1Entered()
-    {
-        // 중괄호를 추가하여 안전하게 처리
-        if (_currentStep == TutorialStep.MoveAD)
-        {
-            SetStep(TutorialStep.JumpCharge);
-            if (_pressHold_Image != null) _pressHold_Image.gameObject.SetActive(true);
-        }
-    }
+    
 
     private void CheckPeakHeight()
     {
@@ -149,7 +149,6 @@ public class TutorialManager : Singleton<TutorialManager>
     private IEnumerator FinishTutorialRoutine()
     {
         yield return new WaitForSecondsRealtime(_postSlamDelay);
-        if (EventManager.Instance != null)
-            EventManager.Instance.PostNotification(MEventType.StageStarted, this, null);
+        GameManager.Instance.GameStart();
     }
 }

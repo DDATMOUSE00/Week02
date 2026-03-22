@@ -25,7 +25,9 @@ public class SpawnManager : MonoBehaviour
         if (EventManager.Instance != null)
         {
             EventManager.Instance.AddListener(MEventType.StageStarted, OnRespawnStart);
-            EventManager.Instance.AddListener(MEventType.GameStateChanged, OnRespawnEnd);
+            EventManager.Instance.AddListener(MEventType.StageCleared, OnRespawnEnd);
+            EventManager.Instance.AddListener(MEventType.StageFailed, OnRespawnEnd);
+
         }
     }
     private void OnDisable()
@@ -33,7 +35,9 @@ public class SpawnManager : MonoBehaviour
         if (EventManager.Instance != null)
         {
             EventManager.Instance.RemoveListener(MEventType.StageStarted, this);
-            EventManager.Instance.RemoveListener(MEventType.GameStateChanged, this);
+            EventManager.Instance.RemoveListener(MEventType.StageCleared, this);
+            EventManager.Instance.RemoveListener(MEventType.StageFailed, this);
+
         }
 
     }
@@ -58,7 +62,6 @@ public class SpawnManager : MonoBehaviour
 
         _lastSpawnPosition = _player.position;
         _isSpawnActive = true;
-        Debug.Log("Start");
     }
 
     private void OnRespawnEnd(MEventType type, Component sender, System.EventArgs args)
@@ -66,7 +69,6 @@ public class SpawnManager : MonoBehaviour
         _isSpawnActive = false;
 
         PoolManager.Instance.ReturnAllEnemies();
-        Debug.Log("End");
     }
 
     public void CheckDistanceSpawn(Vector3 playerPosition)
