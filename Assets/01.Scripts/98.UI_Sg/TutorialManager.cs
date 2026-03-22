@@ -23,8 +23,8 @@ public class TutorialManager : Singleton<TutorialManager>
     [SerializeField] private float _postSlamDelay = 2.0f;
 
     [Header("텍스트 사진")]
-    [SerializeField] private Image _press_Image;
-    [SerializeField] private Image _pressHold_Image;
+    [SerializeField] private GameObject _press_Image;
+    [SerializeField] private GameObject _pressHold_Image;
 
     [Header("입력 레퍼런스")]
     [SerializeField] private InputActionReference _slamActionReference; // 인스펙터에서 Jump 액션 연결
@@ -35,7 +35,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
     private bool _isPeakDetected = false;
     private bool _canJumpNow = false;
-    public override void Init() { Debug.Log("Tutorial Manager Initialized."); }
+    public override void Init() {}
 
     private void Start() { /*SetStep(TutorialStep.MoveAD); */}
     public void OnTrigger1Entered()
@@ -49,7 +49,6 @@ public class TutorialManager : Singleton<TutorialManager>
         }
     private void Update()
     {
-       //Debug.Log($"<color=cyan>[StateCheck]</color> 현재 상태: <b>{_currentStep}</b>");
         if (_playerRb == null) return;
 
         switch (_currentStep)
@@ -61,7 +60,7 @@ public class TutorialManager : Singleton<TutorialManager>
                     if (!_canJumpNow)
                     {
                         _canJumpNow = true;
-                        Debug.Log("준비 완료! 이제 점프하세요.");
+                        //Debug.Log("준비 완료! 이제 점프하세요.");
                     }
                 }
 
@@ -72,7 +71,7 @@ public class TutorialManager : Singleton<TutorialManager>
                     _canJumpNow = false; // 플래그 리셋
                     SetStep(TutorialStep.InAir);
                     if (_pressHold_Image != null) _pressHold_Image.gameObject.SetActive(false);
-                    Debug.Log("점프 성공! 공중 상태 진입.");
+                  //  Debug.Log("점프 성공! 공중 상태 진입.");
                 }
                 break;
 
@@ -87,7 +86,7 @@ public class TutorialManager : Singleton<TutorialManager>
                     OnSlamInput();
 
                     // 디버그 로직 (원하실 경우 추가)
-                    Debug.Log("<color=orange>[Tutorial]</color> 슬램 입력 감지 (New Input System)");
+                    //Debug.Log("<color=orange>[Tutorial]</color> 슬램 입력 감지 (New Input System)");
                 }
                 break;
         }
@@ -142,7 +141,7 @@ public class TutorialManager : Singleton<TutorialManager>
     }
     public void StartTutorial()
     {
-        Debug.Log("<color=green>[Tutorial]</color> 튜토리얼 본격 시작!");
+       // Debug.Log("<color=green>[Tutorial]</color> 튜토리얼 본격 시작!");
 
         // [핵심 추가] 시작 씬에서 꺼졌던 UI 오브젝트 자체를 강제로 다시 켭니다.
         if (_uiManager != null)
