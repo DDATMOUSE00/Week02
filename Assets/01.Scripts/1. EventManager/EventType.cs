@@ -7,7 +7,6 @@
     StageExited,
     
     StartingCutScene,
-    EndingCutScene,
     TutorialStarted,
 
     ComboHit,

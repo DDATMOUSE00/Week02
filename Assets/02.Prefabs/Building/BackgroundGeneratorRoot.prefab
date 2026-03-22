@@ -58,7 +58,7 @@ MonoBehaviour:
   - {fileID: 6952047263049518033, guid: f79adf33a1dc734469c7ffe0ced04836, type: 3}
   - {fileID: 1429611038510195122, guid: be712f14eeb84324b82b3e790e2eb680, type: 3}
   - {fileID: 1094739479852101368, guid: bacab0a22c641154c8cc157cc836760a, type: 3}
-  _frontGapRange: {x: 10, y: 15}
+  _frontGapRange: {x: 0, y: 1}
   _avoidRepeat: 1
   _leftPadding: 0
   _rightPadding: 0

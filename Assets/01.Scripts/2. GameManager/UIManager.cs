@@ -9,13 +9,15 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject ClearUI;
     [SerializeField] private GameObject GameOverUI;
 
+
     public void GameClearUIActivate()
     {
         ClearUI.SetActive(true);
     }
+
     public void GameOverUIActivate()
     {
-        GameOverUI.SetActive(false);
+        GameOverUI.SetActive(true);
     }
 
 }
