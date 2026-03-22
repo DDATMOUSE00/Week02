@@ -50806,10 +50806,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[Tutorial]'
       objectReference: {fileID: 0}
-    - target: {fileID: 576565434052140011, guid: 39d71269ae199774ebd6fe751b4c04aa, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1565451980258887718, guid: 39d71269ae199774ebd6fe751b4c04aa, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -86246,6 +86242,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1035295012}
     - target: {fileID: 4945567791040141933, guid: 9216d69a16eccac4092d26e98ba5fff7, type: 3}
+      propertyPath: _duration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4945567791040141933, guid: 9216d69a16eccac4092d26e98ba5fff7, type: 3}
       propertyPath: _endPoint
       value: 
       objectReference: {fileID: 116603752}
@@ -86281,6 +86281,10 @@ PrefabInstance:
       propertyPath: _playerPoint
       value: 
       objectReference: {fileID: 8710293422776256960}
+    - target: {fileID: 4945567791040141933, guid: 9216d69a16eccac4092d26e98ba5fff7, type: 3}
+      propertyPath: _targetPanel
+      value: 
+      objectReference: {fileID: 8029415818582509561}
     - target: {fileID: 4945567791040141933, guid: 9216d69a16eccac4092d26e98ba5fff7, type: 3}
       propertyPath: _fillBarImage
       value: 

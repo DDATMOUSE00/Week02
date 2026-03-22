@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6393088044141916572}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -51,8 +51,11 @@ MonoBehaviour:
   _playerPoint: {fileID: 0}
   _uiStartPoint: {fileID: 0}
   _uiEndPoint: {fileID: 0}
+  _fillBarImage: {fileID: 0}
   _playerIcon: {fileID: 0}
   _playerIconY: 0
   _trainIcon: {fileID: 0}
-  _trainIconY: 5
+  _trainIconY: 25
   _gameTimer: {fileID: 0}
+  _targetPanel: {fileID: 0}
+  _duration: 2
