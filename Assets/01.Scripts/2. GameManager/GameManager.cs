@@ -15,6 +15,8 @@ public class GameManager : Singleton<GameManager>
     public GameState CurrentState = GameState.Lobby;
     private bool _isStageEnded = false;
 
+    [SerializeField] private PlayerControllerVersionTwo _player;
+
     void Start()
     {
         CurrentState = GameState.Lobby;
@@ -84,6 +86,18 @@ public class GameManager : Singleton<GameManager>
     public void DebugSetState(GameState nextstate)
     {
         ChangeState(nextstate);
+    }
+    
+    public void LockPlayer()
+    {
+        if (_player != null)
+            _player.PlayerInputLock(true);
+    }
+
+    public void UnlockPlayer()
+    {
+        if (_player != null)
+            _player.PlayerInputLock(false);
     }
         
 }
