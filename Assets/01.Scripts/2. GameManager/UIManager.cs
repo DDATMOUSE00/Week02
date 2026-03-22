@@ -114,7 +114,7 @@ public class UIManager : Singleton<UIManager>
     }
     public void TrainIconTransform()
     {
-        Debug.Log(TrainDistance(_gameTimer.RemainingTime, _totalTime));
+        
         _trainIcon.transform.localPosition = new Vector2(TrainDistance(_gameTimer.RemainingTime, _totalTime), _trainIconY);
     }
     public void Fill_Bar()
