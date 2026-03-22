@@ -46,6 +46,7 @@ public class UIManager : Singleton<UIManager>
     {
         if (EventManager.Instance != null)
         {
+
             EventManager.Instance.AddListener(MEventType.StageStarted, OnSliderStart);
             EventManager.Instance.AddListener(MEventType.StageCleared, OnSliderStop);
         }
