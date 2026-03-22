@@ -109,11 +109,13 @@ public class CutScene_sj : MonoBehaviour
                 if (GameManager.Instance != null)
 
                 {
+                    FadeController_sj.Instance.FadeOut();
+                    Debug.Log("�ƾ� ��, Ʃ�丮�� ����");
                     GameManager.Instance.TutorialStart();
                     TutorialManager.Instance.StartTutorial();
                 }
 
-                _currentCutScene = 0;
+                _currentCutScene = 0; // �ƾ� �ʱ�ȭ
             }
         }
     }
@@ -123,6 +125,15 @@ public class CutScene_sj : MonoBehaviour
         _currentCutScene = 0;
         _isCutSceneFinished = false;
 
+        // 1. ���� ������Ʈ�� �մϴ�.
+        //_cutScene_Background.SetActive(true);
+
+        // 2. ��� �̹����� ã�Ƽ�
+        //Image bgImage = _cutScene_Background.GetComponent<Image>();
+
+        // 3. ���� '��Ÿ����' �ϰ� �ʹٸ� (���� 0 -> 1)
+        //bgImage.color = new Color(bgImage.color.r, bgImage.color.g, bgImage.color.b, 0f);
+        //bgImage.DOFade(0f, 1f);
         foreach (var img in _start_cutSceneObjects) if (img != null) img.gameObject.SetActive(false);
         foreach (var img in _ending_cutSceneObjects) if (img != null) img.gameObject.SetActive(false);
 
@@ -133,9 +144,17 @@ public class CutScene_sj : MonoBehaviour
     {
         _currentCutScene = 0;
 
+        //// ��ŸƮ �ƾ��̸� �ƾ� ���� ���� �� ���̵� �ƿ�
+        //if (_isEndingCutScene == false)
+        //{
+        //    // ���⼭ FadeOut�� �� �θ��� Update ���̶� �ߺ� ����ǹǷ� 
+        //    // ���� �����ϰ� ���� CutSceneUpdate�� else �ȿ����� ó���ϵ��� �����
+        //}
 
         foreach (var img in _start_cutSceneObjects) if (img != null) img.gameObject.SetActive(false);
         foreach (var img in _ending_cutSceneObjects) if (img != null) img.gameObject.SetActive(false);
     }
 
+    // [�߰�4] StartScene_sj ���� ��ư���� �ƾ��� �θ��� ���� �ٸ� ����
+  
 }
