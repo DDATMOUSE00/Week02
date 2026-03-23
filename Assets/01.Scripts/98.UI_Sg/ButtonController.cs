@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
 {
-    [SerializeField] private GameObject _restartarrow;
-    [SerializeField] private GameObject _exitarrow;
+    [SerializeField] private GameObject _restartArrow;
+    [SerializeField] private GameObject _exitArrow;
     //public Sprite Hover_img;
     //public Sprite No_hover_img;
     //Image thisImg;
@@ -37,37 +37,46 @@ public class ButtonController : MonoBehaviour
 
     private void OnGameCleared(MEventType type, Component sender, System.EventArgs args)
     {
-        _restartarrow.SetActive(false);
-        _exitarrow.SetActive(false);
+        _restartArrow.SetActive(false);
+        _exitArrow.SetActive(false);
     }
     private void OnGameFailed(MEventType type, Component sender, System.EventArgs args)
     {
-        _restartarrow.SetActive(false);
-        _exitarrow.SetActive(false);
+        _restartArrow.SetActive(false);
+        _exitArrow.SetActive(false);
+    }
+
+    public void OnRestartButton() {
+        GameManager.Instance.RestartGame();
+    }
+
+    public void OnExitButton()
+    {
+        GameManager.Instance.ExitGame();
     }
 
     public void RestartButtonUI_In()
     {
         //thisImg.sprite = Hover_img;
-        _restartarrow.SetActive(true);
+        _restartArrow.SetActive(true);
    
     }
 
     public void RestartButtonUI_out()
     {
         //thisImg.sprite = No_hover_img;
-        _restartarrow.SetActive(false);
+        _restartArrow.SetActive(false);
     
     }
     public void ExitButtonUI_In()
     {
     
-        _exitarrow.SetActive(true);
+        _exitArrow.SetActive(true);
     }
 
     public void ExitButtonUI_out()
     {
      
-        _exitarrow.SetActive(false);
+        _exitArrow.SetActive(false);
     }
 }

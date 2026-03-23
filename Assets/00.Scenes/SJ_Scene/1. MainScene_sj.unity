@@ -45978,14 +45978,42 @@ PrefabInstance:
     - target: {fileID: 181276446469832237, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 714481347}
+      objectReference: {fileID: 714481348}
+    - target: {fileID: 181276446469832237, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 714481348}
     - target: {fileID: 181276446469832237, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: RestartButtonUI_In
+      objectReference: {fileID: 0}
+    - target: {fileID: 181276446469832237, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RestartButtonUI_out
       objectReference: {fileID: 0}
     - target: {fileID: 1790182205693260626, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3153946756555774859, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3153946756555774859, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 714481348}
+    - target: {fileID: 3153946756555774859, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnRestartButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 3153946756555774859, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ButtonController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3153946756555774859, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6935937770679427628, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -46006,6 +46034,62 @@ PrefabInstance:
     - target: {fileID: 7239615395903242666, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
       propertyPath: m_Name
       value: '[Panel] GameClearOverUI'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7621416964668451297, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7621416964668451297, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7621416964668451297, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 714481348}
+    - target: {fileID: 7621416964668451297, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7621416964668451297, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnExitButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 7621416964668451297, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ButtonController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7621416964668451297, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678893917804262439, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678893917804262439, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678893917804262439, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 714481348}
+    - target: {fileID: 7678893917804262439, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678893917804262439, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnExitButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678893917804262439, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ButtonController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678893917804262439, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7790494637467834049, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
       propertyPath: m_Pivot.x
@@ -46087,6 +46171,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7863859655434492831, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 714481348}
+    - target: {fileID: 7863859655434492831, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnRestartButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863859655434492831, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ButtonController, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 8061987249403128255, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -46106,6 +46202,22 @@ PrefabInstance:
     - target: {fileID: 8375514178068339897, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8937372723444039581, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 714481348}
+    - target: {fileID: 8937372723444039581, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 714481348}
+    - target: {fileID: 8937372723444039581, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExitButtonUI_In
+      objectReference: {fileID: 0}
+    - target: {fileID: 8937372723444039581, guid: 0701311fa01a1dd4ab794d88d6dd6cca, type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExitButtonUI_out
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
