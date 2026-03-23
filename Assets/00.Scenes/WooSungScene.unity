@@ -21037,7 +21037,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.7971698, g: 0.94289756, b: 1, a: 0}
+  m_BackGroundColor: {r: 0.4269758, g: 0.76086557, b: 0.8962264, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -27988,7 +27988,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '99  [Combo]'
+  m_text: '99 [Combo]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c3fa09c0feeba6c40b446d1ba8154f91, type: 2}
   m_sharedMaterial: {fileID: -1410021695860367095, guid: c3fa09c0feeba6c40b446d1ba8154f91, type: 2}
@@ -27999,7 +27999,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 1
+  m_enableVertexGradient: 0
   m_colorMode: 2
   m_fontColorGradient:
     topLeft: {r: 1, g: 0.8674295, b: 0, a: 1}
@@ -28015,8 +28015,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 99
-  m_fontSizeBase: 99
+  m_fontSize: 72
+  m_fontSizeBase: 72
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -58671,7 +58671,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 242, y: 127}
-  m_SizeDelta: {x: 600, y: 70}
+  m_SizeDelta: {x: 300, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1590362056
 CanvasGroup:
@@ -58702,7 +58702,7 @@ MonoBehaviour:
   _rainbowGradient: {fileID: 677468073}
   _cg: {fileID: 1590362056}
   _comboSlider: {fileID: 848238840}
-  _suffix: '  [Combo]'
+  _suffix: ' [Combo]'
   _hideWhenZero: 1
   _idleRotateAngle: 8
   _idleMaxDuration: 0.65
