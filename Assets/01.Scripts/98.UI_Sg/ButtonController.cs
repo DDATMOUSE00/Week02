@@ -46,6 +46,15 @@ public class ButtonController : MonoBehaviour
         _exitArrow.SetActive(false);
     }
 
+    public void OnRestartButton() {
+        GameManager.Instance.RestartGame();
+    }
+
+    public void OnExitButton()
+    {
+        GameManager.Instance.ExitGame();
+    }
+
     public void RestartButtonUI_In()
     {
         //thisImg.sprite = Hover_img;

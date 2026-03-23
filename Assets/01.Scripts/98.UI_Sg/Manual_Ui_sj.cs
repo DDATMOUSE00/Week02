@@ -81,26 +81,34 @@ public class Manual_Ui_sg : MonoBehaviour
 
     private void OnActionChange(object obj, InputActionChange change)
     {
-        if (change == InputActionChange.ActionStarted || change == InputActionChange.ActionPerformed)
+        // 1. 상태 확인 (누르기 시작했거나 수행 중일 때만)
+        if (change != InputActionChange.ActionStarted && change != InputActionChange.ActionPerformed)
+            return;
+
+        if (!(obj is InputAction action) || action.activeControl == null)
+            return;
+
+        // 2. 현재 입력 장치 판별
+        bool isNowGamepad = action.activeControl.device is Gamepad;
+
+        // 3. 패드 쏠림 방지 (데드존 체크)
+        if (isNowGamepad)
         {
-            var action = obj as InputAction;
-            if (action == null || action.activeControl == null) return;
+            var value = action.ReadValueAsObject();
+            float inputMagnitude = 0f;
 
-            bool isNowGamepad = action.activeControl.device is Gamepad;
+            if (value is Vector2 v2) inputMagnitude = v2.magnitude;
+            else if (value is float f) inputMagnitude = Mathf.Abs(f);
+            else inputMagnitude = 1f; // 버튼 등 기타 입력은 1로 간주
 
-            // 패드 쏠림으로 인한 강제 전환 방지
-            if (isNowGamepad)
-            {
-                var val = action.ReadValueAsObject();
-                float magnitude = (val is Vector2 v2) ? v2.magnitude : (val is float f ? Mathf.Abs(f) : 1f);
-                if (magnitude < _stickDeadzone) return;
-            }
+            if (inputMagnitude < _stickDeadzone) return;
+        }
 
-            if (isNowGamepad != _isGamepad)
-            {
-                //Debug.Log($"<color=lime>[Manual_UI]</color> 기기 전환: <b>{(isNowGamepad ? "패드" : "키보드")}</b> (원인: {action.name})");
-                UpdateVisualsByDevice(isNowGamepad);
-            }
+        // 4. 장치가 실제로 바뀌었을 때만 UI 업데이트
+        if (isNowGamepad != _isGamepad)
+        {
+            _isGamepad = isNowGamepad; // 현재 상태 저장 (이 변수가 선언되어 있어야 함)
+            UpdateVisualsByDevice(_isGamepad);
         }
     }
 
