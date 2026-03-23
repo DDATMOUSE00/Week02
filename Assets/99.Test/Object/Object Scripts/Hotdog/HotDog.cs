@@ -60,6 +60,8 @@ public class Hotdog : MonoBehaviour
     
     void OnCollisionEnter2D(Collision2D collision)
     {
+
+        GameManager.Instance.ScoreIncreaseBread();
         if (collision.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject);   

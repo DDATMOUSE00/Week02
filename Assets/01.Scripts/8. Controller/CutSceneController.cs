@@ -65,7 +65,13 @@ public class CutSceneController : MonoBehaviour
         }
 
         if (frames[_currentIndex] != null)
-            frames[_currentIndex].gameObject.SetActive(true);
+        {
+            GameObject currentFrameObject = frames[_currentIndex].gameObject;
+            currentFrameObject.SetActive(true);
+
+            CutSceneFrameMotion frameMotion = currentFrameObject.GetComponent<CutSceneFrameMotion>();
+            if (frameMotion != null) frameMotion.Play();
+        }
 
         _currentIndex++;
     }

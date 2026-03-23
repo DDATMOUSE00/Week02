@@ -15,6 +15,10 @@
     TrainTimeChanged,
     TrainTimeOver,
 
+    DestroyEnemy,
+    DestroyBread,
+    DestroyBuilding
+
 
 
 }

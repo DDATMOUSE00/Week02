@@ -47,6 +47,8 @@ public class BreakBuilding : MonoBehaviour
     private void BreakNow()
     {
         if (_isBroken) return;
+        GameManager.Instance.ScoreIncreaseBuilding();
+
         _isBroken = true;
 
         Vector2 forceDirection = _baseDirection;
