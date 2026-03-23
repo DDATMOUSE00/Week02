@@ -163,7 +163,6 @@ public class TutorialManager : Singleton<TutorialManager>
 
         ApplyStepRuntimeState(nextStep);
         ApplyStepUI(nextStep);
-
         if (_showDebugLog)
             Debug.Log($"Tutorial Step Changed : {_currentStep}", this);
     }
@@ -222,6 +221,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
             case TutorialStep.Finished:
                 RestoreTimeScale();
+                GameManager.Instance.GameStart();
                 break;
         }
     }

@@ -47178,7 +47178,7 @@ MonoBehaviour:
   _trainIcon: {fileID: 1551620534}
   _trainIconY: 25
   _gameTimer: {fileID: 1686891875}
-  _targetPanel: {fileID: 8029415818582509561}
+  _targetCanvasGroup: {fileID: 0}
   _duration: 0.5
   NavigateActionReference: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   SpaceActionReference: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
@@ -48399,7 +48399,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5103298859569784639, guid: 997009364c319284fa44c3f964edf0c2, type: 3}
       propertyPath: _totalTime
-      value: 30
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5644885629499129852, guid: 997009364c319284fa44c3f964edf0c2, type: 3}
       propertyPath: m_Name
