@@ -173,6 +173,9 @@ public class PlayerControllerVersionTwo : MonoBehaviour
         _movement.ApplyHorizontalMovement(this);
         _movement.ApplyGravityScale(this);
         _movement.ClampGroundedVerticalVelocity(this);
+
+        // 마지막에 환경 보정
+        _movement.ResolveEnvironmentConstraints();
     }
 
     #endregion
