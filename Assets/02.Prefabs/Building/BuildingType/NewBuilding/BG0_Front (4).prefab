@@ -360,15 +360,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BreakBuilding
   BuildingSprite: {fileID: 5674889706624783083}
   _leftPieces:
-  - {fileID: 4384385404980839940}
-  - {fileID: 1537679011155587626}
   - {fileID: 6667439410260596801}
   - {fileID: 6292113472746531968}
+  - {fileID: 4384385404980839940}
+  - {fileID: 1537679011155587626}
   _rightPieces:
-  - {fileID: 7085516514458187639}
-  - {fileID: 1172411050478171141}
   - {fileID: 4973261059836780894}
   - {fileID: 4360489911839034203}
+  - {fileID: 7085516514458187639}
+  - {fileID: 1172411050478171141}
   _baseDirection: {x: 1, y: -1}
   _normalizeDirection: 1
   _explodeForce: 40

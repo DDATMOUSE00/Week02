@@ -17,7 +17,7 @@ public class BreakBuilding : MonoBehaviour
 
     private bool _isBroken = false;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    /*private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
         if (_isBroken) return;
@@ -30,7 +30,20 @@ public class BreakBuilding : MonoBehaviour
 
         BreakNow();
     }
+*/
 
+    public void SlamBuilding()
+    {
+        //if (_isBroken) return;
+        //_isBroken = true;
+
+        Vector2 forceDirection = _baseDirection;
+        if (_normalizeDirection && forceDirection.sqrMagnitude > 0f)
+            forceDirection = forceDirection.normalized;
+
+        ApplyForceToPiece(_leftPieces, -forceDirection);
+        ApplyForceToPiece(_rightPieces, forceDirection);
+    }
     private void BreakNow()
     {
         if (_isBroken) return;
