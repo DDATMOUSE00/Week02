@@ -112,12 +112,6 @@ public class EventManager : Singleton<EventManager>
         Listeners = newListeners;
     }
 
-    // 씬 로드 후 죽은 리스너 정리
-    private void OnLevelWasLoaded()
-    {
-        RemoveRedundancies();
-    }
-
     public override void Init()
     {
         Debug.Log("EventManager Init Complete!");

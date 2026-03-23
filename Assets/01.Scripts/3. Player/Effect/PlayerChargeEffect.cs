@@ -1,5 +1,4 @@
 ﻿using DG.Tweening;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,10 +13,13 @@ public class PlayerChargeEffect : MonoBehaviour
     [SerializeField] private Slider _chargeSlider;
     [SerializeField] private CanvasGroup _chargeSliderCanvasGroup;
 
-    [Header("Charge Squash")]
-    [SerializeField] private float _yOffest = 0;
+    [Header("Charge UI Follow")]
+    [SerializeField] private Transform _followTarget;
 
-    [Tooltip("차지 UI가 보여지기 시작하는 Ratio 값")]
+    [Header("Charge Squash")]
+    [SerializeField] private float _yOffest = 0f;
+
+    [Tooltip("차지 종료 시 원래 스케일로 복귀하는 시간")]
     [SerializeField] private float _chargeExitDuration = 0.1f;
     [SerializeField] private float _maxChargeScaleX = 1.12f;
     [SerializeField] private float _maxChargeScaleY = 0.88f;
@@ -32,19 +34,24 @@ public class PlayerChargeEffect : MonoBehaviour
     private PlayerControllerVersionTwo _controller;
     private PlayerJumpAction _jumpAction;
 
+    private RectTransform _chargeSliderRect;
+    private Canvas _parentCanvas;
+    private RectTransform _parentCanvasRect;
+    private Camera _uiCamera;
+
     private bool _wasCharging;
+    private bool _isShow;
 
     private Vector3 _baseScale = Vector3.one;
 
     private Tween _scaleTween;
     private Tween _uiFadeTween;
-    private bool _isShow;
 
     #endregion
 
     #region Unity Lifecycle
 
-    // 같은 오브젝트의 필수 컴포넌트를 가져오고, 인스펙터 참조를 검증한다.
+    // 같은 오브젝트의 필수 컴포넌트와 UI 추적에 필요한 참조를 캐싱한다.
     private void Awake()
     {
         _controller = GetComponent<PlayerControllerVersionTwo>();
@@ -57,9 +64,17 @@ public class PlayerChargeEffect : MonoBehaviour
         }
 
         _baseScale = _visualRoot.localScale;
+
+        _chargeSliderRect = _chargeSliderCanvasGroup.transform as RectTransform;
+        _parentCanvas = _chargeSliderCanvasGroup.GetComponentInParent<Canvas>();
+        _parentCanvasRect = _parentCanvas != null ? _parentCanvas.GetComponent<RectTransform>() : null;
+        _uiCamera = ResolveUiCamera();
+
+        if (_followTarget == null)
+            _followTarget = transform;
     }
 
-    // 활성화 시 기본 상태를 맞춘다.
+    // 활성화 시 기본 상태와 UI 상태를 초기화한다.
     private void OnEnable()
     {
         _wasCharging = false;
@@ -67,7 +82,7 @@ public class PlayerChargeEffect : MonoBehaviour
         ResetChargeUIImmediate();
     }
 
-    // 비활성화 시 트윈과 UI를 정리한다.
+    // 비활성화 시 트윈과 UI 상태를 정리한다.
     private void OnDisable()
     {
         KillTweens();
@@ -75,14 +90,11 @@ public class PlayerChargeEffect : MonoBehaviour
         ResetChargeUIImmediate();
     }
 
-    // 차지 상태 변화와 차지 UI, 비주얼 스케일을 갱신한다.
+    // 차지 상태 변화에 맞춰 스케일, 슬라이더 값, 페이드 연출을 갱신한다.
     private void Update()
     {
         bool isCharging = _controller.IsCharging;
 
-        //if (!_wasCharging && isCharging && _jumpAction.ChargeEffectiveRatio == 0)
-        //PlayChargeStartEffect();
-        
         if (_jumpAction.ChargeEffectiveRatio >= 0.1f)
             PlayChargeStartEffect();
 
@@ -96,6 +108,18 @@ public class PlayerChargeEffect : MonoBehaviour
             PlayChargeEndEffect();
 
         _wasCharging = isCharging;
+    }
+
+    // 화면 갱신 직전에 슬라이더를 플레이어 머리 위 좌표로 따라가게 만든다.
+    private void LateUpdate()
+    {
+        if (_chargeSliderCanvasGroup == null)
+            return;
+
+        if (_chargeSliderCanvasGroup.alpha <= 0f)
+            return;
+
+        UpdateChargeUIFollowPosition();
     }
 
     #endregion
@@ -125,25 +149,49 @@ public class PlayerChargeEffect : MonoBehaviour
             isValid = false;
         }
 
+        if (_chargeSliderCanvasGroup != null && _chargeSliderCanvasGroup.transform as RectTransform == null)
+        {
+            Debug.LogError($"{nameof(PlayerChargeEffect)}: _chargeSliderCanvasGroup 은 UI RectTransform 이어야 합니다.", this);
+            isValid = false;
+        }
+
+        if (_chargeSliderCanvasGroup != null && _chargeSliderCanvasGroup.GetComponentInParent<Canvas>() == null)
+        {
+            Debug.LogError($"{nameof(PlayerChargeEffect)}: _chargeSliderCanvasGroup 상위에서 Canvas 를 찾지 못했습니다.", this);
+            isValid = false;
+        }
+
         return isValid;
+    }
+
+    // 현재 Canvas 설정에 맞는 UI 카메라를 반환한다.
+    private Camera ResolveUiCamera()
+    {
+        if (_parentCanvas == null)
+            return Camera.main;
+
+        if (_parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            return null;
+
+        if (_parentCanvas.worldCamera != null)
+            return _parentCanvas.worldCamera;
+
+        return Camera.main;
     }
 
     #endregion
 
     #region Charge Effect
 
-    // 차지 시작 시 UI를 표시한다.
+    // 차지 UI를 최초 한 번 표시하고 현재 위치를 즉시 맞춘다.
     private void PlayChargeStartEffect()
     {
-        if (_isShow == true)
+        if (_isShow)
             return;
+
         _isShow = true;
 
-        _chargeSliderCanvasGroup.transform.localPosition = new Vector3(
-            _chargeSliderCanvasGroup.transform.localPosition.x,
-            _chargeSliderCanvasGroup.transform.localPosition.y + _yOffest,
-            _chargeSliderCanvasGroup.transform.localPosition.z
-            );
+        UpdateChargeUIFollowPosition();
 
         KillScaleTween();
         KillUiTween();
@@ -192,20 +240,49 @@ public class PlayerChargeEffect : MonoBehaviour
         _chargeSlider.value = _jumpAction.ChargeEffectiveRatio;
     }
 
+    // 슬라이더를 플레이어 머리 위 월드 좌표에 대응되는 UI 위치로 갱신한다.
+    private void UpdateChargeUIFollowPosition()
+    {
+        if (_followTarget == null || _chargeSliderRect == null)
+            return;
+
+        Vector3 targetWorldPosition = _followTarget.position;
+        targetWorldPosition.y += _yOffest;
+
+        if (_parentCanvas != null && _parentCanvas.renderMode == RenderMode.WorldSpace)
+        {
+            _chargeSliderRect.position = targetWorldPosition;
+            return;
+        }
+
+        if (_parentCanvasRect == null)
+            return;
+
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(_uiCamera, targetWorldPosition);
+        Camera eventCamera = _parentCanvas != null && _parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay
+            ? null
+            : _uiCamera;
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_parentCanvasRect, screenPoint, eventCamera, out Vector2 localPoint))
+            _chargeSliderRect.anchoredPosition = localPoint;
+    }
+
     #endregion
 
     #region Utility
 
-    // 비주얼을 즉시 기본 상태로 되돌린다.
+    // 비주얼을 즉시 기본 스케일로 되돌린다.
     private void ResetVisualImmediate()
     {
         if (_visualRoot != null)
             _visualRoot.localScale = _baseScale;
     }
 
-    // UI를 즉시 숨기고 값을 초기화한다.
+    // UI를 즉시 숨기고 슬라이더 값을 초기화한다.
     private void ResetChargeUIImmediate()
     {
+        _isShow = false;
+
         if (_chargeSlider != null)
         {
             _chargeSlider.minValue = 0f;
@@ -217,7 +294,7 @@ public class PlayerChargeEffect : MonoBehaviour
             _chargeSliderCanvasGroup.alpha = 0f;
     }
 
-    // 모든 트윈을 정리한다.
+    // 모든 트윈을 안전하게 종료한다.
     private void KillTweens()
     {
         KillScaleTween();
@@ -233,7 +310,7 @@ public class PlayerChargeEffect : MonoBehaviour
         _scaleTween = null;
     }
 
-    // UI 트윈을 종료한다.
+    // UI 페이드 트윈을 종료한다.
     private void KillUiTween()
     {
         if (_uiFadeTween != null && _uiFadeTween.IsActive())

@@ -19,7 +19,7 @@ TagManager:
   - Ground
   - Obstacle
   - Item
-  - 
+  - Trigger
   - 
   - 
   - 
@@ -61,6 +61,9 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 962313013
+    locked: 0
+  - name: Trigger
+    uniqueID: 1051831363
     locked: 0
   m_RenderingLayers:
   - Default

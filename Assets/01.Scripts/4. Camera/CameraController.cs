@@ -17,6 +17,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] private bool _followX = true;
     [SerializeField] private bool _followY = true;
 
+    [Header("X Bound")]
+    [SerializeField] private bool _useXBound = true;
+    [SerializeField] private float _minFollowX = -10f;
+    [SerializeField] private float _maxFollowX = 10f;
+
     [Header("Ground Reference Y")]
     [Tooltip("항상 보여주고 싶은 기준 바닥 Y값")]
     [SerializeField] private float _groundReferenceY = 0f;
@@ -164,7 +169,10 @@ public class CameraController : MonoBehaviour
             GetCurrentYSmoothTime(),
             _yMaxSpeed);
 
-        transform.position = new Vector3(nextX, nextY, _fixedZ) + _slamShakeOffset;
+        Vector3 finalPosition = new Vector3(nextX, nextY, _fixedZ) + _slamShakeOffset;
+        finalPosition.x = ClampX(finalPosition.x);
+
+        transform.position = finalPosition;
     }
 
     // 흔들림 오프셋을 제외한 현재 기준 좌표를 반환한다.
@@ -179,7 +187,8 @@ public class CameraController : MonoBehaviour
         if (!_followX)
             return fallbackX;
 
-        return _target.position.x + _followOffset.x;
+        float targetX = _target.position.x + _followOffset.x;
+        return ClampX(targetX);
     }
 
     // Y축 목표 좌표를 계산한다.
@@ -191,6 +200,17 @@ public class CameraController : MonoBehaviour
         float playerY = _target.position.y + _followOffset.y;
         float blendedY = Mathf.Lerp(_groundReferenceY, playerY, _verticalFollowLerp);
         return Mathf.Min(blendedY, _groundReferenceY + _maxCameraRiseFromGround);
+    }
+
+    // X축 바운드를 적용한다.
+    private float ClampX(float x)
+    {
+        if (!_useXBound)
+            return x;
+
+        float minX = Mathf.Min(_minFollowX, _maxFollowX);
+        float maxX = Mathf.Max(_minFollowX, _maxFollowX);
+        return Mathf.Clamp(x, minX, maxX);
     }
 
     // 플레이어의 수직 속도에 따라 Y축 추적 스무딩을 결정한다.
@@ -380,6 +400,18 @@ public class CameraController : MonoBehaviour
             new Vector3(-100f, _groundReferenceY, 0f),
             new Vector3(100f, _groundReferenceY, 0f));
 
+        if (_useXBound)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(
+                new Vector3(_minFollowX, -100f, 0f),
+                new Vector3(_minFollowX, 100f, 0f));
+
+            Gizmos.DrawLine(
+                new Vector3(_maxFollowX, -100f, 0f),
+                new Vector3(_maxFollowX, 100f, 0f));
+        }
+
         if (_target == null)
             return;
 
@@ -393,7 +425,7 @@ public class CameraController : MonoBehaviour
             new Vector3(_target.position.x, playerY, 0f));
 
         Gizmos.color = Color.green;
-        Gizmos.DrawSphere(new Vector3(_target.position.x, targetY, 0f), 0.12f);
+        Gizmos.DrawSphere(new Vector3(ClampX(_target.position.x), targetY, 0f), 0.12f);
     }
 
     #endregion

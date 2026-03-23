@@ -2,6 +2,9 @@
 
 public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
+    [Header("싱글톤")]
+    [SerializeField] private bool isDontDestroyOnLoad = false;
+
     private static T _instance;
     private static readonly object _lock = new object();
     private static bool _applicationIsQuitting = false;
@@ -36,7 +39,8 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         if (_instance == null)
         {
             _instance = this as T;
-            DontDestroyOnLoad(gameObject);
+            if(isDontDestroyOnLoad)
+                DontDestroyOnLoad(gameObject);
             return;
         }
 

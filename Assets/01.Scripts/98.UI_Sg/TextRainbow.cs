@@ -49,7 +49,8 @@ public class TextRainbow : MonoBehaviour
                 _cycleDuration
             )
             .SetEase(Ease.Linear)
-            .SetLoops(-1, LoopType.Restart);
+            .SetLoops(-1, LoopType.Restart)
+            .SetUpdate(true);
     }
 
     private void KillRainbow()

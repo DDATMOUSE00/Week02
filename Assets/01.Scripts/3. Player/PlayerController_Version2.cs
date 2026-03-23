@@ -45,7 +45,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     private float _lastJumpChargeRatio;
 
     // 외부에서 플레이어 입력을 잠글 때 사용하는 플래그
-    
+
 
     #endregion
 
@@ -173,6 +173,9 @@ public class PlayerControllerVersionTwo : MonoBehaviour
         _movement.ApplyHorizontalMovement(this);
         _movement.ApplyGravityScale(this);
         _movement.ClampGroundedVerticalVelocity(this);
+
+        // 마지막에 환경 보정
+        _movement.ResolveEnvironmentConstraints();
     }
 
     #endregion
@@ -272,7 +275,7 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     // 점프 입력에 따라 차지, 슬램, 점프 버퍼를 처리한다.
     private void HandleJumpInput()
     {
-        if (JumpAction == null)
+        if (_isPlayerInputLocked || JumpAction == null)
             return;
 
         bool pressed = JumpAction.WasPressedThisFrame();
@@ -338,8 +341,19 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     {
         _isPlayerInputLocked = isLocked;
 
-        if (isLocked)
-            _moveInputX = 0f;
+        if (!isLocked)
+            return;
+
+        _moveInputX = 0f;
+
+        if (_isSlamAnticipating)
+        {
+            CancelSlamAnticipationState();
+            _airAction.ResetRuntimeState();
+
+            if (_showDebugLog)
+                Debug.Log("Slam anticipation canceled because player input was locked.");
+        }
     }
 
     #endregion
@@ -381,6 +395,17 @@ public class PlayerControllerVersionTwo : MonoBehaviour
     {
         _isSlamAnticipating = false;
         _isSlamming = true;
+    }
+
+    // 입력 잠금 등 외부 사유로 진행 중인 슬램 예고 상태를 취소한다.
+    public void CancelSlamAnticipationState()
+    {
+        if (!_isSlamAnticipating)
+            return;
+
+        _isSlamAnticipating = false;
+        _isSlamming = false;
+        _canSlam = true;
     }
 
     // 착지 후 공중 행동 상태를 초기화한다.

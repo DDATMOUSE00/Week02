@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent (typeof(PlayerGamePadVibration))]
 [RequireComponent(typeof(PlayerCombo))]
 public class PlayerSlamDamage : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class PlayerSlamDamage : MonoBehaviour
     [Header("Effect")]
     [SerializeField] private PlayerHitEffect _playerHitEffect;
 
+    [Header("Game Pad Vibration")]
+    [SerializeField] private PlayerGamePadVibration _gamePadVibration;
+
     private bool _hasLastImpact;
     private Vector2 _lastImpactPoint;
     private Vector2 _lastSlamImpactBoxSize;
@@ -38,6 +42,7 @@ public class PlayerSlamDamage : MonoBehaviour
     {
         _controller = GetComponent<PlayerControllerVersionTwo>();
         _playerCombo = GetComponent<PlayerCombo>();
+        _gamePadVibration = GetComponent<PlayerGamePadVibration>();
 
         _slamBaseImpactBoxSize.x = Mathf.Max(0.01f, _slamBaseImpactBoxSize.x);
         _slamBaseImpactBoxSize.y = Mathf.Max(0.01f, _slamBaseImpactBoxSize.y);
@@ -75,8 +80,12 @@ public class PlayerSlamDamage : MonoBehaviour
             _playerHitEffect.PlayAt(impactPoint, isSuperCharge);
 
         float fallDistance = GetCurrentSlamFallDistance(slamStartY, impactPoint.y);
+        float slamShakeRatio = EvaluateSlamShakeRatio(impactPoint, slamStartY);
         int comboLevel = _playerCombo != null ? _playerCombo.CurrentComboLevel : 0;
         Vector2 impactBoxSize = GetSlamImpactBoxSize(fallDistance, slamChargeRatio, comboLevel);
+
+        if (_gamePadVibration != null)
+            _gamePadVibration.PlayChargedSlamImpactRumble(slamChargeRatio, slamShakeRatio, isSuperCharge);
 
         _hasLastImpact = true;
         _lastImpactPoint = impactPoint;
@@ -105,15 +114,17 @@ public class PlayerSlamDamage : MonoBehaviour
 
             EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
             var hotDogStore = hit.GetComponent<HotdogStore>();
+            var building = hit.GetComponent<BreakBuilding>();
+
+            if (building != null)
+                building.SlamBuilding();
             if (hotDogStore != null)
                 hotDogStore.DestoyStore();
-   
             if (enemy == null)
                 continue;
 
             enemy.Kill();
             killedCount++;
-
 
             if (_playerCombo != null)
                 _playerCombo.AddKill();

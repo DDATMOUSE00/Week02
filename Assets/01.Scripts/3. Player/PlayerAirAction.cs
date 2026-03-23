@@ -56,7 +56,8 @@ public class PlayerAirAction : MonoBehaviour
     // 현재 공중 슬램 진입이 가능한지 반환한다.
     public bool CanStartAirSlam(PlayerControllerVersionTwo controller)
     {
-        return !controller.IsCharging &&
+        return !controller.IsPlayerInputLocked &&
+               !controller.IsCharging &&
                !controller.IsSlamAnticipating &&
                !controller.IsSlamming &&
                controller.CanSlam;
@@ -65,6 +66,9 @@ public class PlayerAirAction : MonoBehaviour
     // 슬램 예고 상태에 진입한다.
     public void StartSlamAnticipation(PlayerControllerVersionTwo controller, PlayerMovementMotor movement)
     {
+        if (controller.IsPlayerInputLocked)
+            return;
+
         controller.EnterSlamAnticipationState();
 
         bool useChargedSlam = controller.LastJumpWasCharged;
@@ -104,6 +108,13 @@ public class PlayerAirAction : MonoBehaviour
         if (!controller.IsSlamAnticipating)
             return;
 
+        if (controller.IsPlayerInputLocked)
+        {
+            controller.CancelSlamAnticipationState();
+            ResetRuntimeState();
+            return;
+        }
+
         _slamAnticipationTimer -= deltaTime;
 
         if (_slamAnticipationTimer <= 0f)
@@ -114,7 +125,14 @@ public class PlayerAirAction : MonoBehaviour
     private void BeginSlamDive(PlayerControllerVersionTwo controller, PlayerMovementMotor movement)
     {
         if (!controller.IsSlamAnticipating)
+            return; 
+
+        if (controller.IsPlayerInputLocked)
+        {
+            controller.CancelSlamAnticipationState();
+            ResetRuntimeState();
             return;
+        }
 
         controller.EnterSlamDiveState();
         _slamAnticipationTimer = 0f;

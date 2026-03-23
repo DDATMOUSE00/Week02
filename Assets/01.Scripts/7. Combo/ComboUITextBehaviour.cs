@@ -1,17 +1,17 @@
 ﻿using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ComboUITextBehaviour : MonoBehaviour
 {
     [Header("Reference")]
     [SerializeField] private TMP_Text _tmp;
-    [SerializeField] private RectTransform _remainScaleTarget;
-    [SerializeField] private RectTransform _idleRotationTarget;
-    [SerializeField] private RectTransform _impactRotationTarget;
-    [SerializeField] private RectTransform _punchScaleTarget;
+    [SerializeField] private RectTransform _effectTarget;
     [SerializeField] private ComboTextRainbowGradient _rainbowGradient;
     [SerializeField] private CanvasGroup _cg;
+    [Space(10)]
+    [SerializeField] private Slider _comboSlider;
 
     [Header("Display")]
     [SerializeField] private string _suffix = " COMBO";
@@ -51,17 +51,8 @@ public class ComboUITextBehaviour : MonoBehaviour
     {
         RectTransform selfRect = transform as RectTransform;
 
-        if (_remainScaleTarget == null)
-            _remainScaleTarget = selfRect;
-
-        if (_idleRotationTarget == null)
-            _idleRotationTarget = selfRect;
-
-        if (_impactRotationTarget == null)
-            _impactRotationTarget = selfRect;
-
-        if (_punchScaleTarget == null)
-            _punchScaleTarget = selfRect;
+        if (_effectTarget == null)
+            _effectTarget = selfRect;
     }
 
     private void OnEnable()
@@ -98,6 +89,7 @@ public class ComboUITextBehaviour : MonoBehaviour
     public void SetRemainRatio(float remainRatio)
     {
         _lastRemainRatio = Mathf.Clamp01(remainRatio);
+        _comboSlider.value = remainRatio;
         ApplyRemainScale();
     }
 
@@ -151,12 +143,12 @@ public class ComboUITextBehaviour : MonoBehaviour
     // 남은 시간 비율에 따라 기본 스케일을 갱신한다.
     private void ApplyRemainScale()
     {
-        if (_remainScaleTarget == null)
+        if (_effectTarget == null)
             return;
 
         float evaluatedRatio = EvaluateRemainScaleRatio(_lastRemainRatio);
         float scale = Mathf.Lerp(_minRemainScale, _fullRemainScale, evaluatedRatio);
-        _remainScaleTarget.localScale = Vector3.one * scale;
+        _effectTarget.localScale = Vector3.one * scale;
     }
 
     // 콤보가 높을수록 빨라지는 기본 갸우뚱 모션을 재시작한다.
@@ -164,13 +156,13 @@ public class ComboUITextBehaviour : MonoBehaviour
     {
         KillTween(ref _idleTween);
 
-        if (_idleRotationTarget == null)
+        if (_effectTarget == null)
             return;
 
         if (immediateReset)
         {
             _idlePhase = 0f;
-            _idleRotationTarget.localRotation = Quaternion.identity;
+            _effectTarget.localRotation = Quaternion.identity;
         }
 
         float duration = Mathf.Lerp(_idleMaxDuration, _idleMinDuration, _lastComboRatio);
@@ -183,7 +175,7 @@ public class ComboUITextBehaviour : MonoBehaviour
         {
             _idlePhase = Mathf.Repeat(value, Mathf.PI * 2f);
             float angle = Mathf.Sin(_idlePhase) * _idleRotateAngle;
-            _idleRotationTarget.localRotation = Quaternion.Euler(0f, 0f, angle);
+            _effectTarget.localRotation = Quaternion.Euler(0f, 0f, angle);
         })
         .SetEase(Ease.Linear)
         .SetLoops(-1, LoopType.Incremental);
@@ -200,18 +192,18 @@ public class ComboUITextBehaviour : MonoBehaviour
         KillTween(ref _impactRotationTween);
         KillTween(ref _punchScaleTween);
 
-        if (_impactRotationTarget != null)
+        if (_effectTarget != null)
         {
-            _impactRotationTween = _impactRotationTarget.DOPunchRotation(
+            _impactRotationTween = _effectTarget.DOPunchRotation(
                 new Vector3(0f, 0f, rotateAmount * _punchDirection),
                 _punchRotateDuration,
                 _punchRotateVibrato,
                 0.85f);
         }
 
-        if (_punchScaleTarget != null)
+        if (_effectTarget != null)
         {
-            _punchScaleTween = _punchScaleTarget.DOPunchScale(
+            _punchScaleTween = _effectTarget.DOPunchScale(
                 Vector3.one * scaleAmount,
                 _punchScaleDuration,
                 _punchScaleVibrato,
@@ -253,17 +245,12 @@ public class ComboUITextBehaviour : MonoBehaviour
     // 비활성화 시 남는 회전/스케일 값을 기본값으로 되돌린다.
     private void ResetVisual()
     {
-        if (_remainScaleTarget != null)
-            _remainScaleTarget.localScale = Vector3.one * _fullRemainScale;
-
-        if (_idleRotationTarget != null)
-            _idleRotationTarget.localRotation = Quaternion.identity;
-
-        if (_impactRotationTarget != null)
-            _impactRotationTarget.localRotation = Quaternion.identity;
-
-        if (_punchScaleTarget != null)
-            _punchScaleTarget.localScale = Vector3.one;
+        if (_effectTarget != null)
+        {
+            _effectTarget.localScale = Vector3.one * _fullRemainScale;
+            _effectTarget.localRotation = Quaternion.identity;
+            _effectTarget.localScale = Vector3.one;
+        }
 
         if (_rainbowGradient != null)
             _rainbowGradient.enabled = false;
