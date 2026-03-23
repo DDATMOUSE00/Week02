@@ -1,163 +1,142 @@
+// CutSceneController.cs
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class CutSceneController : MonoBehaviour
 {
     private enum CutSceneType { None, Start, EndingA, EndingB, EndingC }
 
-    [Header("Cartoon Image")]
-    [SerializeField] private Image[] _startCutScenes;
-    [SerializeField] private Image[] _endingACutScenes;
-    [SerializeField] private Image[] _endingBCutScenes;
-    
-    [SerializeField] private Image[] _endingCCutScenes;
-
-    
-    [Header("Cartoon Background")]
+    [Header("Shared")]
     [SerializeField] private GameObject _background;
-        
-    private CutSceneType _currentType = CutSceneType.None;
-    private int _currentIndex = 0;
-    private bool _isPlaying = false;
-
     [SerializeField] private GameScoreController _gameScoreController;
 
-    
+    [Header("Sequences")]
+    [SerializeField] private CutSceneSequencePlayer _startSequence;
+    [SerializeField] private CutSceneSequencePlayer _endingASequence;
+    [SerializeField] private CutSceneSequencePlayer _endingBSequence;
+    [SerializeField] private CutSceneSequencePlayer _endingCSequence;
+
+    private CutSceneType _currentType = CutSceneType.None;
+    private CutSceneSequencePlayer _currentSequence;
+    private bool _isPlaying;
 
     private void OnEnable()
     {
         if (EventManager.Instance == null) return;
-        
-            EventManager.Instance.AddListener(MEventType.StartingCutScene, OnStartingCutScene);
-            EventManager.Instance.AddListener(MEventType.StageCleared, OnStageCleared);
-            EventManager.Instance.AddListener(MEventType.StageFailed, OnStageFailed); 
-        
-        
+
+        EventManager.Instance.AddListener(MEventType.StartingCutScene, OnStartingCutScene);
+        EventManager.Instance.AddListener(MEventType.StageCleared, OnStageCleared);
+        EventManager.Instance.AddListener(MEventType.StageFailed, OnStageFailed);
     }
 
     private void OnDisable()
     {
         if (EventManager.Instance == null) return;
+
         EventManager.Instance.RemoveListener(MEventType.StartingCutScene, this);
         EventManager.Instance.RemoveListener(MEventType.StageCleared, this);
         EventManager.Instance.RemoveListener(MEventType.StageFailed, this);
     }
 
-    private void OnStartingCutScene(MEventType t, Component s, EventArgs a) => StartCutScene(CutSceneType.Start);
-    private void OnStageCleared(MEventType t, Component s, EventArgs a)
-        {
-            if(_gameScoreController.BreadScore >= 3)
-            {
-                StartCutScene(CutSceneType.EndingC);
-            }
-            else
-            {
-                StartCutScene(CutSceneType.EndingA);
-            }
-        }
-    private void OnStageFailed(MEventType t, Component s, EventArgs a) => StartCutScene(CutSceneType.EndingB);
-
     private void Update()
-        {   
-            if (_isPlaying == false) return;
-            if (!IsAnyInputPressedThisFrame()) return;
-
-            ShowNextCutScene();
-        }
-    
-    private void ShowNextCutScene()
     {
-        Image[] frames = GetCurrentFrames();
-        int count = frames == null ? 0 : frames.Length;
+        if (!_isPlaying) return;
+        if (!IsAdvancePressedThisFrame()) return;
 
-        if (_currentIndex >= count)
+        if (_currentSequence == null)
         {
             EndCutScene();
             return;
         }
 
-        if (frames[_currentIndex] != null)
-        {
-            GameObject currentFrameObject = frames[_currentIndex].gameObject;
-            currentFrameObject.SetActive(true);
-
-            CutSceneFrameMotion frameMotion = currentFrameObject.GetComponent<CutSceneFrameMotion>();
-            if (frameMotion != null) frameMotion.Play();
-        }
-
-        _currentIndex++;
+        _currentSequence.HandleAdvanceInput();
     }
+
+    private void OnStartingCutScene(MEventType t, Component s, EventArgs a)
+    {
+        StartCutScene(CutSceneType.Start);
+    }
+
+    private void OnStageCleared(MEventType t, Component s, EventArgs a)
+    {
+        bool isEndingC = _gameScoreController != null && _gameScoreController.BreadScore >= 3;
+        StartCutScene(isEndingC ? CutSceneType.EndingC : CutSceneType.EndingA);
+    }
+
+    private void OnStageFailed(MEventType t, Component s, EventArgs a)
+    {
+        StartCutScene(CutSceneType.EndingB);
+    }
+
     private void StartCutScene(CutSceneType type)
     {
+        StopAllSequences();
+
         _currentType = type;
-        _currentIndex = 0;
+        _currentSequence = GetSequence(type);
         _isPlaying = true;
 
-        SetAllInactive(_startCutScenes);
-        SetAllInactive(_endingACutScenes);
-        SetAllInactive(_endingBCutScenes);
-        SetAllInactive(_endingCCutScenes);
-
         if (_background != null) _background.SetActive(true);
+
+        if (_currentSequence == null)
+        {
+            EndCutScene();
+            return;
+        }
+
+        _currentSequence.Begin(OnSequenceFinished);
     }
+
+    private void OnSequenceFinished()
+    {
+        EndCutScene();
+    }
+
     private void EndCutScene()
     {
-        SetAllInactive(GetCurrentFrames());
-        if (_background != null) _background.SetActive(false);
-
         _isPlaying = false;
 
-        if (GameManager.Instance == null) return;
+        if (_currentSequence != null)
+        {
+            _currentSequence.StopImmediate();
+            _currentSequence = null;
+        }
 
-        if (_currentType == CutSceneType.Start) GameManager.Instance.TutorialStart();
-        else if (_currentType == CutSceneType.EndingA) GameManager.Instance.ClearCutSceneFinished();
-        else if (_currentType == CutSceneType.EndingB) GameManager.Instance.GameOverCutSceneFinished();
-        else if (_currentType == CutSceneType.EndingC) GameManager.Instance.ClearCutSceneFinished();
-        //히든분기
+        if (_background != null) _background.SetActive(false);
+
+        if (GameManager.Instance != null)
+        {
+            if (_currentType == CutSceneType.Start) GameManager.Instance.TutorialStart();
+            else if (_currentType == CutSceneType.EndingA) GameManager.Instance.ClearCutSceneFinished();
+            else if (_currentType == CutSceneType.EndingB) GameManager.Instance.GameOverCutSceneFinished();
+            else if (_currentType == CutSceneType.EndingC) GameManager.Instance.ClearCutSceneFinished();
+        }
 
         _currentType = CutSceneType.None;
     }
 
-    private Image[] GetCurrentFrames()
+    private CutSceneSequencePlayer GetSequence(CutSceneType type)
     {
-        if (_currentType == CutSceneType.Start) return _startCutScenes;
-        if (_currentType == CutSceneType.EndingA) return _endingACutScenes;
-        if (_currentType == CutSceneType.EndingB) return _endingBCutScenes;
-        if (_currentType == CutSceneType.EndingC) return _endingCCutScenes;
-
+        if (type == CutSceneType.Start) return _startSequence;
+        if (type == CutSceneType.EndingA) return _endingASequence;
+        if (type == CutSceneType.EndingB) return _endingBSequence;
+        if (type == CutSceneType.EndingC) return _endingCSequence;
         return null;
     }
 
-    private void SetAllInactive(Image[] arr)
+    private void StopAllSequences()
     {
-        if (arr == null) return;
-        for (int i = 0; i < arr.Length; i++)
-            if (arr[i] != null) arr[i].gameObject.SetActive(false);
+        if (_startSequence != null) _startSequence.StopImmediate();
+        if (_endingASequence != null) _endingASequence.StopImmediate();
+        if (_endingBSequence != null) _endingBSequence.StopImmediate();
+        if (_endingCSequence != null) _endingCSequence.StopImmediate();
     }
-    private bool IsAnyInputPressedThisFrame()
+
+    private bool IsAdvancePressedThisFrame()
     {
-        if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame) return true;
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) return true;
-        if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame) return true;
-
-        if (Gamepad.current != null)
-        {
-            if (Gamepad.current.buttonSouth.wasPressedThisFrame) return true;
-            if (Gamepad.current.startButton.wasPressedThisFrame) return true;
-            if (Gamepad.current.selectButton.wasPressedThisFrame) return true;
-            if (Gamepad.current.dpad.up.wasPressedThisFrame) return true;
-            if (Gamepad.current.dpad.down.wasPressedThisFrame) return true;
-            if (Gamepad.current.dpad.left.wasPressedThisFrame) return true;
-            if (Gamepad.current.dpad.right.wasPressedThisFrame) return true;
-        }
-
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame) return true;
+        if (Gamepad.current != null && Gamepad.current.buttonSouth.wasPressedThisFrame) return true;
         return false;
     }
 }
-
-    
-
-
-
