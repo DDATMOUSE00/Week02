@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-
+    
     public override void Init()
     {
         CurrentState = GameState.Lobby;
@@ -22,6 +22,11 @@ public class GameManager : Singleton<GameManager>
         CurrentState = GameState.Lobby;
         StartingCutScene();
     }
+
+    
+    public void ScoreIncreaseEnemy()    => EventManager.Instance.PostNotification(MEventType.DestroyEnemy, this);
+    public void ScoreIncreaseBread()    => EventManager.Instance.PostNotification(MEventType.DestroyBread, this);
+    public void ScoreIncreaseBuilding() => EventManager.Instance.PostNotification(MEventType.DestroyBuilding, this);
 
 
     public void StartingCutScene()
@@ -52,8 +57,6 @@ public class GameManager : Singleton<GameManager>
         ChangeState(GameState.Clear);
         
         EventManager.Instance.PostNotification(MEventType.StageCleared, this);
-
-
     }
 
     public void GameOver()
@@ -80,8 +83,6 @@ public class GameManager : Singleton<GameManager>
 
         GameState prev = CurrentState;
         CurrentState = nextstate;
-
-       
     }
     public void DebugSetState(GameState nextstate)
     {
