@@ -23,26 +23,16 @@ public class PlayerEndSlowTrigger : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (_playerController == null)
-            return;
-
-        if (other.GetComponent<PlayerControllerVersionTwo>() == _playerController)
-        {
-            CheckAndApplySlow();
-        }
-    }
-
     private void OnTriggerExit2D(Collider2D other)
     {
         if (_playerController == null)
             return;
 
-        if (other.GetComponent<PlayerControllerVersionTwo>() == _playerController)
+        if (other.GetComponent<PlayerControllerVersionTwo>() != null) 
         {
             _isPlayerInside = false;
             RestoreTimeScale();
+            GameManager.Instance.UnlockPlayer();
         }
     }
 
@@ -62,7 +52,6 @@ public class PlayerEndSlowTrigger : MonoBehaviour
         else
         {
             RestoreTimeScale();
-            GameManager.Instance.UnlockPlayer();
         }
     }
 

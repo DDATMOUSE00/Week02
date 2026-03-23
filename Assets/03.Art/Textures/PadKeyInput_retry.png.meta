@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f04ae6b9bc9f80d4aa8a3fb758b85ae0
+guid: 858dd6d32bc0c684a8f20e633a29574c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5357543204705888088
-    second: joystick_left_0
+      213: -1089197575528961130
+    second: PadKeyInput_retry_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: joystick_left_0
+      name: PadKeyInput_retry_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 15
-        width: 55
-        height: 34
+        x: 9
+        y: 8
+        width: 14
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8576d41c821d95a40800000000000000
-      internalID: 5357543204705888088
+      spriteID: 69b216c639462e0f0800000000000000
+      internalID: -1089197575528961130
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      joystick_left_0: 5357543204705888088
+      PadKeyInput_retry_0: -1089197575528961130
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
