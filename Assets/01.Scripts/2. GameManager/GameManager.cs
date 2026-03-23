@@ -33,7 +33,6 @@ public class GameManager : Singleton<GameManager>
     {
         ChangeState(GameState.StartCutScene);
         EventManager.Instance.PostNotification(MEventType.StartingCutScene, this);
-        //이벤트 구독해서 게임 시작 컷씬 실행
 
     }
 
