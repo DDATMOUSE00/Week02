@@ -35,12 +35,16 @@ public class TutorialManager : Singleton<TutorialManager>
     [SerializeField] private GameObject _pressTmp;
     [SerializeField] private GameObject _pressHoldTmp;
 
+    [Header("Hint UI Follow")]
+    [SerializeField] private Transform _hintFollowTarget;
+    [SerializeField] private Vector3 _hintFollowOffset = new Vector3(0f, 2f, 0f);
+
     [Header("Debug")]
     [SerializeField] private bool _showDebugLog = false;
 
     public float GameStartPosition;
 
-    //슬로우 연출용
+    // 슬로우 연출용
     private Coroutine _slowMotionRoutine;
     private float _defaultFixedDeltaTime;
 
@@ -50,6 +54,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
     private Rigidbody2D _playerRb;
     private PlayerJumpAction _playerJumpAction;
+    private Camera _mainCamera;
 
     private bool _isPeakDetected;
     private bool _canJumpNow;
@@ -69,11 +74,14 @@ public class TutorialManager : Singleton<TutorialManager>
 
     #region Initialize / Lifecycle
 
-    // 싱글톤 초기화 시 플레이어 관련 참조를 캐싱한다.
+    // 싱글톤 초기화 시 플레이어 관련 참조와 카메라를 캐싱한다.
     public override void Init()
     {
         _defaultFixedDeltaTime = Time.fixedDeltaTime;
-        _playerController.PlayerInputLock(true);
+        _mainCamera = Camera.main;
+
+        if (_playerController != null)
+            _playerController.PlayerInputLock(true);
 
         CacheReferences();
         RestoreTimeScale();
@@ -81,13 +89,14 @@ public class TutorialManager : Singleton<TutorialManager>
         HideAllHintObjects();
     }
 
+    // Awake 시 초기화 루틴을 실행한다.
     protected override void Awake()
     {
         base.Awake();
-
         Init();
     }
-    // 비활성화될 때 슬로모션이 남지 않도록 복구한다.
+
+    // 파괴될 때 슬로모션이 남지 않도록 복구한다.
     private void OnDestroy()
     {
         RestoreTimeScale();
@@ -114,6 +123,12 @@ public class TutorialManager : Singleton<TutorialManager>
         }
     }
 
+    // 모든 힌트 오브젝트를 플레이어 머리 위 위치로 갱신한다.
+    private void LateUpdate()
+    {
+        UpdateHintFollow();
+    }
+
     #endregion
 
     #region Public API
@@ -134,14 +149,16 @@ public class TutorialManager : Singleton<TutorialManager>
         if (_currentStep != TutorialStep.MoveAD)
             return;
 
-        SetStep(TutorialStep.JumpCharge); //스페이스바 누르라고 뜸
+        SetStep(TutorialStep.JumpCharge);
     }
+
+    // 공중 트리거 진입 시 점프 차지 단계에서 공중 단계로 전환한다.
     public void OnInAirTrigger()
     {
         if (_currentStep != TutorialStep.JumpCharge)
             return;
 
-        SetStep(TutorialStep.InAir); //스페이스바 누르라고 뜸
+        SetStep(TutorialStep.InAir);
     }
 
     // 슬램 입력이 완료된 것으로 판단되면 튜토리얼을 종료한다.
@@ -163,6 +180,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
         ApplyStepRuntimeState(nextStep);
         ApplyStepUI(nextStep);
+
         if (_showDebugLog)
             Debug.Log($"Tutorial Step Changed : {_currentStep}", this);
     }
@@ -170,9 +188,6 @@ public class TutorialManager : Singleton<TutorialManager>
     #endregion
 
     #region Step Update
-
-    // 차지량이 충분한지와 실제 점프 이륙 여부를 검사한다.
-    // TODO: 수정해야함, 이걸 트리거로 바꿔야함
 
     // 점프 정점에 도달했는지 검사한다.
     private void UpdateInAirStep()
@@ -284,6 +299,81 @@ public class TutorialManager : Singleton<TutorialManager>
 
     #endregion
 
+    #region Hint UI Follow
+
+    // 따라갈 기준 대상을 반환하며, 비어 있으면 플레이어 본체를 사용한다.
+    private Transform GetHintFollowTarget()
+    {
+        if (_hintFollowTarget != null)
+            return _hintFollowTarget;
+
+        if (_playerController != null)
+            return _playerController.transform;
+
+        return null;
+    }
+
+    // 현재 활성/비활성 여부와 무관하게 힌트 UI 위치를 갱신한다.
+    private void UpdateHintFollow()
+    {
+        Transform followTarget = GetHintFollowTarget();
+        if (followTarget == null)
+            return;
+
+        Vector3 targetWorldPosition = followTarget.position + _hintFollowOffset;
+
+        UpdateHintObjectPosition(_pressTmp, targetWorldPosition);
+        UpdateHintObjectPosition(_pressHoldTmp, targetWorldPosition);
+    }
+
+    // 힌트 오브젝트가 UI인지 월드 오브젝트인지에 따라 위치를 안전하게 갱신한다.
+    private void UpdateHintObjectPosition(GameObject hintObject, Vector3 targetWorldPosition)
+    {
+        if (hintObject == null)
+            return;
+
+        RectTransform rectTransform = hintObject.transform as RectTransform;
+        if (rectTransform == null)
+        {
+            hintObject.transform.position = targetWorldPosition;
+            return;
+        }
+
+        Canvas canvas = rectTransform.GetComponentInParent<Canvas>();
+        if (canvas == null)
+        {
+            rectTransform.position = targetWorldPosition;
+            return;
+        }
+
+        if (canvas.renderMode == RenderMode.WorldSpace)
+        {
+            rectTransform.position = targetWorldPosition;
+            return;
+        }
+
+        RectTransform parentRect = rectTransform.parent as RectTransform;
+        if (parentRect == null)
+            return;
+
+        if (_mainCamera == null)
+            _mainCamera = Camera.main;
+
+        if (_mainCamera == null)
+            return;
+
+        Camera uiCamera = null;
+        if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            uiCamera = canvas.worldCamera != null ? canvas.worldCamera : _mainCamera;
+
+        Vector2 screenPosition = _mainCamera.WorldToScreenPoint(targetWorldPosition);
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, screenPosition, uiCamera, out Vector2 localPoint))
+            rectTransform.localPosition = localPoint;
+    }
+
+    #endregion
+
     #region Helpers
 
     // 플레이어 컨트롤러를 기준으로 필요한 컴포넌트를 한 번에 캐싱한다.
@@ -327,7 +417,6 @@ public class TutorialManager : Singleton<TutorialManager>
 
         _slowMotionRoutine = StartCoroutine(CoApplySlowMotion());
     }
-
 
     // 시간 배율을 기본값으로 복구한다.
     private void RestoreTimeScale()

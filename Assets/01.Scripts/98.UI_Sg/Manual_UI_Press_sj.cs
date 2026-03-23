@@ -28,7 +28,7 @@ public class Manual_Ui_Press_sg : MonoBehaviour
     [SerializeField] private float _spacePressedSizeY = 80f;
     [SerializeField] private Color _spaceDefaultColor = Color.white;
     [SerializeField] private Color _spacePressedColor = new Color(123f / 255f, 123f / 255f, 123f / 255f, 1f);
-
+     
     [Header("Y Offset")]
     [SerializeField] private float yOffset = 8f;
 
