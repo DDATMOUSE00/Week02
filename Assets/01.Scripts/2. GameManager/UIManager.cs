@@ -103,12 +103,12 @@ public class UIManager : Singleton<UIManager>
         if (_targetCanvasGroup == null) return;
 
         //_targetCanvasGroup.DOKill();
-        _targetCanvasGroup.gameObject.SetActive(true);
-        _targetCanvasGroup.alpha =1; //컷씬 시작은 보이게
+        //_targetCanvasGroup.gameObject.SetActive(true);
+       // _targetCanvasGroup.alpha =1; //컷씬 시작은 보이게
     }
     private void OnTutorialStart(MEventType type, Component sender, System.EventArgs args)
     {   
-        FadeOut();
+        //FadeOut();
     }
     private void OnGameStart(MEventType type, Component sender, System.EventArgs args)
     {
@@ -117,11 +117,11 @@ public class UIManager : Singleton<UIManager>
     }
     private void OnGameCleared(MEventType type, Component sender, System.EventArgs args)
     {
-        FadeIn();
+        //FadeIn();
     }
     private void OnGameFailed(MEventType type, Component sender, System.EventArgs args)
     {
-        FadeIn();
+        //FadeIn();
        
     }
 
@@ -181,23 +181,22 @@ public class UIManager : Singleton<UIManager>
         _fillBarImage.fillAmount=Mathf.Clamp((_playerPoint.transform.localPosition.x - _startPosition) / (_endPosition - _startPosition), 0, 1);
     }
 
-    public void FadeOut(Action onComplete = null)
+    public void FadeOut(CanvasGroup targetCanvas)
     {
-        if (_targetCanvasGroup == null) return;
-        _targetCanvasGroup.gameObject.SetActive(true);
-        _targetCanvasGroup.DOFade(0f, _duration).OnComplete(() => {
-            _targetCanvasGroup.gameObject.SetActive(false); // 다 어두워지면 클릭 방해 안되게 끔
-            onComplete?.Invoke();
+        if (targetCanvas == null) return;
+        targetCanvas.gameObject.SetActive(true);
+        targetCanvas.DOFade(0f, _duration).OnComplete(() => {
+            targetCanvas.gameObject.SetActive(false); // 다 밝아지면 클릭 방해 안되게 끔
         });
     }
 
-    public void FadeIn(Action onComplete = null)
+    public void FadeIn(CanvasGroup targetCanvas)
     {
-        if (_targetCanvasGroup == null) return;
-        _targetCanvasGroup.gameObject.SetActive(true);
-        _targetCanvasGroup.alpha = 0; // 시작은 투명하게
-        _targetCanvasGroup.DOFade(1f, _duration).OnComplete(() => {
-            onComplete?.Invoke();
+        if (targetCanvas == null) return;
+        targetCanvas.gameObject.SetActive(true);
+        targetCanvas.alpha = 0; // 시작은 투명하게
+        targetCanvas.DOFade(1f, _duration).OnComplete(() => {
+
         });
     }
 
