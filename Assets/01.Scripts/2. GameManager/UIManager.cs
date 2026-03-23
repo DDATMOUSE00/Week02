@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -56,9 +57,16 @@ public class UIManager : Singleton<UIManager>
     public Image GamepadRight;
     public Image GamepadJump;
 
-    [Header("위치 추적")]
+    [Header("입력키 그룹")]
     public RectTransform ManualRect;
     public Vector3 ManualOffset;
+
+    [Header("점멸 할 텍스트,점멸방식")]
+    [SerializeField] private TextMeshProUGUI[] _blinkingText;
+    public LoopType Looptype;
+
+    [Header("Restart 버튼,Exit버튼")]
+   
 
     [Header("다른 스크립트가 참조하는 플레이어")]
     public GameObject Player;
@@ -103,14 +111,17 @@ public class UIManager : Singleton<UIManager>
     private void OnGameFailed(MEventType type, Component sender, System.EventArgs args)
     {
         FadeIn();
+       
     }
 
 
 
     private void Start()
     {
+
         //if (GameManager.Instance.CurrentState == GameState.Play)
         //    InGameDistance();
+        BlinkController();
         SliderDistance();
         _totalTime = _gameTimer._totalTime;
     }
@@ -177,6 +188,13 @@ public class UIManager : Singleton<UIManager>
             onComplete?.Invoke();
         });
     }
+
+    public void BlinkController()
+    {
+        for(int i=0; i<_blinkingText.Length; i++)
+            _blinkingText[i].DOFade(0.3f, 1f).SetLoops(-1, Looptype);
+    }
+
 
 
 

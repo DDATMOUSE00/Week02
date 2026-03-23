@@ -98,7 +98,7 @@ public class Manual_Ui_sg : MonoBehaviour
 
             if (isNowGamepad != _isGamepad)
             {
-                Debug.Log($"<color=lime>[Manual_UI]</color> 기기 전환: <b>{(isNowGamepad ? "패드" : "키보드")}</b> (원인: {action.name})");
+                //Debug.Log($"<color=lime>[Manual_UI]</color> 기기 전환: <b>{(isNowGamepad ? "패드" : "키보드")}</b> (원인: {action.name})");
                 UpdateVisualsByDevice(isNowGamepad);
             }
         }
@@ -165,7 +165,7 @@ public class Manual_Ui_sg : MonoBehaviour
         _switchTimer = 0f;
         _showLeftNow = true;
         RefreshUI();
-        Debug.Log("<color=yellow>[Manual_UI]</color> AD 가이드 시작 (무한 깜빡이)");
+        //Debug.Log("<color=yellow>[Manual_UI]</color> AD 가이드 시작 (무한 깜빡이)");
     }
 
     public void ShowOnlySpace() { _showAD = false; _showSpace = true; RefreshUI(); }
@@ -175,7 +175,7 @@ public class Manual_Ui_sg : MonoBehaviour
         _showAD = false;
         _showSpace = false;
         RefreshUI();
-        Debug.Log("<color=red>[Manual_UI]</color> 모든 가이드 비활성화 (트리거 발동)");
+        //Debug.Log("<color=red>[Manual_UI]</color> 모든 가이드 비활성화 (트리거 발동)");
     }
 
     private void LateUpdate() { UpdateUIpos(); }
