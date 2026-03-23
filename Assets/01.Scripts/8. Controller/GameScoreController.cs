@@ -8,7 +8,7 @@ public class GameScoreController : MonoBehaviour
     
     [SerializeField] private int KillScore = 0;
     [SerializeField] private int BuildingScore = 0;
-    [SerializeField] private int BreadScore = 0;
+    [SerializeField] public int BreadScore = 0;
 
     [Header("Typing")]
     [SerializeField] private float charsPerSecond = 28f;

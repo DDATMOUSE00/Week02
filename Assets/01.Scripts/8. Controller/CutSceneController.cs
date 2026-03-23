@@ -5,14 +5,15 @@ using UnityEngine.InputSystem;
 
 public class CutSceneController : MonoBehaviour
 {
-    private enum CutSceneType { None, Start, EndingA, EndingB }
+    private enum CutSceneType { None, Start, EndingA, EndingB, EndingC }
 
     [Header("Cartoon Image")]
     [SerializeField] private Image[] _startCutScenes;
     [SerializeField] private Image[] _endingACutScenes;
     [SerializeField] private Image[] _endingBCutScenes;
     
-    
+    [SerializeField] private Image[] _endingCCutScenes;
+
     
     [Header("Cartoon Background")]
     [SerializeField] private GameObject _background;
@@ -20,6 +21,9 @@ public class CutSceneController : MonoBehaviour
     private CutSceneType _currentType = CutSceneType.None;
     private int _currentIndex = 0;
     private bool _isPlaying = false;
+
+    [SerializeField] private GameScoreController _gameScoreController;
+
     
 
     private void OnEnable()
@@ -42,7 +46,17 @@ public class CutSceneController : MonoBehaviour
     }
 
     private void OnStartingCutScene(MEventType t, Component s, EventArgs a) => StartCutScene(CutSceneType.Start);
-    private void OnStageCleared(MEventType t, Component s, EventArgs a) => StartCutScene(CutSceneType.EndingA);
+    private void OnStageCleared(MEventType t, Component s, EventArgs a)
+        {
+            if(_gameScoreController.BreadScore >= 3)
+            {
+                StartCutScene(CutSceneType.EndingC);
+            }
+            else
+            {
+                StartCutScene(CutSceneType.EndingA);
+            }
+        }
     private void OnStageFailed(MEventType t, Component s, EventArgs a) => StartCutScene(CutSceneType.EndingB);
 
     private void Update()
@@ -84,6 +98,7 @@ public class CutSceneController : MonoBehaviour
         SetAllInactive(_startCutScenes);
         SetAllInactive(_endingACutScenes);
         SetAllInactive(_endingBCutScenes);
+        SetAllInactive(_endingCCutScenes);
 
         if (_background != null) _background.SetActive(true);
     }
@@ -99,6 +114,8 @@ public class CutSceneController : MonoBehaviour
         if (_currentType == CutSceneType.Start) GameManager.Instance.TutorialStart();
         else if (_currentType == CutSceneType.EndingA) GameManager.Instance.ClearCutSceneFinished();
         else if (_currentType == CutSceneType.EndingB) GameManager.Instance.GameOverCutSceneFinished();
+        else if (_currentType == CutSceneType.EndingC) GameManager.Instance.ClearCutSceneFinished();
+        //히든분기
 
         _currentType = CutSceneType.None;
     }
@@ -108,6 +125,8 @@ public class CutSceneController : MonoBehaviour
         if (_currentType == CutSceneType.Start) return _startCutScenes;
         if (_currentType == CutSceneType.EndingA) return _endingACutScenes;
         if (_currentType == CutSceneType.EndingB) return _endingBCutScenes;
+        if (_currentType == CutSceneType.EndingC) return _endingCCutScenes;
+
         return null;
     }
 
