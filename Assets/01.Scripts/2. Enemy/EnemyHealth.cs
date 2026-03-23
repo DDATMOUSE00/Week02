@@ -21,6 +21,7 @@ public class EnemyHealth : MonoBehaviour
             return;
 
         _isDead = true;
+        GameManager.Instance.ScoreIncreaseEnemy();
         _enemy.OnDeath();
     }
 }
