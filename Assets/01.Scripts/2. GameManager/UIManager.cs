@@ -39,7 +39,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameTimer _gameTimer;
 
     [Header("페이드에 사용할 검은 패널 (Image)")]
-    [SerializeField] private Image _targetPanel;
+    [SerializeField] private CanvasGroup _targetCanvasGroup;
     [SerializeField] private float _duration = 0.5f;
 
     [Header("입력 액션 레퍼런스")]
@@ -78,6 +78,7 @@ public class UIManager : Singleton<UIManager>
     {
         if (EventManager.Instance != null)
         {
+            EventManager.Instance.AddListener(MEventType.StartingCutScene,OnCutSceneStart);
             EventManager.Instance.AddListener(MEventType.TutorialStarted, OnTutorialStart);
             EventManager.Instance.AddListener(MEventType.StageStarted, OnGameStart);
             EventManager.Instance.AddListener(MEventType.StageCleared, OnGameCleared);
@@ -89,15 +90,25 @@ public class UIManager : Singleton<UIManager>
     {
         if (EventManager.Instance != null)
         {
+            EventManager.Instance.RemoveListener(MEventType.StartingCutScene, this);
             EventManager.Instance.RemoveListener(MEventType.TutorialStarted, this);
             EventManager.Instance.RemoveListener(MEventType.StageStarted, this);
             EventManager.Instance.RemoveListener(MEventType.StageCleared, this);
+            EventManager.Instance.RemoveListener(MEventType.StageFailed, this);
         }
 
     }
-    private void OnTutorialStart(MEventType type, Component sender, System.EventArgs args)
+    private void OnCutSceneStart(MEventType type, Component sender, System.EventArgs args)
     {
-        FadeOut();
+        if (_targetCanvasGroup == null) return;
+
+        //_targetCanvasGroup.DOKill();
+        //_targetCanvasGroup.gameObject.SetActive(true);
+       // _targetCanvasGroup.alpha =1; //컷씬 시작은 보이게
+    }
+    private void OnTutorialStart(MEventType type, Component sender, System.EventArgs args)
+    {   
+        //FadeOut();
     }
     private void OnGameStart(MEventType type, Component sender, System.EventArgs args)
     {
@@ -106,11 +117,11 @@ public class UIManager : Singleton<UIManager>
     }
     private void OnGameCleared(MEventType type, Component sender, System.EventArgs args)
     {
-        FadeIn();
+        //FadeIn();
     }
     private void OnGameFailed(MEventType type, Component sender, System.EventArgs args)
     {
-        FadeIn();
+        //FadeIn();
        
     }
 
@@ -124,6 +135,7 @@ public class UIManager : Singleton<UIManager>
         BlinkController();
         SliderDistance();
         _totalTime = _gameTimer._totalTime;
+      
     }
     private void Update()
     {   if (GameManager.Instance.CurrentState == GameState.Play)
@@ -169,23 +181,22 @@ public class UIManager : Singleton<UIManager>
         _fillBarImage.fillAmount=Mathf.Clamp((_playerPoint.transform.localPosition.x - _startPosition) / (_endPosition - _startPosition), 0, 1);
     }
 
-    public void FadeOut(Action onComplete = null)
+    public void FadeOut(CanvasGroup targetCanvas)
     {
-        if (_targetPanel == null) return;
-        _targetPanel.gameObject.SetActive(true);
-        _targetPanel.DOFade(0f, _duration).OnComplete(() => {
-            _targetPanel.gameObject.SetActive(false); // 다 밝아지면 클릭 방해 안되게 끔
-            onComplete?.Invoke();
+        if (targetCanvas == null) return;
+        targetCanvas.gameObject.SetActive(true);
+        targetCanvas.DOFade(0f, _duration).OnComplete(() => {
+            targetCanvas.gameObject.SetActive(false); // 다 밝아지면 클릭 방해 안되게 끔
         });
     }
 
-    public void FadeIn(Action onComplete = null)
+    public void FadeIn(CanvasGroup targetCanvas)
     {
-        if (_targetPanel == null) return;
-        _targetPanel.gameObject.SetActive(true);
-        _targetPanel.color = new Color(0, 0, 0, 0); // 시작은 투명하게
-        _targetPanel.DOFade(1f, _duration).OnComplete(() => {
-            onComplete?.Invoke();
+        if (targetCanvas == null) return;
+        targetCanvas.gameObject.SetActive(true);
+        targetCanvas.alpha = 0; // 시작은 투명하게
+        targetCanvas.DOFade(1f, _duration).OnComplete(() => {
+
         });
     }
 
