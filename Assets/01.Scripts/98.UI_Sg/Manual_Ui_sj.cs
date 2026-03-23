@@ -1,15 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Manual_Ui_sg : MonoBehaviour
 {
-    [Header("입력 액션 레퍼런스")]
-  
-    private InputActionReference _navigateActionReference;
-    private InputActionReference _spaceActionReference;
-
     [Header("키보드 UI 세트 (Image 객체)")]
     private Image _a;
     private Image _d;
@@ -21,31 +15,29 @@ public class Manual_Ui_sg : MonoBehaviour
     private Image _gamepadJump;
 
     [Header("위치 추적")]
-    private GameObject _player; // 플레이어 위치 추적용
-    private RectTransform _manualRect; // UI 위치 조정을 위한 RectTransform
-    private Vector3 _manualOffset; // 플레이어 대비 UI 위치 오프셋
+    private GameObject _player;
+    private RectTransform _manualRect;
+    private Vector3 _manualOffset;
 
+    [Header("Blink")]
+    [SerializeField] private float _switchInterval = 0.5f;
 
-    private float _switchInterval = 0.5f; // 깜빡임 속도
     private float _switchTimer = 0f;
     private bool _showLeftNow = true;
-
-    
-    private float _stickDeadzone = 0.5f; // 쏠림 방지를 위해 데드존 상향
 
     private bool _isGamepad = false;
     private bool _showAD = false;
     private bool _showSpace = false;
 
-    
-
     private Camera _mainCamera;
     private RectTransform _parentRect;
     private Camera _uiCamera;
 
-    private void Awake() { _mainCamera = Camera.main;
-        _navigateActionReference = UIManager.Instance.NavigateActionReference;
-        _spaceActionReference = UIManager.Instance.SpaceActionReference;
+    // UIManager에서 필요한 레퍼런스를 가져오고 메인 카메라를 캐싱한다.
+    private void Awake()
+    {
+        _mainCamera = Camera.main;
+
         _a = UIManager.Instance.A;
         _d = UIManager.Instance.D;
         _spacebar = UIManager.Instance.Spacebar;
@@ -59,6 +51,7 @@ public class Manual_Ui_sg : MonoBehaviour
         _manualOffset = UIManager.Instance.ManualOffset;
     }
 
+    // 시작 시 부모 Rect와 UI 카메라를 캐싱하고 현재 입력 장치 상태를 반영한다.
     private void Start()
     {
         if (_manualRect != null)
@@ -67,75 +60,96 @@ public class Manual_Ui_sg : MonoBehaviour
             Canvas canvas = _manualRect.GetComponentInParent<Canvas>();
             _uiCamera = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? _mainCamera : null;
         }
-        UpdateVisualsByDevice(false);
+
+        ApplyCurrentInputType();
     }
 
+    // 활성화될 때 입력 타입 변경 이벤트를 구독하고 현재 장치 상태를 즉시 반영한다.
     private void OnEnable()
     {
-        InputSystem.onActionChange += OnActionChange;
-        if (_navigateActionReference != null) _navigateActionReference.action.Enable();
-        if (_spaceActionReference != null) _spaceActionReference.action.Enable();
+        SubscribeInputTypeEvent();
+        ApplyCurrentInputType();
     }
 
-    private void OnDisable() { InputSystem.onActionChange -= OnActionChange; }
-
-    private void OnActionChange(object obj, InputActionChange change)
+    // 비활성화될 때 입력 타입 변경 이벤트를 해제한다.
+    private void OnDisable()
     {
-        // 1. 상태 확인 (누르기 시작했거나 수행 중일 때만)
-        if (change != InputActionChange.ActionStarted && change != InputActionChange.ActionPerformed)
-            return;
-
-        if (!(obj is InputAction action) || action.activeControl == null)
-            return;
-
-        // 2. 현재 입력 장치 판별
-        bool isNowGamepad = action.activeControl.device is Gamepad;
-
-        // 3. 패드 쏠림 방지 (데드존 체크)
-        if (isNowGamepad)
-        {
-            var value = action.ReadValueAsObject();
-            float inputMagnitude = 0f;
-
-            if (value is Vector2 v2) inputMagnitude = v2.magnitude;
-            else if (value is float f) inputMagnitude = Mathf.Abs(f);
-            else inputMagnitude = 1f; // 버튼 등 기타 입력은 1로 간주
-
-            if (inputMagnitude < _stickDeadzone) return;
-        }
-
-        // 4. 장치가 실제로 바뀌었을 때만 UI 업데이트
-        if (isNowGamepad != _isGamepad)
-        {
-            _isGamepad = isNowGamepad; // 현재 상태 저장 (이 변수가 선언되어 있어야 함)
-            UpdateVisualsByDevice(_isGamepad);
-        }
+        UnsubscribeInputTypeEvent();
     }
 
+    // AD 안내가 켜져 있을 때만 타이머를 돌려 좌우 아이콘을 번갈아 표시한다.
+    private void Update()
+    {
+        if (!_showAD)
+            return;
+
+        _switchTimer += Time.deltaTime;
+        if (_switchTimer < _switchInterval)
+            return;
+
+        _switchTimer = 0f;
+        _showLeftNow = !_showLeftNow;
+        RefreshUI();
+    }
+
+    // LateUpdate에서 수동 안내 UI의 위치를 플레이어 기준으로 갱신한다.
+    private void LateUpdate()
+    {
+        UpdateUIPos();
+    }
+
+    // InputTypeManager의 입력 타입 변경 이벤트를 구독한다.
+    private void SubscribeInputTypeEvent()
+    {
+        if (InputTypeManager.Instance == null)
+            return;
+
+        InputTypeManager.Instance.OnInputTypeChanged -= OnInputTypeChanged;
+        InputTypeManager.Instance.OnInputTypeChanged += OnInputTypeChanged;
+    }
+
+    // InputTypeManager의 입력 타입 변경 이벤트를 해제한다.
+    private void UnsubscribeInputTypeEvent()
+    {
+        if (InputTypeManager.Instance == null)
+            return;
+
+        InputTypeManager.Instance.OnInputTypeChanged -= OnInputTypeChanged;
+    }
+
+    // 입력 장치가 바뀌면 현재 표시 중인 안내 UI를 새 장치 기준으로 다시 그린다.
+    private void OnInputTypeChanged(bool isGamepad)
+    {
+        UpdateVisualsByDevice(isGamepad);
+    }
+
+    // 현재 입력 타입을 매니저에서 가져와 UI에 반영한다.
+    private void ApplyCurrentInputType()
+    {
+        UpdateVisualsByDevice(ResolveCurrentIsGamePad());
+    }
+
+    // 현재 입력 타입을 구해온다.
+    private bool ResolveCurrentIsGamePad()
+    {
+        if (InputTypeManager.Instance != null)
+            return InputTypeManager.Instance.IsGamePad;
+
+        bool hasGamePad = Gamepad.current != null;
+        bool hasKeyboardOrMouse = Keyboard.current != null || Mouse.current != null;
+        return hasGamePad && !hasKeyboardOrMouse;
+    }
+
+    // 외부나 매니저에서 전달한 입력 장치 상태를 내부 UI 상태로 반영한다.
     public void UpdateVisualsByDevice(bool isGamepad)
     {
         _isGamepad = isGamepad;
         RefreshUI();
     }
 
-    private void Update()
-    {
-        // [핵심] 조작 중이든 아니든 _showAD가 켜져 있으면 무조건 타이머 가동
-        if (_showAD)
-        {
-            _switchTimer += Time.deltaTime;
-            if (_switchTimer >= _switchInterval)
-            {
-                _switchTimer = 0f;
-                _showLeftNow = !_showLeftNow;
-                RefreshUI(); // 상태 바뀔 때마다 UI 갱신
-            }
-        }
-    }
-
+    // 현재 장치와 현재 안내 상태에 맞게 실제 아이콘 표시를 갱신한다.
     private void RefreshUI()
     {
-        // 1. 모든 UI 초기화 (끔)
         _a?.gameObject.SetActive(false);
         _d?.gameObject.SetActive(false);
         _spacebar?.gameObject.SetActive(false);
@@ -143,29 +157,33 @@ public class Manual_Ui_sg : MonoBehaviour
         _gamepadRight?.gameObject.SetActive(false);
         _gamepadJump?.gameObject.SetActive(false);
 
-        // 2. 현재 단계 및 기기에 따른 표시
-        if (!_isGamepad) // 키보드 모드
+        if (!_isGamepad)
         {
             if (_showAD)
             {
-                // 키보드는 깜빡이지 않고 A, D 둘 다 보여줌 (원하면 여기도 타이머 적용 가능)
                 _a?.gameObject.SetActive(true);
                 _d?.gameObject.SetActive(true);
             }
-            if (_showSpace) _spacebar?.gameObject.SetActive(true);
+
+            if (_showSpace)
+                _spacebar?.gameObject.SetActive(true);
         }
-        else // 패드 모드: 조작 여부 상관없이 타이머에 따라 번갈아 표시
+        else
         {
             if (_showAD)
             {
-                if (_showLeftNow) _gamepadLeft?.gameObject.SetActive(true);
-                else _gamepadRight?.gameObject.SetActive(true);
+                if (_showLeftNow)
+                    _gamepadLeft?.gameObject.SetActive(true);
+                else
+                    _gamepadRight?.gameObject.SetActive(true);
             }
-            if (_showSpace) _gamepadJump?.gameObject.SetActive(true);
+
+            if (_showSpace)
+                _gamepadJump?.gameObject.SetActive(true);
         }
     }
 
-    // 트리거 등 외부에서 호출하여 UI를 켜고 끄는 함수들
+    // AD 안내만 켜고 좌우 번갈이 표시 상태를 초기화한다.
     public void ShowOnlyAD()
     {
         _showAD = true;
@@ -173,32 +191,34 @@ public class Manual_Ui_sg : MonoBehaviour
         _switchTimer = 0f;
         _showLeftNow = true;
         RefreshUI();
-        //Debug.Log("<color=yellow>[Manual_UI]</color> AD 가이드 시작 (무한 깜빡이)");
     }
 
-    public void ShowOnlySpace() { _showAD = false; _showSpace = true; RefreshUI(); }
+    // 점프/슬램 안내만 켠다.
+    public void ShowOnlySpace()
+    {
+        _showAD = false;
+        _showSpace = true;
+        RefreshUI();
+    }
 
+    // 모든 수동 안내 UI를 끈다.
     public void HideAll()
     {
         _showAD = false;
         _showSpace = false;
         RefreshUI();
-        //Debug.Log("<color=red>[Manual_UI]</color> 모든 가이드 비활성화 (트리거 발동)");
     }
 
-    private void LateUpdate() { UpdateUIpos(); }
-    private void UpdateUIpos()
+    // 플레이어 머리 위 기준으로 수동 안내 UI의 위치를 따라가게 한다.
+    private void UpdateUIPos()
     {
-        if (_player == null || _manualRect == null || _parentRect == null) return;
+        if (_player == null || _manualRect == null || _parentRect == null || _mainCamera == null)
+            return;
+
         Vector3 targetPos = _player.transform.position + _manualOffset;
         Vector2 screenPos = _mainCamera.WorldToScreenPoint(targetPos);
+
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_parentRect, screenPos, _uiCamera, out Vector2 localPoint))
             _manualRect.localPosition = localPoint;
     }
-
-
-
-
-
-
 }

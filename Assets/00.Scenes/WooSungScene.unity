@@ -21398,6 +21398,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 1046027103914808982, guid: e795f52e17eb68945a3a3ef5e18176ec, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3936163429374256778, guid: e795f52e17eb68945a3a3ef5e18176ec, type: 3}
       propertyPath: _minHeightToSlow
       value: 1
@@ -72692,6 +72696,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1992718139}
+  - component: {fileID: 1992718140}
   m_Layer: 0
   m_Name: InputTypeManager
   m_TagString: Untagged
@@ -72714,6 +72719,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1992718140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992718138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c150d535bff569e45954b27fda78fdd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputTypeManager
+  isDontDestroyOnLoad: 0
 --- !u!1001 &2001533777
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -113655,8 +113673,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284789759
-  m_fontColor: {r: 1, g: 0.7007875, b: 0.3915094, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -114002,7 +114020,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!222 &3093700793880439205
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -114189,7 +114207,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3972495037044220325
 Transform:
   m_ObjectHideFlags: 0
@@ -114387,6 +114405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0595cf3b3afa0e346a4190b9697ea650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Manual_Ui_sg
+  _switchInterval: 0.5
 --- !u!114 &5297336690942285670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114506,8 +114525,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4285916657
-  m_fontColor: {r: 0.9433962, g: 0.8966434, b: 0.45834818, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -115227,8 +115246,8 @@ MonoBehaviour:
   _slowMotionStartScale: 0.35
   _slowMotionLerpDuration: 1
   _peakCheckVelocityY: 0.1
-  _pressTmp: {fileID: 3829882634366655164}
-  _pressHoldTmp: {fileID: 3080081671540760977}
+  _pressTmp: {fileID: 5552340270095101553}
+  _pressHoldTmp: {fileID: 2197461148565536227}
   _hintFollowTarget: {fileID: 8939529227513929847}
   _hintFollowOffset: {x: 3.5, y: 5.7, z: 0}
   _showDebugLog: 0

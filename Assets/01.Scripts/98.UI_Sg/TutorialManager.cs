@@ -1,5 +1,7 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 // PlayerControllerVersionTwo를 중심으로 튜토리얼 상태를 관리한다.
 public class TutorialManager : Singleton<TutorialManager>
@@ -32,8 +34,8 @@ public class TutorialManager : Singleton<TutorialManager>
     [SerializeField] private float _peakCheckVelocityY = 0.1f;
 
     [Header("Hint UI")]
-    [SerializeField] private GameObject _pressTmp;
-    [SerializeField] private GameObject _pressHoldTmp;
+    [SerializeField] private TMP_Text _pressTmp;
+    [SerializeField] private TMP_Text _pressHoldTmp;
 
     [Header("Hint UI Follow")]
     [SerializeField] private Transform _hintFollowTarget;
@@ -44,7 +46,6 @@ public class TutorialManager : Singleton<TutorialManager>
 
     public float GameStartPosition;
 
-    // 슬로우 연출용
     private Coroutine _slowMotionRoutine;
     private float _defaultFixedDeltaTime;
 
@@ -74,7 +75,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
     #region Initialize / Lifecycle
 
-    // 싱글톤 초기화 시 플레이어 관련 참조와 카메라를 캐싱한다.
+    // 싱글톤 초기화 시 플레이어 관련 참조와 카메라를 캐싱하고 힌트 텍스트를 갱신한다.
     public override void Init()
     {
         _defaultFixedDeltaTime = Time.fixedDeltaTime;
@@ -86,6 +87,7 @@ public class TutorialManager : Singleton<TutorialManager>
         CacheReferences();
         RestoreTimeScale();
         ResetRuntimeFlags();
+        RefreshHintTexts();
         HideAllHintObjects();
     }
 
@@ -96,9 +98,23 @@ public class TutorialManager : Singleton<TutorialManager>
         Init();
     }
 
-    // 파괴될 때 슬로모션이 남지 않도록 복구한다.
+    // 활성화될 때 입력 타입 변경 이벤트를 구독하고 텍스트를 현재 장치 기준으로 갱신한다.
+    private void OnEnable()
+    {
+        SubscribeInputTypeEvent();
+        RefreshHintTexts();
+    }
+
+    // 비활성화될 때 입력 타입 변경 이벤트를 해제한다.
+    private void OnDisable()
+    {
+        UnsubscribeInputTypeEvent();
+    }
+
+    // 파괴될 때 이벤트와 슬로모션이 남지 않도록 복구한다.
     private void OnDestroy()
     {
+        UnsubscribeInputTypeEvent();
         RestoreTimeScale();
     }
 
@@ -140,6 +156,7 @@ public class TutorialManager : Singleton<TutorialManager>
             _uiManualUI.gameObject.SetActive(true);
 
         ResetRuntimeFlags();
+        RefreshHintTexts();
         SetStep(TutorialStep.MoveAD);
     }
 
@@ -183,6 +200,58 @@ public class TutorialManager : Singleton<TutorialManager>
 
         if (_showDebugLog)
             Debug.Log($"Tutorial Step Changed : {_currentStep}", this);
+    }
+
+    #endregion
+
+    #region Input Type
+
+    // InputTypeManager의 입력 타입 변경 이벤트를 구독한다.
+    private void SubscribeInputTypeEvent()
+    {
+        if (InputTypeManager.Instance == null)
+            return;
+
+        InputTypeManager.Instance.OnInputTypeChanged -= OnInputTypeChanged;
+        InputTypeManager.Instance.OnInputTypeChanged += OnInputTypeChanged;
+    }
+
+    // InputTypeManager의 입력 타입 변경 이벤트를 해제한다.
+    private void UnsubscribeInputTypeEvent()
+    {
+        if (InputTypeManager.Instance == null)
+            return;
+
+        InputTypeManager.Instance.OnInputTypeChanged -= OnInputTypeChanged;
+    }
+
+    // 입력 장치가 바뀌면 힌트 문구를 새 장치 기준으로 갱신한다.
+    private void OnInputTypeChanged(bool isGamePad)
+    {
+        RefreshHintTexts();
+    }
+
+    // 현재 입력 타입에 맞는 힌트 문구를 TMP에 반영한다.
+    private void RefreshHintTexts()
+    {
+        bool isGamePad = ResolveCurrentIsGamePad();
+
+        if (_pressTmp != null)
+            _pressTmp.text = isGamePad ? "Press X For Slam!" : "Press SpaceBar For Slam!";
+
+        if (_pressHoldTmp != null)
+            _pressHoldTmp.text = isGamePad ? "Press X" : "Press SpaceBar";
+    }
+
+    // 현재 입력 장치가 게임패드인지 판별한다.
+    private bool ResolveCurrentIsGamePad()
+    {
+        if (InputTypeManager.Instance != null)
+            return InputTypeManager.Instance.IsGamePad;
+
+        bool hasGamePad = Gamepad.current != null;
+        bool hasKeyboardOrMouse = Keyboard.current != null || Mouse.current != null;
+        return hasGamePad && !hasKeyboardOrMouse;
     }
 
     #endregion
@@ -241,9 +310,11 @@ public class TutorialManager : Singleton<TutorialManager>
         }
     }
 
-    // 단계 변경 시 안내 UI를 갱신한다.
+    // 단계 변경 시 안내 UI와 힌트 문구를 갱신한다.
     private void ApplyStepUI(TutorialStep step)
     {
+        RefreshHintTexts();
+
         switch (step)
         {
             case TutorialStep.None:
@@ -327,7 +398,7 @@ public class TutorialManager : Singleton<TutorialManager>
     }
 
     // 힌트 오브젝트가 UI인지 월드 오브젝트인지에 따라 위치를 안전하게 갱신한다.
-    private void UpdateHintObjectPosition(GameObject hintObject, Vector3 targetWorldPosition)
+    private void UpdateHintObjectPosition(Component hintObject, Vector3 targetWorldPosition)
     {
         if (hintObject == null)
             return;
@@ -456,11 +527,11 @@ public class TutorialManager : Singleton<TutorialManager>
         _slowMotionRoutine = null;
     }
 
-    // null 안전하게 오브젝트 활성 상태를 바꾼다.
-    private void SetActiveSafe(GameObject target, bool isActive)
+    // null 안전하게 컴포넌트의 게임오브젝트 활성 상태를 바꾼다.
+    private void SetActiveSafe(Component target, bool isActive)
     {
         if (target != null)
-            target.SetActive(isActive);
+            target.gameObject.SetActive(isActive);
     }
 
     #endregion
