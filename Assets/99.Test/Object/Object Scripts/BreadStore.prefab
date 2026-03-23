@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2624608296754042053}
   - component: {fileID: 7752031987303613339}
   - component: {fileID: 9026323446592484680}
-  m_Layer: 10
-  m_Name: HotdogStore
+  m_Layer: 7
+  m_Name: BreadStore
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,8 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 094ba9bdd5d60944aa6f7068aec622ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HotdogStore
-  _isAlive: 1
-  _hasCalled: 0
   _hotdogCount: 1
   _player: {fileID: 0}
   _col: {fileID: 0}
@@ -111,7 +109,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7214420773972765254}
   - component: {fileID: 7080624882244369411}
-  m_Layer: 10
+  m_Layer: 7
   m_Name: Sprite
   m_TagString: Enemy
   m_Icon: {fileID: 0}
