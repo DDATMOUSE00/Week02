@@ -114,9 +114,12 @@ public class PlayerSlamDamage : MonoBehaviour
 
             EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
             var hotDogStore = hit.GetComponent<HotdogStore>();
+            var building = hit.GetComponent<BreakBuilding>();
+
+            if (building != null)
+                building.SlamBuilding();
             if (hotDogStore != null)
                 hotDogStore.DestoyStore();
-
             if (enemy == null)
                 continue;
 

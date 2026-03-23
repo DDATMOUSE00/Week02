@@ -125,7 +125,7 @@ public class PlayerAirAction : MonoBehaviour
     private void BeginSlamDive(PlayerControllerVersionTwo controller, PlayerMovementMotor movement)
     {
         if (!controller.IsSlamAnticipating)
-            return;
+            return; 
 
         if (controller.IsPlayerInputLocked)
         {

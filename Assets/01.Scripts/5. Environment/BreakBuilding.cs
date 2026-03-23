@@ -37,12 +37,12 @@ public class BreakBuilding : MonoBehaviour
         //if (_isBroken) return;
         //_isBroken = true;
 
-        Vector2 forceDirection = _baseDirection;
-        if (_normalizeDirection && forceDirection.sqrMagnitude > 0f)
-            forceDirection = forceDirection.normalized;
+        if (BuildingSprite != null)
+            BuildingSprite.SetActive(false);
 
-        ApplyForceToPiece(_leftPieces, -forceDirection);
-        ApplyForceToPiece(_rightPieces, forceDirection);
+        PieceActive(_leftPieces, true);
+        PieceActive(_rightPieces, true);
+        BreakNow();
     }
     private void BreakNow()
     {
