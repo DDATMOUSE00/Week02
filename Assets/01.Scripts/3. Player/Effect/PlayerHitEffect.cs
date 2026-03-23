@@ -15,6 +15,7 @@ public class PlayerHitEffect : MonoBehaviour
     [SerializeField] private ParticleSystem _starLevel_3_Particle;
 
     [Header("Charging Slam Particle - Hit")]
+    [SerializeField] private ParticleSystem _hitLevel_0_Particle;
     [SerializeField] private ParticleSystem _hitLevel_1_Particle;
     [SerializeField] private ParticleSystem _hitLevel_2_Particle;
     [SerializeField] private ParticleSystem _hitLevel_3_Particle;
@@ -73,6 +74,7 @@ public class PlayerHitEffect : MonoBehaviour
         switch (_playerCombo.CurrentComboLevel)
         {
             case 0:
+                PlayParticle(_hitLevel_0_Particle, worldPosition);
                 break;
             case 1:
                 PlayParticle(_starLevel_1_Particle, worldPosition);
