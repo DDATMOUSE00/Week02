@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/00.Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
+  - enabled: 0
     path: Assets/00.Scenes/THScene/TH_Mount/TH_ArtBackground.unity
     guid: dc0294802256cfc4dad6a3bf7f8972e7
+  - enabled: 1
+    path: Assets/00.Scenes/THScene/TH_FinalScene.unity
+    guid: 1c226229299c9fb4c971deb998e88a68
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
