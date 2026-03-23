@@ -65,11 +65,26 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private TextMeshProUGUI[] _blinkingText;
     public LoopType Looptype;
 
-    [Header("Restart 버튼,Exit버튼")]
-   
-
     [Header("다른 스크립트가 참조하는 플레이어")]
     public GameObject Player;
+
+    [Header("게임 종료화면")]
+
+    public GameObject TypingTextObject;
+
+    public GameObject RetryButton;
+
+    public GameObject RestartButton;
+
+    public GameObject ExitButton;
+
+    public GameObject RestartArrowButton;
+
+    public GameObject EndArrowButton;
+
+    [SerializeField] private GameScoreController _gameScoreController;
+
+
 
     private float _totalTime;
     private float _remainingTime;
@@ -98,6 +113,7 @@ public class UIManager : Singleton<UIManager>
         }
 
     }
+    
     private void OnCutSceneStart(MEventType type, Component sender, System.EventArgs args)
     {
         if (_targetCanvasGroup == null) return;
@@ -129,12 +145,17 @@ public class UIManager : Singleton<UIManager>
 
     private void Start()
     {
-
         //if (GameManager.Instance.CurrentState == GameState.Play)
         //    InGameDistance();
         BlinkController();
         SliderDistance();
         _totalTime = _gameTimer._totalTime;
+
+        ClearUI.SetActive(false);
+        GameOverUI.SetActive(false);
+
+        RetryButton.SetActive(false);
+
       
     }
     private void Update()
@@ -212,11 +233,13 @@ public class UIManager : Singleton<UIManager>
     public void GameClearUIActivate()
     {
         ClearUI.SetActive(true);
+        _gameScoreController.EndingText();
     }
 
     public void GameOverUIActivate()
     {
         GameOverUI.SetActive(true);
+        _gameScoreController.EndingText();
     }
     
 }

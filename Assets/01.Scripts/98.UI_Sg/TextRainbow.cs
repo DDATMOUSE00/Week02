@@ -23,7 +23,7 @@ public class TextRainbow : MonoBehaviour
 
     private void OnDisable()
     {
-        //KillRainbow();
+        KillRainbow();
     }
 
     private void PlayRainbow()

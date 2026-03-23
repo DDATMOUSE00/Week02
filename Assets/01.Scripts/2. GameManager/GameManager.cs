@@ -17,6 +17,7 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private PlayerControllerVersionTwo _player;
 
+
     void Start()
     {
         CurrentState = GameState.Lobby;
@@ -62,7 +63,6 @@ public class GameManager : Singleton<GameManager>
     {
         if (_isStageEnded) return;
         _isStageEnded = true;
-        Debug.LogError("GameOver");
 
         ChangeState(GameState.GameOver);
         EventManager.Instance.PostNotification(MEventType.StageFailed, this);
