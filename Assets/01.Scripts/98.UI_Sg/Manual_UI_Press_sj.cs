@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Manual_Ui_Press_sg : MonoBehaviour
 {
@@ -29,19 +28,31 @@ public class Manual_Ui_Press_sg : MonoBehaviour
     [SerializeField] private float _spacePressedSizeY = 80f;
     [SerializeField] private Color _spaceDefaultColor = Color.white;
     [SerializeField] private Color _spacePressedColor = new Color(123f / 255f, 123f / 255f, 123f / 255f, 1f);
+     
+    [Header("Y Offset")]
+    [SerializeField] private float yOffset = 8f;
 
-    private bool _stageStart = false;
-    
+    private bool _stageStart;
+
+    private Vector2 _aDefaultAnchoredPosition;
+    private Vector2 _dDefaultAnchoredPosition;
+    private Vector2 _spacebarDefaultAnchoredPosition;
+    private Vector2 _gamepadJumpDefaultAnchoredPosition;
+
     private void Awake()
     {
         _navigateActionReference = UIManager.Instance.NavigateActionReference;
         _spaceActionReference = UIManager.Instance.SpaceActionReference;
+
         _a = UIManager.Instance.A;
         _d = UIManager.Instance.D;
         _spacebar = UIManager.Instance.Spacebar;
-
         _gamepadJump = UIManager.Instance.GamepadJump;
 
+        _aDefaultAnchoredPosition = GetAnchoredPosition(_a);
+        _dDefaultAnchoredPosition = GetAnchoredPosition(_d);
+        _spacebarDefaultAnchoredPosition = GetAnchoredPosition(_spacebar);
+        _gamepadJumpDefaultAnchoredPosition = GetAnchoredPosition(_gamepadJump);
     }
 
     private void OnEnable()
@@ -65,6 +76,10 @@ public class Manual_Ui_Press_sg : MonoBehaviour
             _spaceActionReference.action.performed += OnSpacePerformed;
             _spaceActionReference.action.canceled += OnSpaceCanceled;
         }
+
+        ResetLeftAction();
+        ResetRightAction();
+        ResetSpacebarAction();
     }
 
     private void OnDisable()
@@ -90,8 +105,6 @@ public class Manual_Ui_Press_sg : MonoBehaviour
         }
     }
 
-
-
     #region 입력 처리 (Navigate: A, D)
 
     private void OnNavigatePerformed(InputAction.CallbackContext context)
@@ -102,14 +115,11 @@ public class Manual_Ui_Press_sg : MonoBehaviour
         {
             ExecuteLeftAction();
             ResetRightAction();
-            // 추가
-
         }
         else if (navigationInput.x > 0.5f)
         {
             ExecuteRightAction();
             ResetLeftAction();
-          
         }
     }
 
@@ -117,12 +127,10 @@ public class Manual_Ui_Press_sg : MonoBehaviour
     {
         ResetLeftAction();
         ResetRightAction();
-     
     }
 
     #endregion
 
- 
     #region 입력 처리 (Space)
 
     private void OnSpacePerformed(InputAction.CallbackContext context)
@@ -142,78 +150,118 @@ public class Manual_Ui_Press_sg : MonoBehaviour
     private void ExecuteLeftAction()
     {
         if (_a == null) return;
-      
-        _a.rectTransform.sizeDelta = new Vector2(_a.rectTransform.sizeDelta.x, _adPressedSizeY);
-        _a.color = _adPressedColor;
-            
+
+        ApplyVisual(
+            _a,
+            _adPressedSizeY,
+            _adPressedColor,
+            new Vector2(_aDefaultAnchoredPosition.x, _aDefaultAnchoredPosition.y - yOffset));
     }
 
     private void ExecuteRightAction()
     {
         if (_d == null) return;
-         _d.rectTransform.sizeDelta = new Vector2(_d.rectTransform.sizeDelta.x, _adPressedSizeY);
-         _d.color = _adPressedColor;
-     
-      
+
+        ApplyVisual(
+            _d,
+            _adPressedSizeY,
+            _adPressedColor,
+            new Vector2(_dDefaultAnchoredPosition.x, _dDefaultAnchoredPosition.y - yOffset));
     }
 
     private void ExecuteSpacebarAction()
     {
-        if (_spacebar == null) return;
-        
-         _spacebar.rectTransform.sizeDelta = new Vector2(_spacebar.rectTransform.sizeDelta.x, _spacePressedSizeY);
-         _spacebar.color = _spacePressedColor;
-        _gamepadJump.rectTransform.sizeDelta = new Vector2(_gamepadJump.rectTransform.sizeDelta.x, _spacePressedSizeY);
-        _gamepadJump.color = _spacePressedColor;
+        if (_spacebar != null)
+        {
+            ApplyVisual(
+                _spacebar,
+                _spacePressedSizeY,
+                _spacePressedColor,
+                new Vector2(_spacebarDefaultAnchoredPosition.x, _spacebarDefaultAnchoredPosition.y - yOffset));
+        }
 
-
+        if (_gamepadJump != null)
+        {
+            ApplyVisual(
+                _gamepadJump,
+                _spacePressedSizeY,
+                _spacePressedColor,
+                new Vector2(_gamepadJumpDefaultAnchoredPosition.x, _gamepadJumpDefaultAnchoredPosition.y - yOffset));
+        }
     }
 
     private void ResetLeftAction()
     {
         if (_a == null) return;
-      
-         _a.rectTransform.sizeDelta = new Vector2(_a.rectTransform.sizeDelta.x, _adDefaultSizeY);
-         _a.color = _adDefaultColor;
-     
-      
+
+        ApplyVisual(
+            _a,
+            _adDefaultSizeY,
+            _adDefaultColor,
+            _aDefaultAnchoredPosition);
     }
 
     private void ResetRightAction()
     {
         if (_d == null) return;
 
-       
-         _d.rectTransform.sizeDelta = new Vector2(_d.rectTransform.sizeDelta.x, _adDefaultSizeY);
-         _d.color = _adDefaultColor;
- 
-     
+        ApplyVisual(
+            _d,
+            _adDefaultSizeY,
+            _adDefaultColor,
+            _dDefaultAnchoredPosition);
     }
 
     private void ResetSpacebarAction()
     {
-        if (_spacebar == null) return;
-        _spacebar.rectTransform.sizeDelta = new Vector2(_spacebar.rectTransform.sizeDelta.x, _spaceDefaultSizeY);
-        _spacebar.color = _spaceDefaultColor;
-        _gamepadJump.rectTransform.sizeDelta = new Vector2(_gamepadJump.rectTransform.sizeDelta.x, _spaceDefaultSizeY);
-        _gamepadJump.color = _spaceDefaultColor;
+        if (_spacebar != null)
+        {
+            ApplyVisual(
+                _spacebar,
+                _spaceDefaultSizeY,
+                _spaceDefaultColor,
+                _spacebarDefaultAnchoredPosition);
+        }
 
+        if (_gamepadJump != null)
+        {
+            ApplyVisual(
+                _gamepadJump,
+                _spaceDefaultSizeY,
+                _spaceDefaultColor,
+                _gamepadJumpDefaultAnchoredPosition);
+        }
+    }
+
+    private void ApplyVisual(Image target, float sizeY, Color color, Vector2 anchoredPosition)
+    {
+        RectTransform rectTransform = target.rectTransform;
+        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, sizeY);
+        rectTransform.anchoredPosition = anchoredPosition;
+        target.color = color;
+    }
+
+    private Vector2 GetAnchoredPosition(Image target)
+    {
+        if (target == null)
+            return Vector2.zero;
+
+        return target.rectTransform.anchoredPosition;
     }
 
     #endregion
 
     #region 이벤트
 
-    private void OnGameFail(MEventType MEventType, Component Sender, EventArgs args)
+    private void OnGameFail(MEventType mEventType, Component sender, EventArgs args)
     {
         _stageStart = false;
     }
 
-    private void OnGameStart(MEventType MEventType, Component Sender, EventArgs args)
+    private void OnGameStart(MEventType mEventType, Component sender, EventArgs args)
     {
         _stageStart = true;
     }
-
 
     #endregion
 }
