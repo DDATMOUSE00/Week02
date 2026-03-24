@@ -62,11 +62,14 @@ public class GameScoreController : MonoBehaviour
 
         bool left = (Keyboard.current?.aKey.wasPressedThisFrame ?? false)
                     || (Keyboard.current?.leftArrowKey.wasPressedThisFrame ?? false)
-                    || (Gamepad.current?.dpad.left.wasPressedThisFrame ?? false);
+                    || (Gamepad.current?.dpad.left.wasPressedThisFrame ?? false)
+                    || (Gamepad.current?.rightStick.left.wasPressedThisFrame ?? false);
+
 
         bool right = (Keyboard.current?.dKey.wasPressedThisFrame ?? false)
                      || (Keyboard.current?.rightArrowKey.wasPressedThisFrame ?? false)
-                     || (Gamepad.current?.dpad.right.wasPressedThisFrame ?? false);
+                     || (Gamepad.current?.dpad.right.wasPressedThisFrame ?? false)
+                     || (Gamepad.current?.leftStick.right.wasPressedThisFrame ?? false);
 
         if (left)
             SetSelection(true);
