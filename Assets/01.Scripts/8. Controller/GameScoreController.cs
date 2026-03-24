@@ -50,7 +50,11 @@ public class GameScoreController : MonoBehaviour
     }
     private void IncreaseKillScore(MEventType type, Component sender, System.EventArgs args) => KillScore++;
     private void IncreaseBuildingScore(MEventType type, Component sender, System.EventArgs args) => BuildingScore++;
-    private void IncreaseBreadScore(MEventType type, Component sender, System.EventArgs args) => BreadScore++;
+    private void IncreaseBreadScore(MEventType type, Component sender, System.EventArgs args)
+    {
+        BreadScore++;
+        Debug.Log("빵:" + BreadScore + "   sender" + sender.name);
+    }
     private void Update()
     {
         if (!_canSelect || _isTyping)
